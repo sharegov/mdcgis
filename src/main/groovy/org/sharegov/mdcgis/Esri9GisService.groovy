@@ -96,11 +96,5 @@ class Esri9GisService extends EsriGisService{
 		return null;
 	}
 
-	@Override
-	public Object getCircleBuffer(double x, double y, int radius) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 }
