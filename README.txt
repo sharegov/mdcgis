@@ -7,3 +7,6 @@ keytool -importkeystore -srckeystore somefile.pfx -srcstoretype pkcs12 -destkeys
 3. To produce a jks file
 keytool -genkey -v -alias someserver.sharegov.org -keypass password -keystore keystory.jks -storepass password -keyalg "RSA" -sigalg "MD5withRSA" -keysize 2048 -validity 3650
 when asked about first name and last name enter someserver.sharegov.org
+
+The files src/main/resources/config.xml and src/test/resources/configtest.xml are not currently in this repository. I need
+to figure out a way to mask values.
