@@ -126,7 +126,7 @@ class CommonLocationsService {
 
 			Address candidate = addressService.getAddress(rawCommonLocations[0]?.ADDRESS, rawCommonLocations[0]?.ZIP as String)
 			commonLocation = new CommonLocation(name:rawCommonLocations[0]?.NAME, layer:rawCommonLocations[0]?.LAYER, id:rawCommonLocations[0]?.OBJECTID)
-			commonLocation.address = candidate
+			commonLocation.address = candidate	
 
 		} else
 			commonLocation = null
@@ -214,6 +214,8 @@ class CommonLocationsService {
 	 * passed the .0 will be added.
 	 * @return String - address, municipality (name) - 
 	 * ie: 9900 NE 2 Ave, Miami Shores (Catholic Community Svc. Sr. Center)
+	 * If the data can not be retrieved, the message "Service Not Available." is sent.
+	 * 
 	 */
 	String getPollingLocationByPrecinct(String precinctId){
 		
@@ -226,12 +228,18 @@ class CommonLocationsService {
 			return ""
 					
 		// Get the Raw data
-		Map pollingLocation = getRawPollingLocationByPrecinct(precinctId)
-		if (!pollingLocation)
-			return "" 
-			
-		// Build a simple string for now
-		"${pollingLocation['address']}, ${pollingLocation['municipality']} (${pollingLocation['name']})"	
+		try{
+			Map pollingLocation = getRawPollingLocationByPrecinct(precinctId)
+			if (!pollingLocation)
+				return ""
+				
+			// Build a simple string for now
+			"${pollingLocation['address']}, ${pollingLocation['municipality']} (${pollingLocation['name']})"
+							
+		}	catch(RetrievalOfDataException rode) {
+			"Service Not Available."
+		}
+
 
 	}
 	
@@ -249,6 +257,7 @@ class CommonLocationsService {
 		// Make call to http client to get xml
 		def query = [Prec:precinctId]
 		String url = gisConfig.gisServices['pollingPlaceByPrecinct']
+
 		def xmlRawPollingLocation = httpService.request(url, query, groovyx.net.http.ContentType.XML)
 		
 		// break data and store it in a map	

@@ -18,12 +18,13 @@ package org.sharegov.mdcgis;
 import static org.junit.Assert.*;
 
 import org.eclipse.jetty.server.AbstractConnector.Acceptor;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.context.ApplicationContext
 import org.springframework.context.support.ClassPathXmlApplicationContext
 import org.sharegov.mdcgis.utils.AppContext
+
 import static groovyx.net.http.ContentType.*
 
 class PublicWorksTests {
@@ -42,6 +43,11 @@ class PublicWorksTests {
 				
 		publicWorksService = (PublicWorksService) ctx
 				.getBean("PUBLICWORKS_SERVICE")
+	}
+
+	@After
+	public void destroy() throws Exception{
+		((ClassPathXmlApplicationContext) AppContext.getApplicationContext()).close();
 	}
 
 	
@@ -65,9 +71,10 @@ class PublicWorksTests {
 					 submit1:submit1]
 		
 		def result = httpService.request(url, query, HTML)
-		println result
+		String expected = "SW 112TH ST/SW 108TH CT,863485.3125/484357.9375,11201 SW 108TH CT 33176,30,UNINCORPORATED MIAMI-DADE,8:7:9,Daniella Levine Cava:Xavier L. Suarez:Dennis C. Moss,12:14,n/a:n/a,33157:33176,554019:554031:554018:554030:554007,5;"
+
 		
-		assert result == 'hello'
+		assert result == expected
 	}
 		
 	

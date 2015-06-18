@@ -95,7 +95,7 @@ class EsriFieldMappings {
 		'MDC.WaterServiceArea':['UTILITYNAME':'utilityName', 'UTILITYNAMEALIAS':'utilityNameAlias'],
 		'MDC.FEMAFloodZone':['FZONE':'floodZone'],
 		'Recycle_Routes':['RECYROUTE':'recyclingRoute',
-		  'RECYDAY':'recyclingWeekDay'],
+		'RECYDAY':'recyclingWeekDay'],
 		'MDC.HurricaneEvacZone':['ZONEID':'hurricaneEvacZone'],
 		'MDC.HouseDistrict':['ID':'houseDistrictId'],
 		'MDC.SenateDistrict':['ID':'senateDistrictId'],
@@ -104,12 +104,13 @@ class EsriFieldMappings {
 		'NewGarbRoutes':['GARBROUTE':'garbagePickupRoute'],
 		'Trash_Route':['TRASHDAY':'bulkyTrashPickupDay', 'TRASHDAYALIAS':'bulkyTrashPickupDayAlias'],
 		'MDC.Municipality_poly':['NAME':'municipality'],
-		'MDC.CommissionDistrict':['COMDISTID':'districtNumber',
+		'MDC.CommissionDistrict':['ID':'districtNumber',
 		'COMMNAME':'commissionerName'],
 		'Commission_Districts':['COMNAME':'cityCommissionerName', 'COMDISTID':'cityDistrictNumber'],
 		'NET_Areas':['NETNAME':'netOfficeName'],
 	    'MDC.TurkeyPointArea':['ID':'turkeyPointAreaId'],
-		'Code_Enforcement_Zones':['CESECTNAME':'codeEnforcementZone']]
+		'Code_Enforcement_Zones':['CESECTNAME':'codeEnforcementZone'],
+		'PW_Maint_Zones':['GRID_NO': 'publicWorksGridNumber']]
 	
 	
 	public static final Map<String,String> propertyInfoAttributes =[

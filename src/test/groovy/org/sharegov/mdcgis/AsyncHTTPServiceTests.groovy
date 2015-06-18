@@ -16,27 +16,34 @@
 package org.sharegov.mdcgis;
 
 import static org.junit.Assert.*;
-
 import groovyx.net.http.*;
 import net.sf.json.JSONObject
 import net.sf.json.JSONArray
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext
 import org.springframework.context.support.ClassPathXmlApplicationContext
 import org.sharegov.mdcgis.utils.AppContext;
+
 import groovyx.net.http.Method
+
 import java.util.concurrent.FutureTask
 import java.net.UnknownHostException
-import org.sharegov.mdcgis.AsyncHTTPService
 
+import org.sharegov.mdcgis.AsyncHTTPService
 
 import javax.net.ssl.X509TrustManager
 import javax.net.ssl.SSLContext
+
 import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
+
 import javax.net.ssl.TrustManager
+
 import java.security.SecureRandom
+
 import org.apache.http.conn.ssl.SSLSocketFactory
 import org.apache.http.conn.scheme.Scheme
 import org.apache.http.conn.scheme.SchemeRegistry
@@ -44,6 +51,7 @@ import org.apache.http.conn.scheme.SchemeRegistry
 class AsyncHTTPServiceTests {
 	
 	private AsyncHTTPService httpService
+	private GisConfig gisConfig
 	
 	@Before
 	public void setUp() throws Exception {
@@ -52,12 +60,20 @@ class AsyncHTTPServiceTests {
 		ApplicationContext ctx = AppContext.getApplicationContext();
 		httpService = (AsyncHTTPService) ctx
 				.getBean("ASYNC_HTTP_SERVICE");
+				
+		gisConfig = ctx.getBean("GIS_CONFIG");		
 	}
 	
 	
+	@After
+	public void destroy() throws Exception{
+		((ClassPathXmlApplicationContext) AppContext.getApplicationContext()).close();
+	}
+
+	
 	@Test
 	public void testRequest(){
-		def url = 'http://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/14/query'
+		def url = gisConfig.layers['MDC.CommonLocations']
 		String outFields = '*'
 		String f = 'json'
 		String where = "UPPER(NAME) LIKE '%SOUTH MIAMI HOSPITAL%'"
@@ -69,7 +85,8 @@ class AsyncHTTPServiceTests {
 	
 	@Test
 	public void testRequest_ListUrls(){
-		def url = ['http://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/14/query']
+		String commonLocationsUrl = gisConfig.layers['MDC.CommonLocations']
+		def url = [commonLocationsUrl]
 		String outFields = '*'
 		String f = 'json'
 		String where = "UPPER(NAME) LIKE '%SOUTH MIAMI HOSPITAL%'"
@@ -102,7 +119,7 @@ class AsyncHTTPServiceTests {
 		def url = 'http://s0020269/individuals/predefined/configset'
 		def query = null
 		def result = httpService.request(url, query)
-		assert result.size() == 20
+		assert result.size() == 28
 	}
 		
 	@Test

@@ -123,9 +123,9 @@ abstract class EsriGisService implements GisService {
 	
 	public Map featuresInPolygon(Map geometry, String url, List outFields = ['*'], Boolean returnGeometry=true){
 
-		// Create an empty geometry if null is passed in.
-		if(!geometry)
-		  geometry = [rings:[]]
+		// Create an empty geometry if null or empty geometry is passed in.
+		if(!geometry || geometry == [rings:[]])
+		  return [(url):[]]
 		
 		// Wrap the geomtry in a json object.
 		def jsonGeometry = new JsonBuilder(geometry)

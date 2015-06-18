@@ -38,7 +38,7 @@ class AddressControllerTests {
 		
 		@Test
 		public void testEmail() throws Exception {
-			addressController.sendMail("hello")
+		//	addressController.sendMail("This is a test coming from AddressControllerTests.testEmail ")
 		}
 	
 }

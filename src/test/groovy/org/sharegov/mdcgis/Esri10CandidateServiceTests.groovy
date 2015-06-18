@@ -17,6 +17,7 @@ package org.sharegov.mdcgis;
 
 import static org.junit.Assert.*;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +40,10 @@ class Esri10CandidateServiceTests {
 		candidateService = ctx.getBean("CANDIDATE_SERVICE");
 	}
 
+	@After
+	public void destroy() throws Exception{
+		((ClassPathXmlApplicationContext) AppContext.getApplicationContext()).close();
+	}
 
 
 	@Test

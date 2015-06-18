@@ -93,19 +93,21 @@ class Esri10CandidateService extends CandidateService {
 			def geoStreetCandidate = groupOfCandidates.find {it.attributes.Loc_name == 'GeoStreet'}
 			if(geoStreetCandidate){
 				geoStreetCandidate.streetMaintenanceIds = []
-				geoStreetCandidate.streetMaintenanceIds.add(geoStreetCandidate.attributes.Ref_ID)
-				if(geoStreetCandidate?.attributes?.Ref_ID1)
+				if(geoStreetCandidate?.attributes?.Ref_ID || geoStreetCandidate?.attributes?.Ref_ID == 0)
+					geoStreetCandidate.streetMaintenanceIds.add(geoStreetCandidate.attributes.Ref_ID)
+				if(geoStreetCandidate?.attributes?.Ref_ID1 || geoStreetCandidate?.attributes?.Ref_ID1 == 0)
 					geoStreetCandidate.streetMaintenanceIds.add(geoStreetCandidate.attributes.Ref_ID1)
-				if(geoStreetCandidate?.attributes?.Ref_ID2)
+				if(geoStreetCandidate?.attributes?.Ref_ID2 || geoStreetCandidate?.attributes?.Ref_ID2 == 0)
 					geoStreetCandidate.streetMaintenanceIds.add(geoStreetCandidate.attributes.Ref_ID2)
 				cleanCandidates.add(geoStreetCandidate)
 				def geoAddressCandidate = groupOfCandidates.find {it.attributes.Loc_name == 'GeoAddress'}
 				if(geoAddressCandidate){
 					geoAddressCandidate.streetMaintenanceIds = []
-					geoAddressCandidate.streetMaintenanceIds.add(geoStreetCandidate.attributes.Ref_ID)
-					if(geoStreetCandidate?.attributes?.Ref_ID1)
+					if(geoStreetCandidate?.attributes?.Ref_ID || geoStreetCandidate?.attributes?.Ref_ID == 0)
+						geoAddressCandidate.streetMaintenanceIds.add(geoStreetCandidate.attributes.Ref_ID)
+					if(geoStreetCandidate?.attributes?.Ref_ID1 || geoStreetCandidate?.attributes?.Ref_ID1 == 0)
 						geoAddressCandidate.streetMaintenanceIds.add(geoStreetCandidate.attributes.Ref_ID1)
-					if(geoStreetCandidate?.attributes?.Ref_ID2)
+					if(geoStreetCandidate?.attributes?.Ref_ID2 || geoStreetCandidate?.attributes?.Ref_ID2 == 0)
 						geoAddressCandidate.streetMaintenanceIds.add(geoStreetCandidate.attributes.Ref_ID2)
 					cleanCandidates.add(geoAddressCandidate)
 				}

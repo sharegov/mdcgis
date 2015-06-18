@@ -20,9 +20,10 @@ import static org.junit.Assert.*
 import java.util.List;
 
 import groovyx.net.http.ContentType
+
+import org.junit.After;
 import org.junit.Test
 import org.junit.Before
-
 import org.sharegov.mdcgis.utils.AppContext
 import org.springframework.context.ApplicationContext
 import org.springframework.context.support.ClassPathXmlApplicationContext
@@ -30,7 +31,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext
 class FeatureServiceTests {
 	
 	private FeatureService featureService
-	
+    private GisConfig gisConfig
+		
 	@Before
 	public void setUp() throws Exception {
 		new ClassPathXmlApplicationContext("configtest.xml");
@@ -39,12 +41,20 @@ class FeatureServiceTests {
 		featureService = (FeatureService) ctx
 				.getBean("FEATURE_SERVICE");
 				
+		gisConfig = (GisConfig) ctx
+				.getBean("GIS_CONFIG");		
+	}
+
+	@After
+	public void destroy() throws Exception{
+		((ClassPathXmlApplicationContext) AppContext.getApplicationContext()).close();
 	}
 
 	
 	@Test
 	public void testFeaturesFromPointLayersIntersection_SwitchKeyToLayerName(){
-		Map rawResults = ["http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/11/query":
+		String url = gisConfig.layers["MDC.CommissionDistrict"]
+		Map rawResults = [(url):
 			[attributes:[OBJECTID:7, ID:7, COMMNAME:'Xavier L. Suarez'], geometry:[rings:[[[931858.2328325026, 520919.6944387555]]]]]]
 		
 		Map results = ["MDC.CommissionDistrict":
@@ -56,7 +66,8 @@ class FeatureServiceTests {
 	
 	@Test
 	public void testFeaturesAttributesFromPointLayersIntersection_SwitchKeyToLayerName(){
-		Map rawResults = ["http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/11/query":
+		String url = gisConfig.layers['MDC.CommissionDistrict']
+		Map rawResults = [(url):
 			[OBJECTID:7, ID:7, COMMNAME:'Xavier L. Suarez']]
 		
 		Map results = ["MDC.CommissionDistrict":
@@ -74,7 +85,8 @@ class FeatureServiceTests {
 		
 	@Test
 	public void testFeaturesGeometryFromPointLayersIntersection_SwitchKeyToLayerName(){
-		Map rawResults = ["http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/11/query":
+		String url = gisConfig.layers['MDC.CommissionDistrict']
+		Map rawResults = [(url):
 			[rings:[[[931858.2328325026, 520919.6944387555]]]]]
 		
 		Map results = ["MDC.CommissionDistrict":
@@ -87,7 +99,8 @@ class FeatureServiceTests {
 	
 	@Test
 	public void testFeaturesInCircle_SwitchKeyToLayerName(){
-		Map rawResults = ["http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/41/query":
+		String url = gisConfig.layers["pwd_lights"]
+		Map rawResults = [(url):
 			[[attributes:[OBJECTID:68756], 
 			  geometry:[paths:[[[858070.6874045022, 488840.5938830897]]]]]]]
 			
@@ -101,12 +114,10 @@ class FeatureServiceTests {
 	
 	@Test
 	public void testFeaturesAttributesInCircle_SwitchKeyToLayerName(){
+		String url = gisConfig.layers['pwd_lights']
+		Map rawResults = [(url):[OBJECTID:68756]]
 		
-		Map rawResults = ["http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/41/query":
-						  [OBJECTID:68756]]
-		
-		Map results = ["pwd_lights":
-			[OBJECTID:68756]]
+		Map results = ["pwd_lights":[OBJECTID:68756]]
 		
 		featureService.gisService = [featuresAttributesInCircle: {Object[] args -> rawResults}] as GisService
 		assert featureService.featuresAttributesInCircle(857869.753, 488913.937, 200, 'pwd_lights') == results
@@ -114,8 +125,8 @@ class FeatureServiceTests {
 	
 	@Test
 	public void testFeaturesGeometryInCircle_SwitchKeyToLayerName(){
-		
-		Map rawResults = ["http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/41/query":
+		String url = gisConfig.layers['pwd_lights']
+		Map rawResults = [(url):
 			[paths:[[[858070.6874045022, 488840.5938830897]]]]]
 			
 		Map results = ["pwd_lights":
@@ -128,7 +139,8 @@ class FeatureServiceTests {
 	
 	@Test
 	public void testFeaturesInPolygon_SwitchKeyToLayerName(){
-		Map rawResults = ["http://gisweb.miamidade.gov/ArcGIS/rest/services/MD_PropertySearch/MapServer/0/query":
+		String url = gisConfig.layers["MDC.PTXGIS"]
+		Map rawResults = [(url):
 			[[attributes:['MDC.PTXGIS.AREA':0], geometry:[points:[[857869.813, 488913.906]]]]]]
 		
 		Map results = ["MDC.PTXGIS":
@@ -142,8 +154,8 @@ class FeatureServiceTests {
 	
 	@Test
 	public void testFeaturesAttributesInPolygon_SwitchKeyToLayerName(){
-		Map rawResults = ["http://gisweb.miamidade.gov/ArcGIS/rest/services/MD_PropertySearch/MapServer/0/query":
-			['MDC.PTXGIS.AREA':0]]
+		String url = gisConfig.layers["MDC.PTXGIS"]
+		Map rawResults = [(url):['MDC.PTXGIS.AREA':0]]
 		
 		Map results = ["MDC.PTXGIS":['MDC.PTXGIS.AREA':0]]
 				
@@ -156,7 +168,8 @@ class FeatureServiceTests {
 	
 	@Test
 	public void testFeaturesGeometryInPolygon_SwitchKeyToLayerName(){
-		Map rawResults = ["http://gisweb.miamidade.gov/ArcGIS/rest/services/MD_PropertySearch/MapServer/0/query":
+		String url = gisConfig.layers["MDC.PTXGIS"]
+		Map rawResults = [(url):
 			[points:[[857869.813, 488913.906]]]]
 		
 		Map results = ["MDC.PTXGIS":

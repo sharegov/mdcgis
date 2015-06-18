@@ -64,9 +64,10 @@ class Address {
 	Integer houseDistrictId
 	Integer senateDistrictId
 	Integer electionsPrecinctId
-	String pollingLocation
+	String  pollingLocation
 	Integer turkeyPointAreaId
-	String codeEnforcementZone
+	String  codeEnforcementZone
+	Integer publicWorksGridNumber
 	
 	//"StreetAddress",  "Intersection". Interesting to flag something as intersection
 	String addressType

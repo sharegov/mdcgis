@@ -17,6 +17,7 @@ package org.sharegov.mdcgis;
 
 
 import static org.junit.Assert.*;
+
 import org.junit.*;
 import org.sharegov.mdcgis.model.Address
 import org.sharegov.mdcgis.model.CommonLocation
@@ -36,6 +37,11 @@ class CommonLocationsServiceTest {
 		ApplicationContext ctx = AppContext.getApplicationContext();
 		commonLocationsService = (CommonLocationsService) ctx
 				.getBean("COMMON_LOCATIONS_SERVICE");
+	}
+	
+	@After
+	public void destroy() throws Exception{
+		((ClassPathXmlApplicationContext) AppContext.getApplicationContext()).close();
 	}
 
 	@Test
@@ -69,11 +75,11 @@ class CommonLocationsServiceTest {
 	@Test
 	public void testGetRawCommonLocations_ById(){
 		// lets check a simple call
-		def locations =  commonLocationsService.getRawCommonLocations(1780)
+		def locations =  commonLocationsService.getRawCommonLocations(63539)
 		assert locations.size() == 1
 		def location = locations[0]
 		location.with {
-			location.OBJECTID == 1780
+			location.OBJECTID == 63539
 			location.LAYER == 'HOSPITAL'
 			location.NAME == 'South Miami Hospital'
 		}
@@ -222,9 +228,9 @@ class CommonLocationsServiceTest {
 	@Test
 	public void testGetCommonLocationById_Match(){
 		
-		CommonLocation cl =  commonLocationsService.getCommonLocation(2221)
-		assert cl.id == 2221
-		assert cl.layer == 'SCHOOL - PUBLIC'
+		CommonLocation cl =  commonLocationsService.getCommonLocation(63086)
+		assert cl.id == 63086
+		assert cl.layer == 'ADULT LIVING FACILITY'
 		assert cl.name == "Kelley's ALF"
 
 	}
@@ -232,9 +238,9 @@ class CommonLocationsServiceTest {
 	@Test
 	public void testGetRawPollingLocationByPrecinct(){
 		Map pollingPlace = commonLocationsService.getRawPollingLocationByPrecinct("156.0")
-		assert pollingPlace.name == "Catholic Community Svc. Sr. Center"
-		assert pollingPlace.address == "9900 NE 2 Ave"
-		assert pollingPlace.municipality == "Miami Shores 33138"
+		assert pollingPlace.name == "Hubert O. Sibley K-8 Academy"
+		assert pollingPlace.address == "255 NW 115 St"
+		assert pollingPlace.municipality == "Miami 33168"
 		
 
 	}
@@ -257,10 +263,10 @@ class CommonLocationsServiceTest {
 	@Test
 	public void testGetPollingLocationByPrecinct(){
 		String pollingPlace = commonLocationsService.getPollingLocationByPrecinct("156.0")
-		assert pollingPlace == "9900 NE 2 Ave, Miami Shores 33138 (Catholic Community Svc. Sr. Center)"
+		assert pollingPlace == "255 NW 115 St, Miami 33168 (Hubert O. Sibley K-8 Academy)"
 		
 		pollingPlace = commonLocationsService.getPollingLocationByPrecinct("156")
-		assert pollingPlace == "9900 NE 2 Ave, Miami Shores 33138 (Catholic Community Svc. Sr. Center)"
+		assert pollingPlace == "255 NW 115 St, Miami 33168 (Hubert O. Sibley K-8 Academy)"
 		
 		pollingPlace = commonLocationsService.getPollingLocationByPrecinct("asdfasd")
 		assert pollingPlace == ""
@@ -272,6 +278,6 @@ class CommonLocationsServiceTest {
 	@Test
 	public void testGetPollingLocationByPrecinct_156(){
 		String pollingPlace = commonLocationsService.getPollingLocationByPrecinct("156")
-		assert pollingPlace == "9900 NE 2 Ave, Miami Shores 33138 (Catholic Community Svc. Sr. Center)"
+		assert pollingPlace == "255 NW 115 St, Miami 33168 (Hubert O. Sibley K-8 Academy)"
 	}
 }

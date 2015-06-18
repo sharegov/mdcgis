@@ -67,7 +67,6 @@ class AsyncHTTPService implements HTTPService {
 		
 	Object request(String url, def query, ContentType contentType=JSON){
 		Map result = request ([url], query, contentType)
-		
 		return result[url]
 	}
 	

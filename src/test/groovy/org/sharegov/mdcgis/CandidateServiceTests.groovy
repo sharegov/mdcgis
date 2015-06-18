@@ -21,11 +21,14 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.After;
+
 import org.junit.Test;
 import org.sharegov.mdcgis.model.Address
 import org.sharegov.mdcgis.utils.AppContext
 import org.springframework.context.ApplicationContext
 import org.springframework.context.support.ClassPathXmlApplicationContext
+import org.springframework.test.annotation.DirtiesContext
 
 
 class CandidateServiceTests {
@@ -39,8 +42,15 @@ class CandidateServiceTests {
 
 		ApplicationContext ctx = AppContext.getApplicationContext();
 		candidateService = ctx.getBean("CANDIDATE_SERVICE");
+		
+		
 	}
 
+	@After
+	public void destroy() throws Exception{
+		((ClassPathXmlApplicationContext) AppContext.getApplicationContext()).close();
+	}
+	
 
 	@Test
 	public void testGetCandidates_NoStreetPassedIn() {

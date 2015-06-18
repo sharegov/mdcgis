@@ -15,20 +15,22 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
+import java.util.Map;
+
 import org.apache.commons.collections.BidiMap
 import org.apache.commons.collections.bidimap.DualHashBidiMap
 import org.springframework.beans.factory.config.AbstractFactoryBean
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class GisConfigFactoryBean extends AbstractFactoryBean<GisConfig>{
+class GisConfigFactoryBeanLocal extends AbstractFactoryBean<GisConfig>{
 
-	private static Logger _log = LoggerFactory.getLogger(GisConfigFactoryBean.class);
-
+	private static Logger _log = LoggerFactory.getLogger(GisConfigFactoryBeanLocal.class);
+	
 	HTTPService httpService
 	Map connections
-		
+
+
 	@Override
 	public Class<GisConfig> getObjectType() {
 		return GisConfig.class;
@@ -61,20 +63,135 @@ class GisConfigFactoryBean extends AbstractFactoryBean<GisConfig>{
 	
 	private BidiMap populateLayersUrls(){
 		
-		String url = connections.layer.url
-		Map query = connections.layer.query
-
-		_log.info("populateLayersUrls(): about to populate layers from ${url}")
+		_log.info("populateLayersUrls(): about to populate layers from local")
 				
-		def result = httpService.request(url, query)
-		
-		Map layers = [:]
-		   
-		result.each{def layer ->
-			_log.info("${layer.hasName}: ${layer.hasUrl}")
-			String builtUrl = "${layer['hasUrl']}"
-			layers << [(layer.hasName):builtUrl]
-		}
+		Map layers = ["MDC.TurkeyPointArea":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/61",
+
+"MDC.PainterTerritory":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/37",
+
+"MDC.RecyclingRoute":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/43",
+
+"MDC.RoadImpactFeeDistricts":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/45",
+
+"MDC.ZipCode":
+"http://gisweb.miamidade.gov/ArcGIS/rest/services/MD_PropertySearch/MapServer/3",
+
+ "MDC.HomeOwnerAssociation":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/26",
+
+ "Code_Enforcement_Zones":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/10",
+
+ "GarbageRoutes":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/23",
+
+ "MDC.DSWMServiceArea":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/17",
+
+ "MDC.SenateDistrict":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/47",
+
+ "MDC.StreetMaint":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/51",
+
+ "EnforcementMunicipalities":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/19",
+
+ "Commission_Districts":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/13",
+
+ "MDC.PTXGIS":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/62",
+
+ "MDC.GarbagePickupRoute":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/22",
+
+ "MDC.CommonLocations":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/14",
+
+ "MDC.SWMEnforcementZone":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/52",
+
+ "MDC.TMBoundary":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/53",
+
+ "MDC.PTXTABS":
+"http://gisweb.miamidade.gov/ArcGIS/rest/services/MD_PropertySearch/MapServer/4",
+
+ "MDC.WaterServiceArea":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/55",
+
+ "MDC.NeighborhoodCodeOfficer":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/32",
+
+ "Recycle_Routes":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/42",
+
+ "MDC.OutReach":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/36",
+
+ "MDC.MinimumHousing":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/30",
+
+ "NewGarbRoutes":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/34",
+
+ "pwd_lights":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/41",
+
+ "MDC.WCSBulkyBook":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/56",
+
+ "MDC.HurricaneEvacZone":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/28",
+
+ "MDC.Parcels":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/60",
+
+ "MDC.FEMAFloodZone":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/21",
+
+ "MDC.PoliceGrid_poly":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/38",
+
+ "NET_Areas":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/33",
+
+ "MDC.CommissionDistrict":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/11",
+
+ "Trash_Route":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/54",
+
+ "MDC.CommunityCouncil":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/15",
+
+ "MDC.SewerServiceArea":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/49",
+
+ "MDC.HouseDistrict":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/27",
+
+ "MDC.GeoProp":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/57",
+
+ "MDC.Precinct":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/39",
+
+ "MDC.GISSection":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/24",
+
+ "MDC.Municipality_poly":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/GIC/MapServer/31",
+
+ "PW_Maint_Zones":
+"http://s0142960.miamidade.gov/arcgis/rest/services/GIC/MapServer/64"
+
+]
 		
 		return new DualHashBidiMap(layers)
 	}
@@ -94,50 +211,60 @@ class GisConfigFactoryBean extends AbstractFactoryBean<GisConfig>{
 	}
 	
 	private Map populateLocators(){
-		String url = connections.locator.url
-		Map query = connections.locator.query
+
+		_log.info("populateLocators(): about to populate locators from local")
 		
-		_log.info("populateLocators(): about to populate locators from ${url}")
+		Map locators = [ "reverseGeoCodeGeoStreet":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/MDC_Locators/GeoStreet/GeocodeServer/reverseGeocode",
+
+ "findAddressCandidates20":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/MDC_Locators/MD_Locator_75/GeocodeServer/findAddressCandidates",
+
+ "reverseGeoCodeGeoAddress":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/MDC_Locators/GeoAddress/GeocodeServer/reverseGeocode",
+
+ "reverseGeoCode":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/MDC_Locators/MD_Locator/GeocodeServer/reverseGeocode",
+
+ "findAddressCandidates":
+"http://s0142960.miamidade.gov/ArcGIS/rest/services/MDC_Locators/MD_Locator/GeocodeServer/findAddressCandidates"
+]
 		
-		def result = httpService.request(url, query)
-		
-		Map locators = [:]
-		result.each{def locator ->
-			_log.info("${locator.hasName}: ${locator.hasUrl}")
-			locators << [(locator.hasName):locator['hasUrl']]
-		}
 		
 		return locators
 	}
 	
 	private Map populateGisServices(){
-		String url = connections.gisService.url
-		Map query = connections.gisService.query
+
+		_log.info("populateGisServices(): about to populate gis services from local")
 		
-		_log.info("populateGisServices(): about to populate gis services from ${url}")
-		
-		def result = httpService.request(url, query)
-		Map gisServices = [:]
-		result.each{def gisService ->
-			_log.info("${gisService.hasName}: ${gisService.hasUrl}")
-			gisServices << [(gisService.hasName):gisService['hasUrl']]
-		}
+		Map gisServices = [ "pollingPlaceByPrecinct":
+"http://s0141819/Pploc/GetLocation.asmx/PPLoc",
+
+ "standardizeIntersection":
+"http://s0142960.miamidade.gov/GISAddress/standardize.asmx/standardizeIntersection",
+
+ "condoAddressZip":
+"http://s0142960.miamidade.gov/gisaddress/condo.asmx/CondoAddressZip",
+
+ "standardizeAddress":
+"http://s0142960.miamidade.gov/GISAddress/standardize.asmx/standardizeAddress",
+
+ "parentChildFolio":
+"http://s0142960.miamidade.gov/gisaddress/condo.asmx/ParentChildFolio",
+
+ "publicWorksGeoCoder":
+"http://gisimsintra.miamidade.gov/website/pw_geocoder/CSR_Geocoder.asp"
+]
 		
 		return gisServices
 	}
 	
 	private Map populateGisGeometryServices(){
-		String url = connections.gisGeometryService.url
-		Map query = connections.gisGeometryService.query
+
+		_log.info("populateGisGeometryServices(): about to populate gis geometry services from Local")
 		
-		_log.info("populateGisGeometryServices(): about to populate gis geometry services from ${url}")
-		
-		def result = httpService.request(url, query)
-		Map gisGeometryServices = [:]
-		result.each{def gisGeometryService ->
-			_log.info("${gisGeometryService.hasName}: ${gisGeometryService.hasUrl}")
-			gisGeometryServices << [(gisGeometryService.hasName):gisGeometryService['hasUrl']]
-		}
+		Map gisGeometryServices = ["buffer":"http://s0142960.miamidade.gov/arcgis/rest/services/Utilities/Geometry/GeometryServer/buffer"]
 		
 		return gisGeometryServices
 	}
@@ -347,10 +474,12 @@ class GisConfigFactoryBean extends AbstractFactoryBean<GisConfig>{
 		// Process the data fields.domain.codeValues
 		Map data2 = [:]
 		data.each {key, value -> 
-			List domains = value.fields.findAll {it.domain}
+			List domains = value.fields.findAll {it.domain && it.domain != "null"}
 			if(domains)
 				data2 << [(key):domains]
 		}
+		
+		println "the data2 is ${data2}"
 
 		def data3 = data2.inject([:]){acc, key, value ->
 

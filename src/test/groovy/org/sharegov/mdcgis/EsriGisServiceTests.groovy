@@ -19,6 +19,7 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Test
 import org.junit.Before
 
@@ -46,6 +47,12 @@ class EsriGisServiceTests {
 		gisConfig = (GisConfig) ctx
 				.getBean("GIS_CONFIG");						
 	}
+	
+	@After
+	public void destroy() throws Exception{
+		((ClassPathXmlApplicationContext) AppContext.getApplicationContext()).close();
+	}
+
 	
 	@Test
 	public void testFeaturesFromPointLayersIntersection(){
@@ -127,7 +134,7 @@ class EsriGisServiceTests {
 	public void testFeaturesInCircle(){
 		String urlStreetMaint = gisConfig.layers["MDC.StreetMaint"]
 		List features = gisService.featuresInCircle(904028.0626120828, 534703.3748988137, 300, urlStreetMaint)[urlStreetMaint]
-		assert features.size() == 7
+		assert features.size() == 2
 	}
 	
 	@Test
@@ -155,8 +162,8 @@ class EsriGisServiceTests {
 			assert gisService.featuresInCircle(2.1, 3.1, 5, urlStreetMaint) == cleanRequestResult
 			assert false
 		} catch (RetrievalOfDataException rode){
-			String message = "Unexpected error for uri http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/51/query | message: [error:[code:400, message:bad error, details:[]]]"
-			assert rode.message == message
+			String message = "Unexpected error for uri $urlStreetMaint | message: [error:[code:400, message:bad error, details:[]]]"
+			assert rode.getMessage() == message
 		}	
 	}
 	
@@ -226,10 +233,10 @@ class EsriGisServiceTests {
 		List features = results[url]
 
 		assert features.size() == 2
-		assert features[1].attributes.SNAME == "NW 31ST AVE"
-		assert features[1].attributes.MAINTCODE == 'CO'
-		assert features[0].attributes.SNAME == "NW 29TH ST"
+		assert features[0].attributes.SNAME == "NW 31ST AVE"
 		assert features[0].attributes.MAINTCODE == 'CO'
+		assert features[1].attributes.SNAME == "NW 29TH ST"
+		assert features[1].attributes.MAINTCODE == 'CO'
 	}
 	
 	@Test

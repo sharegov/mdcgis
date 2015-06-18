@@ -16,8 +16,8 @@
 package org.sharegov.mdcgis
 
 import static org.junit.Assert.*;
-
 import groovy.json.JsonSlurper
+
 import java.util.Map;
 
 import org.junit.*;
@@ -38,6 +38,11 @@ class PropertyInfoServiceTests {
 		ApplicationContext ctx = AppContext.getApplicationContext();
 		propertyInfoService = (PropertyInfoService) ctx
 				.getBean("PROPERTYINFO_SERVICE");
+	}
+	
+	@After
+	public void destroy() throws Exception{
+		((ClassPathXmlApplicationContext) AppContext.getApplicationContext()).close();
 	}
 
 	@Test
@@ -199,10 +204,10 @@ class PropertyInfoServiceTests {
 	@Test
 	public void testGetRawPropertyInfoByFolio_BuildingMultiAddress(){
 		Map data = propertyInfoService.getRawPropertyInfoByFolio("3049331130001")
-		assert data.ADDRESS == '8215 SW 152ND AVE'
+		assert data.ADDRESS == '8255 SW 152ND AVE'
 		assert data.ZIP == 33193
-		assert data.X_COORD == 	"840977.3"
-		assert data.Y_COORD == "493244.4"
+		assert data.X_COORD == 	"840977"
+		assert data.Y_COORD == "493244"
 	}
 	
 	@Test
@@ -217,8 +222,8 @@ class PropertyInfoServiceTests {
 		assert data.zip == 33186
 		assert data.street == '11826 SW 97 ST'
 		assert data.unit == ''
-		assert data.x == 857869.8
-		assert data.y == 488913.9
+		assert data.x == 857869.0
+		assert data.y == 488913.0
 	}
 
 	@Test
@@ -227,8 +232,8 @@ class PropertyInfoServiceTests {
 		assert data.zip == 33139
 		assert data.street == '2001 MERIDIAN AVE'
 		assert data.unit == "317"
-		assert data.x == 940523.4
-		assert data.y == 532756.3
+		assert data.x == 940523.0
+		assert data.y == 532756.0
 		
 	}
 
@@ -355,7 +360,7 @@ class PropertyInfoServiceTests {
 	@Test
 	void testGetAddressForMultiAddressBuilding(){
 		String address = propertyInfoService.getAddressForMultiAddressBuilding("3049331130001") 
-		assert  address == "8215 SW 152ND AVE"
+		assert  address == "8255 SW 152ND AVE"
 	}
 	
 	@Test

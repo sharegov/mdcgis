@@ -18,6 +18,7 @@ package org.sharegov.mdcgis;
 import static org.junit.Assert.*;
 
 import org.apache.commons.collections.bidimap.DualHashBidiMap
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext
@@ -38,11 +39,17 @@ class GisConfigFactoryBeanTests {
 		config = (GisConfig) ctx.getBean("GIS_CONFIG");
 	}
 	
+	
+	@After
+	public void destroy() throws Exception{
+		((ClassPathXmlApplicationContext) AppContext.getApplicationContext()).close();
+	}
+	
 	@Test
 	public void testLoadLayers(){
 		assert config.layers.size() == 41
 		assert config.locators.size() == 5
-		assert config.gisServices.size() == 1
+		assert config.gisServices.size() == 6
 		assert config.municipalities.size() ==  35
 	}
 	
