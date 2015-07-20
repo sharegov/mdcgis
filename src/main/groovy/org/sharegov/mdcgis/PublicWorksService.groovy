@@ -17,154 +17,126 @@ package org.sharegov.mdcgis
 
 import static groovyx.net.http.ContentType.*
 
+import java.util.Map;
+
 class PublicWorksService {
 
 	HTTPService httpService
 	GisConfig gisConfig
 	
+	
 	public Map intersection(String street1, String street2) {
 		
 		// Make the request for data
-		def url = gisConfig.gisServices['publicWorksGeoCoder']
-		String mode = 'CSR'
-		String cmd = 'INTERSECTION'
+		def url = gisConfig.gisServices['publicWorksIntersection']
 
-		String addZipCode= ''
-		String submit1='Get GIS Information'
-
-		def query = [mode:mode,
-					 Cmd:cmd,
-					 add1:street1,
-					 add2:street2,
-					 AddZipCode:addZipCode,
-					 submit1:submit1]
+		def query = [
+					 addr1:street1,
+					 addr2:street2]
 		
-		def result = httpService.request(url, query, HTML)
+		def result = httpService.request(url, query, XML)
+		def intersection = result.AddrD.children()[0]
 		
-		// throw exception 
-		if(result.toString().contains("ERROR"))
-			throw new RetrievalOfDataException(result.toString())
-		
-		// prepare the data
-		List data = parseData(result.toString())
-		
-		// create a map
-		List keys = ['intersection',
-					 'location',
-					 'anchor',
-					 'municipalityId',
-					 'municipality',
-					 'districtNumber',
-					 'commissionerName',
-					 'communityCouncilId',
-					 'communityCouncilName',
-					 'zip',
-					 'ttrrss',
-					 'rifDistrictNumber']
-		
-		 
-		return [keys, data].transpose().inject([:]) { a, b -> a[b[0]] = b[1]; a }
+		// throw exception when no intersection found
+		if(intersection.Anchor_Address.text() == "")
+			throw new RetrievalOfDataException("No Intersection Available")
+			
+		// Map the data
+		return [ 'intersection'         :[intersection.Address1.text()],
+				 'location'             :["${intersection.X_Coord1.text()}/${intersection.Y_Coord1.text()}"],
+				 'anchor'               :[intersection.Anchor_Address.text()],
+				 'municipalityId'       :intersection.Munic_Code.text().tokenize(":"),
+				 'municipality'         :intersection.Munic_Name.text().tokenize(":"),
+				 'districtNumber'       :intersection.Comm_District.text().tokenize(":"),
+				 'commissionerName'     :intersection.Commissioner_Name.text().tokenize(":"),
+				 'communityCouncilId'   :intersection.Council.text().tokenize(":"),
+				 'communityCouncilName' :intersection.Council_Name.text().tokenize(":"),
+				 'zip'                  :intersection.ZipCode.text().tokenize(":"),
+				 'ttrrss'               :intersection.TTRRSS.text().tokenize(":"),
+				 'rifDistrictNumber'    :intersection.RoadImpact.text().tokenize(":")
+			]
 	}
 	
 	public Map corridor(street1, street2, street3) {
 		
 		// Make the request for data
-		def url = gisConfig.gisServices['publicWorksGeoCoder']
-		String mode = 'CSR'
-		String cmd = 'CORRIDOR'
+		def url = gisConfig.gisServices['publicWorksCorridor']
 
-		String addZipCode= ''
-		String submit1='Get GIS Information'
+		def query = [
+					 addr1:street1,
+					 addr2:street2,
+					 addr3:street3]
+		
+		def result = httpService.request(url, query, XML)
+		def corridor = result.Segm.children()[0]
+		
+		// throw exception when no intersection found
+		if(corridor.Anchor_Address.text() == "")
+			throw new RetrievalOfDataException("No Corridor Available")
 
-		def query = [mode:mode,
-					 Cmd:cmd,
-					 add1:street1,
-					 add2:street2,
-					 add3:street3,
-					 AddZipCode:addZipCode,
-					 submit1:submit1]
 		
-		def result = httpService.request(url, query, HTML)
-		
-		// throw exception
-		if(result.toString().contains("ERROR"))
-			throw new RetrievalOfDataException(result.toString())
-		
-		// prepare the data
-		List data = parseData(result.toString())
-		
-		// create a map
-		List keys = ['intersection',
-					 'location',
-					 'anchor',
-					 'municipalityId',
-					 'municipality',
-					 'districtNumber',
-					 'commissionerName',
-					 'communityCouncilId',
-					 'communityCouncilName',
-					 'zip',
-					 'ttrrss',
-					 'rifDistrictNumber']
-		
-		 
-		return [keys, data].transpose().inject([:]) { a, b -> a[b[0]] = b[1]; a }
+		// Map the data
+		return [ 'intersection'         :[corridor.Address1.text(), corridor.Address2.text()],
+				 'location'             :["${corridor.X_Coord1.text()}/${corridor.Y_Coord1.text()}",
+					 					  "${corridor.X_Coord2.text()}/${corridor.Y_Coord2.text()}"],
+				 'anchor'               :[corridor.Anchor_Address.text()],
+				 'municipalityId'       :corridor.Munic_Code.text().tokenize(":"),
+				 'municipality'         :corridor.Munic_Name.text().tokenize(":"),
+				 'districtNumber'       :corridor.Comm_District.text().tokenize(":"),
+				 'commissionerName'     :corridor.Commissioner_Name.text().tokenize(":"),
+				 'communityCouncilId'   :corridor.Council.text().tokenize(":"),
+				 'communityCouncilName' :corridor.Council_Name.text().tokenize(":"),
+				 'zip'                  :corridor.ZipCode.text().tokenize(":"),
+				 'ttrrss'               :corridor.TTRRSS.text().tokenize(":"),
+				 'rifDistrictNumber'    :corridor.RoadImpact.text().tokenize(":")
+			]
+
 	}
 	
 
-	public Map area(String street1, String street2, String street3, String street4) {
-		
+	public Map area(street1, street2, street3, String street4) {
 		
 		// Make the request for data
-		def url = gisConfig.gisServices['publicWorksGeoCoder']
-		String mode = 'CSR'
-		String cmd = 'AREA'
+		def url = gisConfig.gisServices['publicWorksArea']
 
-		String addZipCode= ''
-		String submit1='Get GIS Information'
+		def query = [
+					 addr1:street1,
+					 addr2:street2,
+					 addr3:street3,
+					 addr4:street4]
+		
+		def result = httpService.request(url, query, XML)
+		def area = result.mArea.children()[0]
+		
+		// throw exception when no intersection found
+		if(area.Anchor_Address.text() == "")
+			throw new RetrievalOfDataException("No Area Available")
 
-		def query = [mode:mode,
-					 Cmd:cmd,
-					 add1:street1,
-					 add2:street2,
-					 add3:street3,
-					 add4:street4,
-					 AddZipCode:addZipCode,
-					 submit1:submit1]
-		
-		def result = httpService.request(url, query, HTML)
-		
-		// throw exception
-		if(result.toString().contains("ERROR"))
-			throw new RetrievalOfDataException(result.toString())
-		
-		// prepare the data
-		List data = parseData(result.toString())
-		
-		// create a map
-		List keys = ['intersection',
-			         'location',
-			         'anchor',
-					 'municipalityId',
-					 'municipality',
-					 'districtNumber',
-					 'commissionerName',
-					 'communityCouncilId',
-					 'communityCouncilName',
-					 'zip',
-					 'ttrrss',
-					 'rifDistrictNumber']
-		
-		 
-		return [keys, data].transpose().inject([:]) { a, b -> a[b[0]] = b[1]; a }
-		
-		
+	
+		// Map the data
+		return [ 'intersection'         :[area.Address1.text(),
+											area.Address2.text(),
+											area.Address3.text(),
+											area.Address4.text()],
+				 'location'             :["${area.X_Coord1.text()}/${area.Y_Coord1.text()}",
+					 						"${area.X_Coord2.text()}/${area.Y_Coord2.text()}",
+											"${area.X_Coord3.text()}/${area.Y_Coord3.text()}",
+											"${area.X_Coord4.text()}/${area.Y_Coord4.text()}"],
+				 'anchor'               :[area.Anchor_Address.text()],
+				 'municipalityId'       :area.Munic_Code.text().tokenize(":"),
+				 'municipality'         :area.Munic_Name.text().tokenize(":"),
+				 'districtNumber'       :area.Comm_District.text().tokenize(":"),
+				 'commissionerName'     :area.Commissioner_Name.text().tokenize(":"),
+				 'communityCouncilId'   :area.Council.text().tokenize(":"),
+				 'communityCouncilName' :area.Council_Name.text().tokenize(":"),
+				 'zip'                  :area.ZipCode.text().tokenize(":"),
+				 'ttrrss'               :area.TTRRSS.text().tokenize(":"),
+				 'rifDistrictNumber'    :area.RoadImpact.text().tokenize(":")
+			]
+
 	}
-	
-	
-	
-	
-	
+
+			
 	private List parseData(String example){
 
 			List tokens = [",",":", "*"]
