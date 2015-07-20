@@ -32,8 +32,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class StartUp
 {
-	public static final String ROOT_URI = "file:///Users/fiallega/Projects/Work/mdcgis/src/main/resources/"; //dev
-	//public static final String ROOT_URI = "file:///C:/mdcgis/bin"; //test
+	//public static final String ROOT_URI = "file:///Users/fiallega/Projects/Work/mdcgis/src/main/resources/"; //dev
+	public static final String ROOT_URI = "file:///C:/mdcgis/bin"; //test
 	
 	public static void main(String []argv)
 	{
@@ -41,16 +41,16 @@ public class StartUp
 		Component server = new Component();
 	    server.getServers().add(Protocol.HTTP, 9193);
 
-	    //String keyStorePath = "c:/mdcgis/conf/clientcert.jks"; //test
-	    String keyStorePath = "/Users/fiallega/Temp/clientcert.jks"; //dev
+	    String keyStorePath = "c:/mdcgis/conf/clientcert.jks"; //test
+	    //String keyStorePath = "/Users/fiallega/Temp/clientcert.jks"; //dev
 	    //String keyStorePath = "/Users/fiallega/Temp/mdcgisbad2.jks";
 
 	    
 		final Server httpsServer = server.getServers().add(Protocol.HTTPS, selfUrl().getPort());
 		httpsServer.getContext().getParameters().add("hostname", selfUrl().getHost());
 		httpsServer.getContext().getParameters().add("keystorePath", keyStorePath);
-		//httpsServer.getContext().getParameters().add("keystorePassword", "cirmservices"); //test
-		httpsServer.getContext().getParameters().add("keystorePassword", "password"); //dev
+		//httpsServer.getContext().getParameters().add("keystorePassword", "cirmservices"); 
+		httpsServer.getContext().getParameters().add("keystorePassword", "password"); //dev //test
 		httpsServer.getContext().getParameters().add("keyPassword", "password");
 		httpsServer.getContext().getParameters().add("disabledCipherSuites", "TLS_DHE_RSA_WITH_DES_CBC_SHA TLS_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA TLS_RSA_WITH_DES_CBC_SHA TLS_RSA_EXPORT_WITH_RC4_40_MD5 TLS_RSA_EXPORT_WITH_DES40_CBC_SHA");
 		httpsServer.getContext().getParameters().add("sslContextFactory", "org.restlet.ext.ssl.DefaultSslContextFactory");
