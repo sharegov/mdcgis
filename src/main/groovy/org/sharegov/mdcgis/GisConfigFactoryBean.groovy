@@ -15,10 +15,11 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
+import java.util.Map;
+
 import org.apache.commons.collections.BidiMap
 import org.apache.commons.collections.bidimap.DualHashBidiMap
 import org.springframework.beans.factory.config.AbstractFactoryBean
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -336,7 +337,7 @@ class GisConfigFactoryBean extends AbstractFactoryBean<GisConfig>{
      *  MDC.StreetMaint:[ONEWAY:[TF:To direction to the From direction, 
      *  						 FT:From direction to the To direction, 
      *                           B:Both Directions]]]
-	 */
+	 
 	private Map populateCodeTranslator(BidiMap layersUrls) {
 		
 		// Get the Data from the layers url.
@@ -378,4 +379,50 @@ class GisConfigFactoryBean extends AbstractFactoryBean<GisConfig>{
 											 'R':'THURSDAY',
 											 'F':'FRIDAY']]]
 	}
+	
+	*/
+	private Map populateCodeTranslator(BidiMap layersUrls) {
+		
+		// Get the Data from the layers url.
+		String f = 'json'
+		def query = [f:f]
+		Map data = httpService.request(layersUrls.values() as List, query)
+
+		// Process the data fields.domain.codeValues
+		Map data2 = [:]
+		data.each {key, value ->
+			List domains = value.fields.findAll {it.domain && it.domain != "null"}
+			if(domains)
+				data2 << [(key):domains]
+		}
+		
+		println "the data2 is ${data2}"
+
+		def data3 = data2.inject([:]){acc, key, value ->
+
+			List names =  value.name
+			List values = []
+			value.domain.codedValues.each {codes ->
+				 values << codes.inject([:]) {result, entry ->
+						result << [(entry.code):entry.name]
+					}
+			}
+
+			// Combine in one map two lists. names of attributes as keys
+			// and translations as values
+			def x = [names, values].transpose().inject([:]) { a, b -> a[b[0]] = b[1]; a }
+			acc << [(layersUrls.getKey(key)):x]
+
+		}
+		
+		// Add hardcoded data
+		data3 << ['MDC.GarbagePickupRoute':['COLLDAY':[1:'MON/THU', 2:'TUE/FRI']]]
+		data3 << ['pwd_lights':['ST_LIGHT':["LIGHT":'FPL - (800) 468-8243', 'CML': 'County Maintained Light']]]
+		data3 << ['Trash_Route':['TRASHDAY':['M':'MONDAY',
+											 'T':'TUESDAY',
+											 'W':'WEDNESDAY',
+											 'R':'THURSDAY',
+											 'F':'FRIDAY']]]
+	}
+	
 }
