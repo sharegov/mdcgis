@@ -239,7 +239,8 @@ class GisConfigFactoryBean extends AbstractFactoryBean<GisConfig>{
 			'MDC.TurkeyPointArea',
 			'NET_Areas',
 			'Code_Enforcement_Zones',
-			'PW_Maint_Zones']
+			'PW_Maint_Zones',
+			'MiamiNeighborhoods']
 		
 	}
 	
