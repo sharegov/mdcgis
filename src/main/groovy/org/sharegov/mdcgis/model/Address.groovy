@@ -68,6 +68,7 @@ class Address {
 	Integer turkeyPointAreaId
 	String  codeEnforcementZone
 	Integer publicWorksGridNumber
+	String  miamiNeighborhood
 	
 	//"StreetAddress",  "Intersection". Interesting to flag something as intersection
 	String addressType
