@@ -26,31 +26,27 @@ import org.restlet.Server;
 import org.restlet.data.Protocol;
 import org.restlet.ext.jaxrs.JaxRsApplication;
 import org.restlet.resource.Directory;
+import org.sharegov.mdcgis.utils.AppContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.ApplicationContext;
 
 
 
 public class StartUp
 {
-	public static final String ROOT_URI = "file:///Users/fiallega/Projects/Work/mdcgis/src/main/resources/"; //dev
-	//public static final String ROOT_URI = "file:///C:/mdcgis/bin"; //test //prod
-	
 	public static void main(String []argv)
 	{
-				
+		new ClassPathXmlApplicationContext("config.xml");
+		ApplicationContext ctx = AppContext.getApplicationContext();
+		final ApplicationConfig config  = (ApplicationConfig) ctx.getBean("APPLICATION_CONFIG");
+		
 		Component server = new Component();
 	    server.getServers().add(Protocol.HTTP, 9193);
 
-	    //String keyStorePath = "c:/mdcgis/conf/clientcert.jks"; //test //prod
-	    String keyStorePath = "/Users/fiallega/Temp/clientcert.jks"; //dev
-	    //String keyStorePath = "/Users/fiallega/Temp/mdcgisbad2.jks";
-
-	    
 		final Server httpsServer = server.getServers().add(Protocol.HTTPS, selfUrl().getPort());
 		httpsServer.getContext().getParameters().add("hostname", selfUrl().getHost());
-		httpsServer.getContext().getParameters().add("keystorePath", keyStorePath);
-		//httpsServer.getContext().getParameters().add("keystorePassword", "cirmservices"); // prod 
-		httpsServer.getContext().getParameters().add("keystorePassword", "password"); //dev //test
+		httpsServer.getContext().getParameters().add("keystorePath", config.getKeyStorePath());
+		httpsServer.getContext().getParameters().add("keystorePassword", config.getKeyStorePassword());
 		httpsServer.getContext().getParameters().add("keyPassword", "password");
 		httpsServer.getContext().getParameters().add("disabledCipherSuites", "TLS_DHE_RSA_WITH_DES_CBC_SHA TLS_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA TLS_RSA_WITH_DES_CBC_SHA TLS_RSA_EXPORT_WITH_RC4_40_MD5 TLS_RSA_EXPORT_WITH_DES40_CBC_SHA");
 		httpsServer.getContext().getParameters().add("sslContextFactory", "org.restlet.ext.ssl.DefaultSslContextFactory");
@@ -77,7 +73,7 @@ public class StartUp
 	    Application application = new Application(childCtx) {  
 	        @Override  
 	        public Restlet createInboundRoot() {  
-	                return new Directory(childCtx.createChildContext(), ROOT_URI);  
+	                return new Directory(childCtx.createChildContext(), config.getRootUri());  
 	        }  
 	    };
 	    server.getDefaultHost().attach("", application);	    
@@ -85,7 +81,7 @@ public class StartUp
 	    try
 		{	        
 	    	server.start();
-			new ClassPathXmlApplicationContext("config.xml");
+			
 				        
 		}
 		catch (Exception e)
