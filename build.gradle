@@ -4,10 +4,10 @@ apply plugin: 'java'
 
 tasks.withType(JavaCompile) {
 	options.fork = true
-	options.forkOptions.executable = '/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home'
+	options.forkOptions.executable = '/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home'
 }
 //compile.options.fork = true
-//compile.options.forkOptions.executable = '/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home'
+//compile.options.forkOptions.executable = '/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home'
 sourceCompatibility = 1.6
 
 version = 1.0
