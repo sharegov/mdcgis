@@ -16,7 +16,7 @@ version = 1.0
 repositories {
     mavenCentral()
 	maven {
-		url "http://maven.restlet.org"
+		url "https://maven.restlet.org"
     }
 }
 
