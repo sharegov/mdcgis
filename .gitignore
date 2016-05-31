@@ -2,7 +2,7 @@
 build/
 *.class
 bin/
-config.xml
+#config.xml
 configtest.xml
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
