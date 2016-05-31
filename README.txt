@@ -12,3 +12,4 @@ The files src/main/resources/config.xml and src/test/resources/configtest.xml ar
 to figure out a way to mask values.
 
 
+Trigger deployment
