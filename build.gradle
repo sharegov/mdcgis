@@ -11,8 +11,15 @@ apply plugin: 'java'
 //compile.options.forkOptions.executable = '/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home'
 sourceCompatibility = 1.6
 
-//version = 1.0
+archivesBaseName = 'mdcgis'
+if (project.hasProperty('projVersion')) {
+	project.version = project.projVersion
+  } else {
+	project.version = '1.0.0'
+  }
 
+
+  
 repositories {
     mavenCentral()
 	maven {
