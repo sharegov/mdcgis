@@ -304,7 +304,7 @@
 	<beans profile="test" >
 	
 		<bean id="APPLICATION_CONFIG" class="org.sharegov.mdcgis.ApplicationConfig">
-			<property name="rootUri" value="c:/mdcgis/conf/clientcert.jks"></property>
+			<property name="rootUri" value="file:///C:/mdcgis/bin"></property>
 			<property name="keyStorePath" value="c:/mdcgis/conf/clientcert.jks"></property>
 			<property name="keyStorePassword" value="password"></property>
 		</bean>
@@ -376,7 +376,7 @@
 	<beans profile="prod" >
 
 		<bean id="APPLICATION_CONFIG" class="org.sharegov.mdcgis.ApplicationConfig">
-			<property name="rootUri" value="c:/mdcgis/conf/clientcert.jks"></property>
+			<property name="rootUri" value="file:///C:/mdcgis/bin"></property>
 			<property name="keyStorePath" value="c:/mdcgis/conf/clientcert.jks"></property>
 			<property name="keyStorePassword" value="cirmservices"></property>
 		</bean>
