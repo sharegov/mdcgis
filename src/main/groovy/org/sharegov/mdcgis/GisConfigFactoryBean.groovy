@@ -206,8 +206,8 @@ class GisConfigFactoryBean extends AbstractFactoryBean<GisConfig>{
 			'MDC.SWMEnforcementZone',
 			'MDC.WCSBulkyBook',
 			'MDC.RoadImpactFeeDistricts',
-			'MDC.CommunityCouncil']
-
+			'MDC.CommunityCouncil',
+			'Fire_Prevention_Bureau_District']
 	}
 	
 	private List populateAddresslayers(){
