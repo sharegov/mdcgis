@@ -240,8 +240,8 @@ class GisConfigFactoryBean extends AbstractFactoryBean<GisConfig>{
 			'NET_Areas',
 			'Code_Enforcement_Zones',
 			'PW_Maint_Zones',
-			'MiamiNeighborhoods']
-		
+			'MiamiNeighborhoods',
+			'Fire_Prevention_Bureau_District']		
 	}
 	
 	private List populateCommonLocationsLayerNames(){

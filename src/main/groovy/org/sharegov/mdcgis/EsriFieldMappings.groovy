@@ -111,7 +111,8 @@ class EsriFieldMappings {
 	    'MDC.TurkeyPointArea':['ID':'turkeyPointAreaId'],
 		'Code_Enforcement_Zones':['CESECTNAME':'codeEnforcementZone'],
 		'PW_Maint_Zones':['GRID_NO': 'publicWorksGridNumber'],
-		'MiamiNeighborhoods':['LABEL':'miamiNeighborhood']]
+		'MiamiNeighborhoods':['LABEL':'miamiNeighborhood'],
+		'Fire_Prevention_Bureau_District':['FPBDISTID':'firePreventionBureauDistrict']]
 	
 	
 	public static final Map<String,String> propertyInfoAttributes =[
