@@ -69,6 +69,7 @@ class Address {
 	String  codeEnforcementZone
 	Integer publicWorksGridNumber
 	String  miamiNeighborhood
+	Integer firePreventionBureauDistrict
 	
 	//"StreetAddress",  "Intersection". Interesting to flag something as intersection
 	String addressType
