@@ -61,6 +61,7 @@ class Address {
 	String floodZone
 	String hurricaneEvacZone
 	String netOfficeName
+	Integer netAreaId
 	Integer houseDistrictId
 	Integer senateDistrictId
 	Integer electionsPrecinctId
