@@ -118,51 +118,51 @@ class EsriFieldMappings {
 	public static final Map<String,String> propertyInfoAttributes =[
 		'MDC.HomeOwnerAssociation':['NAME':'homeOwnerAssociationName'],
 		'MDC.Parcels':["FOLIO" :"parcelFolioNumber",
-		"ADDRESS" :"parcelInfoAddress",
-		"FROM_NUM" :"parcelInfoFromNumber",
-		"TO_NUM" :"parcelInfoToNumber",
-		"PRE_DIR" :"parcelInfoPreDir",
-		"ST_NAME" :"parcelInfoStreetName",
-		"ST_TYP" :"parcelInfoStreetType",
-		"ST_TYP2" :"parcelInfoStreetType2",
-		"SUF_DIR" :"parcelInfoSufDir",
-		"ZIP" :"parcelInfoZip",
-		"CONDO" :"parcelInfoCondo",
-		"MOD_DATE" :"parcelInfoModDate",
-		"PTXADDRESS" :"parcelInfoPtxAddress",
-		"MAIL_ADD1" :"parcelInfoMailAddress1",
-		"MAIL_ADD2" :"parcelInfoMailAddress2",
-		"MAIL_ADD3" :"parcelInfoMailAddress3",
-		"MAIL_ADD4" :"parcelInfoMailAddress4",
-		"MAIL_ZIP" :"parcelInfoMailZip",
-		"OWNER_L" :"parcelInfoOwnerLastName",
-		"OWNER_F" :"parcelInfoOwnerFirstName",
-		"CLUC" :"parcelInfoCluc",
-		"SLUC" :"parcelInfoSluc",
-		"PRI_ZONE" :"parcelInfoPriZone",
-		"SEC_ZONE" :"parcelInfoSecZone",
-		"BED" :"parcelInfoNumberOfBeds",
-		"BATH" :"parcelInfoNumberOfBaths",
-		"HALF_BATH" :"parcelInfoNumberOfHalfBaths",
-		"FLOORS" :"parcelInfoNumberOfFloors",
-		"UNITS" :"parcelInfoNumberOfUnits",
-		"BLDG_SQFT" :"parcelInfoBldgSqft",
+		"ADDRESS" :"parcelInfoAddress", //check
+		"FROM_NUM" :"parcelInfoFromNumber", //check
+		"TO_NUM" :"parcelInfoToNumber", //check
+		"PRE_DIR" :"parcelInfoPreDir", // check
+		"ST_NAME" :"parcelInfoStreetName", // check
+		"ST_TYP" :"parcelInfoStreetType", // check
+		"ST_TYP2" :"parcelInfoStreetType2", // check
+		"SUF_DIR" :"parcelInfoSufDir", // check
+		"ZIP" :"parcelInfoZip", // check
+		"CONDO_FLAG" :"parcelInfoCondo", // CONDO
+		"MOD_DATE" :"parcelInfoModDate", // check
+		"TRUE_SITE_ADDR" :"parcelInfoPtxAddress", //PTXADDRESS
+		"MAILING_BLOCK_LINE1" :"parcelInfoMailAddress1", // MAIL_ADD1
+		"MAILING_BLOCK_LINE2" :"parcelInfoMailAddress2", // MAIL_ADD2
+		"MAILING_BLOCK_LINE3" :"parcelInfoMailAddress3", // MAIL_ADD3
+		"MAILING_BLOCK_LINE4" :"parcelInfoMailAddress4", // MAIL_ADD4
+		"TRUE_MAILING_ZIP_CODE " :"parcelInfoMailZip", //MAIL_ZIP
+		"OWNER_L" :"parcelInfoOwnerLastName", // no corresponding TRUE_OWNER1, TRUE_OWNER2, TRUE_OWNER1
+		"OWNER_F" :"parcelInfoOwnerFirstName", // no corresponding TRUE_OWNER1, TRUE_OWNER2, TRUE_OWNER1
+		"CLUC_CODE_CUR" :"parcelInfoCluc", // CLUC
+		"SLUC_CODE_CUR" :"parcelInfoSluc", // SLUC
+		"PRIMARY_ZONE" :"parcelInfoPriZone", //PRI_ZONE
+		"SECONDARY_ZONE" :"parcelInfoSecZone", // SEC_ZONE
+		"BEDROOM_COUNT" :"parcelInfoNumberOfBeds", // BED
+		"BATHROOM_COUNT" :"parcelInfoNumberOfBaths", // BATH
+		"HALF_BATHROOM_COUNT" :"parcelInfoNumberOfHalfBaths", // HALF_BATH
+		"FLOOR_COUNT" :"parcelInfoNumberOfFloors", // FLOORS
+		"UNIT_COUNT" :"parcelInfoNumberOfUnits", // UNITS
+		"BUILDING_EFFECTIVE_AREA" :"parcelInfoBldgSqft", // BLDG_SQFT
 		"LOT_SIZE" :"parcelInfoLotSize",
-		"LOT_SIZ_UNIT" :"parcelInfoLotSizUnit",
-		"YR_BUILT" :"parcelInfoYearBuilt",
-		"SITE_FLAG" :"parcelInfoSiteFlag",
-		"STATE_EX1" :"parcelInfoStateEx1",
-		"STATE_EX2" :"parcelInfoStateEx2",
-		"CANCEL" :"parcelInfoCancel",
-		"ASSMT_YR1" :"parcelInfoAssmtYr1",
-		"WIDOW_AMT1" :"parcelInfoWidowAmt1",
-		"SENIOR_AMT1" :"parcelInfoSeniorAmt1",
-		"VET_AMT1" :"parcelInfoVetAmt1",
-		"DISABL_AMT1" :"parcelInfoDisablAmt1",
-		"HEX_VAL1" :"parcelInfoHexVal1",
-		"AGRI_VAL1" :"parcelInfoAgriVal1",
-		"EX_VAL1" :"parcelInfoExVal1",
-		"LAND_VAL1" :"parcelInfoLandValue1",
+		//"LOT_SIZ_UNIT" :"parcelInfoLotSizUnit", // gone -> anything available ?
+		"YEAR_BUILT" :"parcelInfoYearBuilt", //YR_BUILT
+		"SITE_FLAG" :"parcelInfoSiteFlag", // gone -> anything available ?
+		"STATE_EX_CODE_CUR" :"parcelInfoStateEx1", // STATE_EX1
+		"STATE_EX_CODE_2_CUR" :"parcelInfoStateEx2", // STATE_EX2
+		"CANCEL_FLAG" :"parcelInfoCancel", // CANCEL
+		"ASSESSMENT_YEAR_PRI" :"parcelInfoAssmtYr1", // ASSMT_YR1
+		"WIDOW_EX_VAL_PRI" :"parcelInfoWidowAmt1", // WIDOW_AMT1
+		"CNTY_SR_EX_VAL_PRI" :"parcelInfoSeniorAmt1", // SENIOR_AMT1
+		"VETERAN_EX_VAL_PRI" :"parcelInfoVetAmt1", // VET_AMT1
+		"DISABLED_EX_VAL_PRI" :"parcelInfoDisablAmt1",  // DISABL_AMT1
+		"HSTEAD_EX_VAL_PRI" :"parcelInfoHexVal1",  // HEX_VAL1
+		"AG_DIFFERENTIAL_VAL_PRI" :"parcelInfoAgriVal1",// AGRI_VAL1
+		"STATE_EX_VAL_PRI" :"parcelInfoExVal1", // EX_VAL1
+		"LAND_VAL_PRI" :"parcelInfoLandValue1",  // LAND_VAL1
 		"BLDG_VAL1" :"parcelInfoBuildingValue1",
 		"TOTAL_VAL1" :"parcelInfoTotalValue1",
 		"SITE_VALUE1" :"parcelInfoSiteValue1",
