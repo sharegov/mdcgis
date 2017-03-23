@@ -56,7 +56,19 @@ public class PropertyService {
 	private static Logger _log = LoggerFactory.getLogger(PropertyService.class);
 
 
+	@Trace(dispatcher= true)
+	@GET
+	@Path("/servicelayers/{layerName}")
+	@Produces("application/json")
+	public Json getLayerInformation(@PathParam("layerName") String layername){
 
+		Form queryParams = Request.getCurrent().getResourceRef().getQueryAsForm();
+		ApplicationContext applicationContext = AppContext.getApplicationContext();
+		AddressController addressController = (AddressController) applicationContext.getBean("ADDRESS_CONTROLLER");
+		JsonBuilder answer = addressController.getLayerInformation(layername, queryParams.getValuesMap());
+
+		return read(answer.toString());
+	}
 
 	@Trace(dispatcher = true)
 	@GET

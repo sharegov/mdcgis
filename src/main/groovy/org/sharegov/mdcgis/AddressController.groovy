@@ -63,6 +63,54 @@ class AddressController {
 	MailSender mailSender
 
 	/**
+	 * get recycling layer information.
+	 *
+	 * @param layerName
+	 * @param queryParams
+     * @return layer information else null.
+     */
+	public JsonBuilder getLayerInformation(String layerName, Map<String, String> queryParams ) {
+
+		// get Parameters
+		String address = queryParams["street"]
+		String zip = queryParams["zip"]
+		String municipalityId = queryParams["municipalityId"]
+		String municipality = queryParams["municipality"]
+		Integer intMunicipalityId
+
+		//clean municipalityId
+		intMunicipalityId = cleanMunicipalityId(municipalityId, municipality)
+
+		_log.info("getCandidates - getLayerInformation - address: " + address + " zip: " +
+				zip + " municipalityId: " + intMunicipalityId);
+
+		//Get X and Y Coordinates
+		Map answer = [:]
+		try {
+
+			Map xyCoordinates = addressService.getXYCoordinatesForAddress(address, zip, intMunicipalityId);
+			if (xyCoordinates == null) {
+				answer = [ok:false, message: "Could not find X,Y Coordinates", LayerInformation:[]];
+			}else {
+				Map data = getDataFromLayers([xyCoordinates.get("x"), xyCoordinates.get("y")], [layerName]);
+				answer = [ok: true, data: data]
+			}
+		}catch(RetrievalOfDataException rode) {
+			answer = [ok:false, message:rode.message, LayerInformation:[]]
+			//sendMail(rode.message)
+		}
+
+		_log.info("getLayerInformation - About to Finish - address: " + address +
+				" zip: " + zip + " with data " + answer)
+		_log.info("getLayerInformation - Finish - address: " + address +
+				" zip: " + zip + " with code " + answer.ok)
+
+		// Convert map to json object
+		JsonBuilder json = new JsonBuilder()
+		json.call(answer)
+	}
+
+	/**
 	 * It will find a list of possible address candidates for the given parameters
 	 * @param queryParams - street, zip, municipality, municipalityId.
 	 * The parameter municipality takes precedence over 
@@ -85,19 +133,7 @@ class AddressController {
 		Integer intMunicipalityId
 
 		// clean municipalityId
-		if (municipalityId == null)
-			intMunicipalityId = null
-		else
-			try {
-				intMunicipalityId = Integer.valueOf(municipalityId)
-			} catch (NumberFormatException nfe) {
-				intMunicipalityId = null
-			}
-
-		// municipality name takes precedence municipality id
-		if (municipality != null)
-			intMunicipalityId = (Integer) gisConfig.municipalities.getKey(
-					municipality.trim().toUpperCase());
+		intMunicipalityId = cleanMunicipalityId(municipalityId, municipality)
 
 		_log.info("getCandidates - Start - address: " + address + " zip: " +
 				zip + " municipalityId: " + intMunicipalityId);
@@ -125,6 +161,31 @@ class AddressController {
 		json.call(answer)
 	}
 
+	/**
+	 * Client and get Municipality ID
+	 *
+	 * @param municipalityId
+	 * @param municipality
+     * @return Municipality Id
+     */
+	private Integer cleanMunicipalityId(String municipalityId, String municipality) {
+		Integer intMunicipalityId
+		if (municipalityId == null)
+			intMunicipalityId = null
+		else
+			try {
+				intMunicipalityId = Integer.valueOf(municipalityId)
+			} catch (NumberFormatException nfe) {
+				intMunicipalityId = null
+			}
+
+		// municipality name takes precedence municipality id
+		if (municipality != null)
+			intMunicipalityId = (Integer) gisConfig.municipalities.getKey(
+					municipality.trim().toUpperCase());
+
+		return intMunicipalityId
+	}
 
 	/**
 	 * Get the address on the x,y.
