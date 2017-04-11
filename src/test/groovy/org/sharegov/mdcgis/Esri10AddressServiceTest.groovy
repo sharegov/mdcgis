@@ -60,7 +60,7 @@ class Esri10AddressServiceTest {
 			assert propertyInfo.parcelFolioNumber == '3059010240130'
 			assert propertyInfo.propertyType == 'UNDEFINED'
 			assert houseDistrictId == 116
-			assert senateDistrictId == 37
+			assert senateDistrictId == 40
 		}
 	}
 
@@ -74,12 +74,12 @@ class Esri10AddressServiceTest {
 							municipality:'MIAMI BEACH',parsedAddressHouse:'2001',
 							parcelFolioNumber:'0232341690001',
 							propertyType:'MULTI',numberOfUnits:113,
-							houseDistrictId:113,senateDistrictId:35],
+							houseDistrictId:113,senateDistrictId:38],
 					  [address: "7200 NW 177TH ST, 33015", x:879912.975,
 						  municipality: "UNINCORPORATED MIAMI-DADE",parsedAddressHouse:'7200',
 						  parcelFolioNumber:'3020110620001',
 						  propertyType:"MULTI",numberOfUnits:117,
-						  houseDistrictId:110,senateDistrictId:38]]
+						  houseDistrictId:110,senateDistrictId:36]]
 		
 		addressInput.eachWithIndex{input, counter  ->
 			Address addr = addressService.getAddress(input[0], input[1])
@@ -114,7 +114,7 @@ class Esri10AddressServiceTest {
 			assert propertyInfo.parcelFolioNumber == '0232341690630'
 			assert propertyInfo.propertyType == 'CONDO'
 			assert houseDistrictId == 113
-			assert senateDistrictId == 35
+			assert senateDistrictId == 38
 		}
 	}
 
@@ -134,7 +134,7 @@ class Esri10AddressServiceTest {
 			assert propertyInfo.parcelFolioNumber == '0232341690630'
 			assert propertyInfo.propertyType == 'CONDO'
 			assert houseDistrictId == 113
-			assert senateDistrictId == 35
+			assert senateDistrictId == 38
 		}
 	}
 
@@ -153,7 +153,7 @@ class Esri10AddressServiceTest {
 			assert propertyInfo.parcelFolioNumber == '0232341690630'
 			assert propertyInfo.propertyType == 'CONDO'
 			assert houseDistrictId == 113
-			assert senateDistrictId == 35
+			assert senateDistrictId == 38
 		}
 	}
 
@@ -216,7 +216,7 @@ class Esri10AddressServiceTest {
 			assert propertyInfo.parcelFolioNumber == '3059010240130'
 			assert propertyInfo.propertyType == 'UNDEFINED'
 			assert houseDistrictId == 116
-			assert senateDistrictId == 37
+			assert senateDistrictId == 40
 		}
 	}
 
@@ -231,8 +231,8 @@ class Esri10AddressServiceTest {
 		assert address.address == "2975 NE 206TH ST, 33180"
 		assert address.municipality == 'AVENTURA'
 		assert address.municipalityId == 28
-		assert address.location.x == 937870.0
-		assert address.location.y ==  594529.0
+		assert address.location.x == 937870.5
+		assert address.location.y ==  594521.2
 		assert address.addressApproximation == true
 		assert address.propertyInfo.parcelFolioNumber == '2812340064600'
 		assert address.propertyInfo.propertyType == 'UNDEFINED'
@@ -244,38 +244,40 @@ class Esri10AddressServiceTest {
 		]
 	}
 
+
 	@Test
 	public void testGetdAddressFromCoord_InParcelButNoStreetNumber2(){
 
 		Address address = addressService.getAddressFromCoord(898029, 512098.4)
 		assert address != null
 
-		assert address.address == "3361 RIVIERA DR, 33134"
+		assert address.address == "405 UNIVERSITY DR, 33134"
 		assert address.municipality == 'CORAL GABLES'
-		assert address.location.x == 898029.0
-		assert address.location.y ==  512098.0
-		assert address.addressApproximation == true
-		assert address.propertyInfo.parcelFolioNumber == '0341170040650'
+		assert address.location.x == 898469.263
+		assert address.location.y ==  512484.987
+		assert address.addressApproximation == false
+		assert address.propertyInfo.parcelFolioNumber == '0341170040220'
 		assert address.propertyInfo.propertyType == 'UNDEFINED'
 		assert address.streetsMaintenance ==  [
-			[streetName:'RIVIERA DR', maintenanceCode:'CI', maintenanceCodeAlias:'City maintained']
+			[streetName:'UNIVERSITY DR', maintenanceCode:'CI', maintenanceCodeAlias:'City maintained']
 		]
 		assert address.streetsLightMaintenance == [
-			[streetName:'RIVIERA DR',  maintenanceCode:'LIGHT', maintenanceCodeAlias:'FPL - (800) 468-8243']
+				[streetName:'ANASTASIA AVE', maintenanceCode:'LIGHT', maintenanceCodeAlias:'FPL - (800) 468-8243'], [streetName:'UNIVERSITY DR', maintenanceCode:'LIGHT', maintenanceCodeAlias:'FPL - (800) 468-8243']
 		]
 	}
-	
+
+
 	@Test
 	public void testGetdAddressFromCoord_InParcelButNoStreetNumberPlaceXYToPropertyXY(){
 
 		Address address = addressService.getAddressFromCoord(874845.306753479, 502312.591349639)
 		assert address != null
 
-		assert address.address == "5884 SW 87TH AVE, 33173"
+		assert address.address == "5860 SW 87TH AVE, 33173"
 		assert address.municipality == 'UNINCORPORATED MIAMI-DADE'
 		assert address.municipalityId == 30
-		assert address.location.x == 874839.0
-		assert address.location.y == 502347.0
+		assert address.location.x == 874841.0
+		assert address.location.y == 502306.3
 		assert address.addressApproximation == true
 		assert address.propertyInfo.parcelFolioNumber == '3040280000050'
 		assert address.propertyInfo.propertyType == 'UNDEFINED'
@@ -332,7 +334,7 @@ class Esri10AddressServiceTest {
 			assert propertyInfo.parcelFolioNumber == '3059010240130'
 			assert propertyInfo.propertyType == 'UNDEFINED'
 			assert houseDistrictId == 116
-			assert senateDistrictId == 37
+			assert senateDistrictId == 40
 		}
 	}
 
@@ -369,7 +371,7 @@ class Esri10AddressServiceTest {
 			assert propertyInfo.parcelFolioNumber == '0232341690630'
 			assert propertyInfo.propertyType == 'CONDO'
 			assert houseDistrictId == 113
-			assert senateDistrictId == 35
+			assert senateDistrictId == 38
 		}
 	}
 
@@ -378,19 +380,19 @@ class Esri10AddressServiceTest {
 		Address addr = addressService.getAddressByFolio("0341170040650")
 
 		addr.with{
-			assert address == "3361 RIVIERA DR, 33134"
+			assert address == "405 UNIVERSITY DR, 33134"
 			assert municipality == 'CORAL GABLES'
-			assert municipalityId == 3
-			assert location.x == 898029
-			assert location.y ==  512098.0
-			assert addressApproximation == true
-			assert propertyInfo.parcelFolioNumber == '0341170040650'
+			assert municipalityId == 03
+			assert location.x == 898469.263
+			assert location.y ==  512484.987
+			assert addressApproximation == false
+			assert ( propertyInfo.parcelFolioNumber == '0341170040650' || propertyInfo.parcelFolioNumber == '0341170040220')
 			assert propertyInfo.propertyType == 'UNDEFINED'
 			assert streetsMaintenance ==  [
-				[streetName:'RIVIERA DR', maintenanceCode:'CI', maintenanceCodeAlias:'City maintained']
+				[streetName:'UNIVERSITY DR', maintenanceCode:'CI', maintenanceCodeAlias:'City maintained']
 			]
 			assert streetsLightMaintenance == [
-				[streetName:'RIVIERA DR', maintenanceCode:'LIGHT', maintenanceCodeAlias:'FPL - (800) 468-8243']
+					[streetName:'ANASTASIA AVE', maintenanceCode:'LIGHT', maintenanceCodeAlias:'FPL - (800) 468-8243'], [streetName:'UNIVERSITY DR', maintenanceCode:'LIGHT', maintenanceCodeAlias:'FPL - (800) 468-8243']
 			]
 		}
 	}
@@ -662,6 +664,7 @@ class Esri10AddressServiceTest {
 		}
 	}
 
+
 	@Test
 	public void testGetCandidateAddresses_Intersections(){
 		def addressInput = 	[
@@ -691,7 +694,8 @@ class Esri10AddressServiceTest {
 				'SW 137TH PL & SW 42ND TER, 33175',
 				'SW 137TH CT & SW 42ND ST, 33175',
 				'SW 137TH CT & SW 42ND TER, 33175',
-				'SW 137TH AVE & SW 42ND ST, 33175'
+				'SW 137TH AVE & SW 42ND ST, 33175',
+				'SW 137TH AVE & NE 42ND AVE, 33033'
 			]
 		]
 
@@ -736,8 +740,8 @@ class Esri10AddressServiceTest {
 				'GALLOWAY RD & CORAL WAY, 33165'
 			],
 			[
-				'SW 137TH CT & BIRD DR, 33175',
-				'SW 137TH AVE & BIRD DR, 33175'
+				'SW 137TH CT & BIRD RD, 33175',
+				'SW 137TH AVE & BIRD RD, 33175'
 			]
 		]
 
@@ -769,7 +773,7 @@ class Esri10AddressServiceTest {
 			['8700 BIRD RD, 33165'],
 			['6700 CORAL WAY, 33155'],
 			['8700 N KENDALL DR, 33176'],
-			['8700 KILLIAN PKWY, 33176']
+			['8700 KILLIAN DR, 33176']
 		]
 		addressInput.eachWithIndex{address, counter ->
 			def candidateAddresses = addressService.getCandidateAddresses(address, "")
@@ -841,8 +845,8 @@ class Esri10AddressServiceTest {
 
 		assert candidateAddresses.size() == 1
 		Address address1 = candidateAddresses[0]
-		assert address1.propertyInfo.keySet().containsAll(EsriFieldMappings.propertyInfoAttributes['MDC.Parcels'].values())
-		assert address1.senateDistrictId == 37
+		assert address1.propertyInfo.keySet().containsAll(EsriFieldMappings.propertyInfoAttributes['MDC.PaParcel'].values())
+		assert address1.senateDistrictId == 40
 		assert address1.propertyInfo.propertyType == 'UNDEFINED'
 		assert address1.address == '11826 SW 97TH ST, 33186'
 		assert address1.addressApproximation == false
@@ -944,9 +948,9 @@ class Esri10AddressServiceTest {
 			assert utilityName == "MDWS"
 			assert floodZone == "AE"
 			assert hurricaneEvacZone == "E"
-			assert netOfficeName == "ALLAPATTAH"
+			assert netOfficeName == "Allapattah"
 			assert houseDistrictId == 111
-			assert senateDistrictId == 40
+			assert senateDistrictId == 37
 			assert electionsPrecinctId == 594
 			assert addressType == null
 			assert locatorName == "GeoAddress"
@@ -996,7 +1000,7 @@ class Esri10AddressServiceTest {
 			assert hurricaneEvacZone == "D"
 			assert netOfficeName == null
 			assert houseDistrictId == 111
-			assert senateDistrictId == 40
+			assert senateDistrictId == 37
 			assert electionsPrecinctId == 284
 			assert addressType == 'StreetAddress'
 			assert locatorName == "GeoAddress"

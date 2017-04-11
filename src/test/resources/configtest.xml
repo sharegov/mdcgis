@@ -231,13 +231,13 @@
 	<bean id="contextApplicationContextProvider" class="org.sharegov.mdcgis.utils.ApplicationContextProvider"></bean>
 
 
-		<bean id="GIS_CONFIG" class="org.sharegov.mdcgis.GisConfigFactoryBean">
+		<bean id="GIS_CONFIG" class="org.sharegov.mdcgis.GisConfigFactoryBeanLocal">
 		    <property name="connections">
 		        <map>
 		            
 		          <entry key="layer">
 		              <map>
-		                  <entry key="url" value="http://s0020284:80/individuals"/>
+		                  <entry key="url" value="https://s0020284.miamidade.gov/individuals"/>
 		                  <entry key="query">
 		                      <map>
 		                          <entry key="q" value="GeoLayer" />
@@ -248,7 +248,7 @@
 		          
 		          <entry key="locator">
 		              <map>
-		                  <entry key="url" value="http://s0020284:80/individuals"/>
+		                  <entry key="url" value="https://s0020284.miamidade.gov/individuals"/>
 		                  <entry key="query">
 		                      <map>
 		                          <entry key="q" value="GeoLocator" />
@@ -259,7 +259,7 @@
 	
 		           <entry key="gisService">
 		              <map>
-		                  <entry key="url" value="http://s0020284:80/individuals"/>
+		                  <entry key="url" value="https://s0020284.miamidade.gov/individuals"/>
 		                  <entry key="query">
 		                      <map>
 		                          <entry key="q" value="GisService" />
@@ -270,7 +270,7 @@
 		          
 		           <entry key="gisGeometryService">
 		              <map>
-		                  <entry key="url" value="http://s0020284:80/individuals"/>
+		                  <entry key="url" value="https://s0020284.miamidade.gov/individuals"/>
 		                  <entry key="query">
 		                      <map>
 		                          <entry key="q" value="GisGeometryService" />
@@ -280,12 +280,12 @@
 		          </entry>		          
 		           <entry key="miamiDadeCounty">
 		              <map>
-		                  <entry key="url" value="http://s0020284:80/individuals/Miami_Dade_County"/>
+		                  <entry key="url" value="https://s0020284.miamidade.gov/individuals/Miami_Dade_County"/>
 		              </map>
 		          </entry>		          	    
 		           <entry key="cityOfMiami">
 		              <map>
-		                  <entry key="url" value="http://s0020284:80/individuals/City_of_Miami"/>
+		                  <entry key="url" value="https://s0020284.miamidade.gov/individuals/City_of_Miami"/>
 		              </map>
 		          </entry>		          	    		          
 		          	          	          
