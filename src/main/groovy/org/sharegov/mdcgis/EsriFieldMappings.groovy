@@ -129,7 +129,7 @@ class EsriFieldMappings {
 							"TRUE_SITE_ZIP_CODE":"parcelInfoZip",
 							"CONDO_FLAG":"parcelInfoCondo",
 							"Missing10":"parcelInfoModDate",
-							"ADDRESS_WITH_UNIT":"parcelInfoPtxAddress",
+							"TRUE_SITE_ADDR":"parcelInfoPtxAddress",
 							"MAILING_BLOCK_LINE1":"parcelInfoMailAddress1",
 							"MAILING_BLOCK_LINE2":"parcelInfoMailAddress2",
 							"MAILING_BLOCK_LINE3":"parcelInfoMailAddress3",
