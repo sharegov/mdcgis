@@ -371,11 +371,6 @@ class PropertyInfoService {
 			return data;
 		}
 
-		//If the layer has attributes of these, then add new attribute called ADDRESS_WITH_UNIT
-		if(data.containsKey("TRUE_SITE_ADDR_NO_UNIT") && data.containsKey("TRUE_SITE_UNIT")){
-			data.ADDRESS_WITH_UNIT = data.TRUE_SITE_ADDR_NO_UNIT?:'' + " " + (data.TRUE_SITE_UNIT?:'')
-		}
-
 		//Parcel Sales origin1
 		if(data.containsKey("OR_BK_1") && data.containsKey("OR_PG_1")){
 			data.SALES_ORI1 = (data.OR_BK_1?:'') + " " + (data.OR_PG_1?:'')

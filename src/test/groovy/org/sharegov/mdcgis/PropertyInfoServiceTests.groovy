@@ -84,7 +84,7 @@ class PropertyInfoServiceTests {
 
 		Map propertyInfo = propertyInfoService.getPropertyInfo(937870, 594529)
 		propertyInfo.with {
-			assert parcelInfoPtxAddress == ""
+			assert parcelInfoPtxAddress == null
 			assert parcelInfoAddress == null
 			assert parcelInfoLegal == "HALLANDALE PARK NO 8 PB 20-49 LOT 15 BLK 18 & S1/2 OF ALLEY & N1/2 OF NE 206 ST LYG N & S & ADJ CLOSED PER R-2006-61 LOT SIZE 3966 SQ FT FAU 30 1234 006 4600"
 			assert parcelFolioNumber == "2812340064600"
@@ -103,7 +103,7 @@ class PropertyInfoServiceTests {
 		propertyInfo.with {
 			assert parcelFolioNumber == '0232341690630'
 			assert propertyType == 'CONDO'
-			assert parcelInfoPtxAddress == '2001 MERIDIAN AVE'
+			assert parcelInfoPtxAddress == '2001 MERIDIAN AVE 317'
 		}
 	}
 
