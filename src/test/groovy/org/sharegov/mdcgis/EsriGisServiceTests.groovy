@@ -174,7 +174,7 @@ class EsriGisServiceTests {
 		Map features = gisService.featuresInPolygon(geometry, urlPaGIS)
 		assert features[urlPaGIS].size() == 1
 		assert features[urlPaGIS][0].attributes.FOLIO == '3059010240130'
-		assert features[urlPaGIS][0].attributes.TRUE_SITE_ADDR == '11826 SW 97 ST'
+		assert features[urlPaGIS][0].attributes.TRUE_SITE_ADDR_NO_UNIT == '11826 SW 97 ST'
 	}
 
 	@Test

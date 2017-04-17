@@ -136,7 +136,7 @@ class PropertyInfoService {
 				if(!address)
 					address = getAddressForMultiAddressBuilding(folioNumber)
 
-				attributes['TRUE_SITE_ADDR'] = address
+				attributes['TRUE_SITE_ADDR_NO_UNIT'] = address
 			}
 		}
 		return attributes
@@ -241,7 +241,7 @@ class PropertyInfoService {
 
 		if (isCondo.toBoolean()) {
 			propertyType = PropertyType.CONDO
-		} else if ( (parentFolioNumber != folioNumber && folioNumber.endsWith("0001")) && referenceOnlyFlag.toBoolean()) {
+		} else if ( parentFolioNumber != folioNumber && folioNumber.endsWith("0001") && referenceOnlyFlag.toBoolean()) {
 			propertyType = PropertyType.MULTI
 		} else {
 			propertyType = PropertyType.UNDEFINED
@@ -262,7 +262,7 @@ class PropertyInfoService {
 	Map getStreetZipUnitByFolio(String folioNumber){
 
 		def data = getCleanPropertyInfoByFolio(folioNumber)
-		data?[street:data.TRUE_SITE_ADDR, zip:data.TRUE_SITE_ZIP_CODE, unit:data.TRUE_SITE_UNIT, x:data.X_COORD, y:data.Y_COORD]:null
+		data?[street:data.TRUE_SITE_ADDR_NO_UNIT, zip:data.TRUE_SITE_ZIP_CODE, unit:data.TRUE_SITE_UNIT, x:data.X_COORD, y:data.Y_COORD]:null
 
 	}
 
@@ -372,8 +372,8 @@ class PropertyInfoService {
 		}
 
 		//If the layer has attributes of these, then add new attribute called ADDRESS_WITH_UNIT
-		if(data.containsKey("TRUE_SITE_ADDR") && data.containsKey("TRUE_SITE_UNIT")){
-			data.ADDRESS_WITH_UNIT = data.TRUE_SITE_ADDR?:'' + " " + (data.TRUE_SITE_UNIT?:'')
+		if(data.containsKey("TRUE_SITE_ADDR_NO_UNIT") && data.containsKey("TRUE_SITE_UNIT")){
+			data.ADDRESS_WITH_UNIT = data.TRUE_SITE_ADDR_NO_UNIT?:'' + " " + (data.TRUE_SITE_UNIT?:'')
 		}
 
 		//Parcel Sales origin1

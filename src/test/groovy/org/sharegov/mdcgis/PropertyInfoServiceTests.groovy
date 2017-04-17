@@ -103,7 +103,7 @@ class PropertyInfoServiceTests {
 		propertyInfo.with {
 			assert parcelFolioNumber == '0232341690630'
 			assert propertyType == 'CONDO'
-			assert parcelInfoPtxAddress == '2001 MERIDIAN AVE 317'
+			assert parcelInfoPtxAddress == '2001 MERIDIAN AVE'
 		}
 	}
 
@@ -112,10 +112,6 @@ class PropertyInfoServiceTests {
 		try {
 			Map data = [:]
 			def result = propertyInfoService.getCondoPropertyInfo(data)
-			assert false
-
-			data = null
-			result = propertyInfoService.getCondoPropertyInfo(data)
 			assert false
 		}catch(RetrievalOfDataException e){
 			String message = "Unexpected error for uri http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/26/query | message: [error:[code:400, message:Failed to execute query., details:[]]]"
@@ -139,16 +135,15 @@ class PropertyInfoServiceTests {
 
 	@Test
 	public void testGetCleanPrpertyInfoByFolio_ConvertXYtoDoubleWith3Decimals(){
-		/*Do we need this ????!!!!!!!
+
 		propertyInfoService.getMetaClass().getRawPropertyInfoByFolio = {String folioNumber ->
 			[FOLIO:folioNumber,ZIP:33139,PTXADDR:'8215 SW 152ND AVE', X_COORD:' 840977.3247', Y_COORD:' 493244.9996']
 		}
-		*/
 
 		Map data = propertyInfoService.getCleanPropertyInfoByFolio("3049331130001")
 
-		assert data.X_COORD ==  840931.2
-		assert data.Y_COORD ==  493159.9
+		assert data.X_COORD ==  840977.325
+		assert data.Y_COORD ==  493245.0
 
 	}
 
@@ -157,7 +152,7 @@ class PropertyInfoServiceTests {
 		Map data = propertyInfoService.getRawPropertyInfoByFolio("3059010240130")
 		assert data.FOLIO == '3059010240130'
 		assert data.TRUE_SITE_ZIP_CODE == '33186-2722'
-		assert data.TRUE_SITE_ADDR == '11826 SW 97 ST'
+		assert data.TRUE_SITE_ADDR_NO_UNIT == '11826 SW 97 ST'
 		assert data.TRUE_SITE_UNIT?:"" == ""
 	}
 
@@ -166,7 +161,7 @@ class PropertyInfoServiceTests {
 		Map data = propertyInfoService.getRawPropertyInfoByFolio("0232341690630")
 		assert data.FOLIO == '0232341690630'
 		assert data.TRUE_SITE_ZIP_CODE == '33139-1503'
-		assert data.TRUE_SITE_ADDR == '2001 MERIDIAN AVE 317'
+		assert data.TRUE_SITE_ADDR_NO_UNIT == '2001 MERIDIAN AVE'
 		assert data.TRUE_SITE_UNIT == '317'
 	}
 
@@ -181,9 +176,9 @@ class PropertyInfoServiceTests {
 
 		]
 		def results = [
-			[ FOLIO:'0132310650001',TRUE_SITE_ADDR: '1750 N BAYSHORE DR', TRUE_SITE_ZIP_CODE:'33132-0000', TRUE_SITE_UNIT:''],
-			[ FOLIO:'0132310640001',TRUE_SITE_ADDR:'1900 N BAYSHORE DR', TRUE_SITE_ZIP_CODE:'33132-0000', TRUE_SITE_UNIT:''],
-			[ FOLIO:'0132310630001',TRUE_SITE_ADDR: '1800 N BAYSHORE DR', TRUE_SITE_ZIP_CODE:'33132-0000', TRUE_SITE_UNIT:'']
+			[ FOLIO:'0132310650001',TRUE_SITE_ADDR_NO_UNIT: '1750 N BAYSHORE DR', TRUE_SITE_ZIP_CODE:'33132-0000', TRUE_SITE_UNIT:''],
+			[ FOLIO:'0132310640001',TRUE_SITE_ADDR_NO_UNIT:'1900 N BAYSHORE DR', TRUE_SITE_ZIP_CODE:'33132-0000', TRUE_SITE_UNIT:''],
+			[ FOLIO:'0132310630001',TRUE_SITE_ADDR_NO_UNIT: '1800 N BAYSHORE DR', TRUE_SITE_ZIP_CODE:'33132-0000', TRUE_SITE_UNIT:'']
 
 		]
 
@@ -193,7 +188,7 @@ class PropertyInfoServiceTests {
 
 			assert data.FOLIO == results[counter].FOLIO
 			assert data.TRUE_SITE_ZIP_CODE == results[counter].TRUE_SITE_ZIP_CODE
-			assert data.TRUE_SITE_ADDR == results[counter].TRUE_SITE_ADDR
+			assert data.TRUE_SITE_ADDR_NO_UNIT == results[counter].TRUE_SITE_ADDR_NO_UNIT
 			assert data.TRUE_SITE_UNIT?:'' == results[counter].TRUE_SITE_UNIT
 		}
 
@@ -202,7 +197,7 @@ class PropertyInfoServiceTests {
 	@Test
 	public void testGetRawPropertyInfoByFolio_BuildingMultiAddress(){
 		Map data = propertyInfoService.getRawPropertyInfoByFolio("3049331130001")
-		assert data.TRUE_SITE_ADDR == '8205- 8365 SW 152ND AVE'
+		assert data.TRUE_SITE_ADDR_NO_UNIT == '8205- 8365 SW 152ND AVE'
 		assert data.TRUE_SITE_ZIP_CODE == '33193-0000'
 		assert data.X_COORD == 840931.2
 		assert data.Y_COORD == 493159.9
@@ -229,7 +224,7 @@ class PropertyInfoServiceTests {
 	public void testGetStreetZipUnitByFolio_Condo(){
 		Map data = propertyInfoService.getStreetZipUnitByFolio("0232341690630")
 		assert data.zip == '33139-1503'
-		assert data.street == '2001 MERIDIAN AVE 317'
+		assert data.street == '2001 MERIDIAN AVE'
 		assert data.unit == "317"
 		assert data.x == 940512.0
 		assert data.y == 532760.3

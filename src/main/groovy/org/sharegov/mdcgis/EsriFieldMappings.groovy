@@ -118,7 +118,7 @@ class EsriFieldMappings {
 	public static final Map<String,String> propertyInfoAttributes =[
 			'MDC.HomeOwnerAssociation':['NAME':'homeOwnerAssociationName'],
 			'MDC.PaParcel':["FOLIO":"parcelFolioNumber",
-							"TRUE_SITE_ADDR":"parcelInfoAddress",
+							"TRUE_SITE_ADDR_NO_UNIT":"parcelInfoAddress",
 							"Missing1":"parcelInfoFromNumber",
 							"Missing2":"parcelInfoToNumber",
 							"Missing3":"parcelInfoPreDir",

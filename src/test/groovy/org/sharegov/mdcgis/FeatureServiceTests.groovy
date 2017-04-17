@@ -260,7 +260,7 @@ class FeatureServiceTests {
 		attributes.with {
 			assert FOLIO == "3059010240130"
 			assert PARENT_FOLIO == null
-			assert TRUE_SITE_ADDR == "11826 SW 97 ST"
+			assert TRUE_SITE_ADDR_NO_UNIT == "11826 SW 97 ST"
 		}
 	}
 	

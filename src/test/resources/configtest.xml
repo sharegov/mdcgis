@@ -231,7 +231,7 @@
 	<bean id="contextApplicationContextProvider" class="org.sharegov.mdcgis.utils.ApplicationContextProvider"></bean>
 
 
-		<bean id="GIS_CONFIG" class="org.sharegov.mdcgis.GisConfigFactoryBeanLocal">
+		<bean id="GIS_CONFIG" class="org.sharegov.mdcgis.GisConfigFactoryBean">
 		    <property name="connections">
 		        <map>
 		            

@@ -386,7 +386,7 @@ class Esri10AddressServiceTest {
 			assert location.x == 898469.263
 			assert location.y ==  512484.987
 			assert addressApproximation == false
-			assert ( propertyInfo.parcelFolioNumber == '0341170040650' || propertyInfo.parcelFolioNumber == '0341170040220')
+			assert ( propertyInfo.parcelFolioNumber == '0341170040220')
 			assert propertyInfo.propertyType == 'UNDEFINED'
 			assert streetsMaintenance ==  [
 				[streetName:'UNIVERSITY DR', maintenanceCode:'CI', maintenanceCodeAlias:'City maintained']
