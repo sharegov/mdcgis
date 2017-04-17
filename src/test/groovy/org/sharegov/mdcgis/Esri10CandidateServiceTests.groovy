@@ -313,32 +313,32 @@ class Esri10CandidateServiceTests {
 	public void testGetRawCandidates_PassIntegerMunicipality(){
 
 		def candidates = candidateService.getRawCandidates("SW 57th AVE & SW 72nd ST", "33143", 30)
-		assert candidates.candidates.size() == 2
+		assert candidates.candidates.size() == 1
 		
 		candidates = candidateService.getRawCandidates("SW 57th AVE & SW 72nd ST", null, 30)
 		assert candidates.candidates.size() == 1
 
 		candidates = candidateService.getRawCandidates("SW 57th AVE & SW 72nd ST", "33143", (Integer) null)
-		assert candidates.candidates.size() == 3
+		assert candidates.candidates.size() == 2
 		
 		candidates = candidateService.getRawCandidates("SW 57th AVE & SW 72nd ST", null, (Integer) null)
-		assert candidates.candidates.size() == 4
+		assert candidates.candidates.size() == 3
 	}
 	
 	@Test
 	public void testGetRawCandidates_PassStringMunicipality(){
 
 		def candidates = candidateService.getRawCandidates("SW 57th AVE & SW 72nd ST", "33143", "UNINCORPORATED MIAMI-DADE")
-		assert candidates.candidates.size() == 2
+		assert candidates.candidates.size() == 1
 		
 		candidates = candidateService.getRawCandidates("SW 57th AVE & SW 72nd ST", null, "UNINCORPORATED MIAMI-DADE")
 		assert candidates.candidates.size() == 1
 
 		candidates = candidateService.getRawCandidates("SW 57th AVE & SW 72nd ST", "33143", null)
-		assert candidates.candidates.size() == 3
+		assert candidates.candidates.size() == 2
 		
 		candidates = candidateService.getRawCandidates("SW 57th AVE & SW 72nd ST", null, null)
-		assert candidates.candidates.size() == 4
+		assert candidates.candidates.size() == 3
 	}
 	
 	@Test

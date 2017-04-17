@@ -401,7 +401,7 @@ class FeatureService {
 	 * @return Map - Return a map of properties for the property whose folio is folioNumber.
 	 * return null if folio does not exist
 	 * 
-	 * [MDC.PTXGIS.AREA:0, PERIMETER:0, PTXGIS_:709943, PTXGIS_ID:684378, FOLIO:3059010240130, 
+	 * [MDC.PaGIS.AREA:0, PERIMETER:0, PaGIS_:709943, PaGIS_ID:684378, FOLIO:3059010240130,
 	 * PARENT:3059010240130, CONDO:N, ZIP:33186, LU:10, X_COORD:857869.8, Y_COORD:488913.9, OBJECTID:709943 ...]
 	 *
 	 */
@@ -418,13 +418,13 @@ class FeatureService {
 					returnGeometry:false]
 
 		// query and extract the attributes
-		List features = queryFeatures('MDC.PTXGIS', query)['MDC.PTXGIS']
+		List features = queryFeatures('MDC.PaGIS', query)['MDC.PaGIS']
 		Map feature = features[0]
 		feature?.attributes		
 	}
 	
 	/**
-	 * The reason for this method is that certain building addresses dont show up in the MDC.PTXGIS 
+	 * The reason for this method is that certain building addresses dont show up in the MDC.PaGIS
 	 * layer so it can be found in the ADDRESS attribute here. 
 	 * @param folioNumber
 	 * @return Map - Return a map of properties for the property whose folio is folioNumber

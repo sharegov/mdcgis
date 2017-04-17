@@ -139,46 +139,46 @@ class FeatureServiceTests {
 	
 	@Test
 	public void testFeaturesInPolygon_SwitchKeyToLayerName(){
-		String url = gisConfig.layers["MDC.PTXGIS"]
+		String url = gisConfig.layers["MDC.PaGIS"]
 		Map rawResults = [(url):
-			[[attributes:['MDC.PTXGIS.AREA':0], geometry:[points:[[857869.813, 488913.906]]]]]]
+			[[attributes:['MDC.PaGIS.AREA':0], geometry:[points:[[857869.813, 488913.906]]]]]]
 		
-		Map results = ["MDC.PTXGIS":
-			[[attributes:['MDC.PTXGIS.AREA':0], geometry:[points:[[857869.813, 488913.906]]]]]]
+		Map results = ["MDC.PaGIS":
+			[[attributes:['MDC.PaGIS.AREA':0], geometry:[points:[[857869.813, 488913.906]]]]]]
 		
 		Map geometry = [rings:[[[857827.405,488961.478],[857908.642,488964.622],[857912.028,488852.544],[857832.004,488848.964],[857827.405,488961.478]]]]
 
 		featureService.gisService = [featuresInPolygon: {Object[] args -> rawResults}] as GisService
-		assert featureService.featuresInPolygon(geometry, 'MDC.PTXGIS') == results
+		assert featureService.featuresInPolygon(geometry, 'MDC.PaGIS') == results
 	}
 	
 	@Test
 	public void testFeaturesAttributesInPolygon_SwitchKeyToLayerName(){
-		String url = gisConfig.layers["MDC.PTXGIS"]
-		Map rawResults = [(url):['MDC.PTXGIS.AREA':0]]
+		String url = gisConfig.layers["MDC.PaGIS"]
+		Map rawResults = [(url):['MDC.PaGIS.AREA':0]]
 		
-		Map results = ["MDC.PTXGIS":['MDC.PTXGIS.AREA':0]]
+		Map results = ["MDC.PaGIS":['MDC.PaGIS.AREA':0]]
 				
 		Map geometry = [rings:[[[857827.405,488961.478],[857908.642,488964.622],[857912.028,488852.544],[857832.004,488848.964],[857827.405,488961.478]]]]
 
 		featureService.gisService = [featuresAttributesInPolygon: {Object[] args -> rawResults}] as GisService
-		assert featureService.featuresAttributesInPolygon(geometry, 'MDC.PTXGIS') == results
+		assert featureService.featuresAttributesInPolygon(geometry, 'MDC.PaGIS') == results
 		
 	}
 	
 	@Test
 	public void testFeaturesGeometryInPolygon_SwitchKeyToLayerName(){
-		String url = gisConfig.layers["MDC.PTXGIS"]
+		String url = gisConfig.layers["MDC.PaGIS"]
 		Map rawResults = [(url):
 			[points:[[857869.813, 488913.906]]]]
 		
-		Map results = ["MDC.PTXGIS":
+		Map results = ["MDC.PaGIS":
 			[points:[[857869.813, 488913.906]]]]
 		
 		Map geometry = [rings:[[[857827.405,488961.478],[857908.642,488964.622],[857912.028,488852.544],[857832.004,488848.964],[857827.405,488961.478]]]]
 
 		featureService.gisService = [featuresGeometryInPolygon: {Object[] args -> rawResults}] as GisService
-		assert featureService.featuresGeometryInPolygon(geometry, 'MDC.PTXGIS') == results
+		assert featureService.featuresGeometryInPolygon(geometry, 'MDC.PaGIS') == results
 	}
 	
 	
@@ -186,29 +186,29 @@ class FeatureServiceTests {
 	public void testFeaturesInPolygon_emptyGeometry(){
 		
 		Map geometry = [rings:[]]
-		Map features = featureService.featuresInPolygon(geometry, 'MDC.PTXGIS')
-		assert features == ['MDC.PTXGIS':[]]
+		Map features = featureService.featuresInPolygon(geometry, 'MDC.PaGIS')
+		assert features == ['MDC.PaGIS':[]]
 
 		geometry = null
-		features = featureService.featuresInPolygon(geometry, 'MDC.PTXGIS')
-		assert features == ['MDC.PTXGIS':[]]
+		features = featureService.featuresInPolygon(geometry, 'MDC.PaGIS')
+		assert features == ['MDC.PaGIS':[]]
 	}
 	
 		
 	@Test
 	public void testFeaturesInPolygon_QueryForGeometry() {
 		// x y for 2001 Meridian Ave
-		def geometry = featureService.featuresGeometryFromPointLayersIntersection("940512.0610576011", "532760.3259282038", ['MDC.Parcels'])
-		Map features = featureService.featuresInPolygon(geometry['MDC.Parcels'], 'MDC.PTXGIS')
-		assert features['MDC.PTXGIS'].size() == 113
+		def geometry = featureService.featuresGeometryFromPointLayersIntersection("940512.0610576011", "532760.3259282038", ['MDC.PaParcel'])
+		Map features = featureService.featuresInPolygon(geometry['MDC.PaParcel'], 'MDC.PaGIS')
+		assert features['MDC.PaGIS'].size() == 113
 	}
 	
 	@Test
 	public void testFeaturesInPolygon_QueryForLargeGeometry() {
 		// x y 
-		def geometry = featureService.featuresGeometryFromPointLayersIntersection("879912.9752018265", "582436.1347285807", ['MDC.Parcels'])
-		Map features = featureService.featuresInPolygon(geometry['MDC.Parcels'], 'MDC.PTXGIS')
-		assert features['MDC.PTXGIS'].size() == 117
+		def geometry = featureService.featuresGeometryFromPointLayersIntersection("879912.9752018265", "582436.1347285807", ['MDC.PaParcel'])
+		Map features = featureService.featuresInPolygon(geometry['MDC.PaParcel'], 'MDC.PaGIS')
+		assert features['MDC.PaGIS'].size() == 117
 	}
 
 	
@@ -259,8 +259,8 @@ class FeatureServiceTests {
 		Map attributes = featureService.propertyAttributesByFolio("3059010240130")
 		attributes.with {
 			assert FOLIO == "3059010240130"
-			assert PARENT == "3059010240130"
-			assert PTXADDRESS == "11826 SW 97 ST"
+			assert PARENT_FOLIO == null
+			assert TRUE_SITE_ADDR_NO_UNIT == "11826 SW 97 ST"
 		}
 	}
 	

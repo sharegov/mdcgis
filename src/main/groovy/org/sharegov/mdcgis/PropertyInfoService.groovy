@@ -41,16 +41,19 @@ class PropertyInfoService {
 	 * given (xCoord, yCoord)
 	 */
 	Map getPropertyInfo(Double xCoord, Double yCoord) {		
-		List layers = []		
+		List layers = []
 		
 		// Get data from intersecting layers with xCoord, yCoord
 		EsriFieldMappings.propertyInfoAttributes.each{key,value -> layers << key}
-		Map dataFromLayers = featureService.featuresFromPointLayersIntersection(xCoord as String, yCoord as String, layers) 
+		Map dataFromLayers = featureService.featuresFromPointLayersIntersection(xCoord as String, yCoord as String, layers)
 
 		// No property, return null
-		if (!dataFromLayers['MDC.Parcels']?.geometry)
+		if (!dataFromLayers['MDC.PaParcel']?.geometry)
 			return null
-		
+
+		// Get the property data in the case of condos from PaGIS
+		dataFromLayers['MDC.PaGIS'] = getCleanPropertyInfoByFolio(dataFromLayers['MDC.PaParcel'].FOLIO)
+
 		// Ensemble it	
 		buildPropertyInfo(dataFromLayers)
 	}
@@ -68,7 +71,7 @@ class PropertyInfoService {
 		Map dataFromLayers = featureService.featuresAttributesFromPointLayersIntersection(data?.xCoord as String, data?.yCoord as String, layers)
 		
 		// No property, return null
-		if (!dataFromLayers['MDC.Parcels'])
+		if (!dataFromLayers['MDC.PaParcel'])
 			return null
 			
 		// Get the folio for the unit. No folio -> no property -> return null	
@@ -77,13 +80,16 @@ class PropertyInfoService {
 			return null
 		
 		// Get the property data in the case of condos from PTXGIS	
-		dataFromLayers['MDC.PTXGIS'] = getCleanPropertyInfoByFolio(folio)
+		dataFromLayers['MDC.PaGIS'] = getCleanPropertyInfoByFolio(folio)
 		
 		// Ensemble it	
 		buildPropertyInfo(dataFromLayers)
+
 	}
-	
-	/**
+
+
+
+/**
 	 * Clean up of data coming from the getRawPropertyInfoByFolio should happen here.
 	 * 1. convert X_COORD and Y_COORD into double rounded to 3 decimal places.
 	 * @param folioNumber
@@ -106,8 +112,8 @@ class PropertyInfoService {
 	/**
 	 * By searching on layer, obtain the property information for folioNumber.
 	 * If no folioNumber found return null. 
-	 * All folios including condos exist on PTXGIS layers which is a point layer. The issue is 
-	 * that PTXGIS does not contain address data for some buildings, so in case of building
+	 * All folios including condos exist on PAGIS layers which is a point layer. The issue is
+	 * that PAGIS does not contain address data for some buildings, so in case of building
 	 * a different layer, MDC.GeoProp needs to be query to obtain the address information.
 	 * @param folioNumber - The Folio Number to search by
 	 * @return Map - property information data for given folio. Return null if
@@ -121,7 +127,7 @@ class PropertyInfoService {
 		if (attributes){
 
 			// In case of a building look ADDR data in a different layer. It is nasty.
-			PropertyType pt = findPropertyType(['MDC.PTXGIS':attributes])
+			PropertyType pt = findPropertyType(['MDC.PaGIS':attributes])
 			if(pt == PropertyType.MULTI){
 				Map buildingAttributes = featureService.propertyAttributesForBuildingByFolio(folioNumber)
 				
@@ -129,12 +135,10 @@ class PropertyInfoService {
 				String address = buildingAttributes['ADDRESS']
 				if(!address)
 					address = getAddressForMultiAddressBuilding(folioNumber)
-				attributes['ADDRESS'] = address
-			} else {
-				attributes['ADDRESS'] = attributes['PTXADDR']
+
+				attributes['TRUE_SITE_ADDR_NO_UNIT'] = address
 			}
 		}
-		
 		return attributes
 	}
 
@@ -150,12 +154,12 @@ class PropertyInfoService {
 		Map propertyInfo = [:]
 
 		// get the geometry if it exists
-		Map geometry = dataFromLayers['MDC.Parcels'].geometry
+		Map geometry = dataFromLayers['MDC.PaParcel'].geometry
 		
 		// If there is data coming from PTXGIS, it should be used instead of Parcels data.
 		// Condo data is only available in PTXGIS.
-		if(dataFromLayers['MDC.PTXGIS'])
-			dataFromLayers['MDC.Parcels'] = dataFromLayers['MDC.PTXGIS']
+		if(dataFromLayers['MDC.PaGIS'])
+			dataFromLayers['MDC.PaParcel'] = dataFromLayers['MDC.PaGIS']
 
 		// map fields in data to fields in propertyInfo
 		EsriFieldMappings.propertyInfoAttributes.each{ layer,attributes ->
@@ -164,6 +168,10 @@ class PropertyInfoService {
 				
 			else {
 				Map data = dataFromLayers[layer]?.attributes?:dataFromLayers[layer]
+
+				//Add other composite fields
+				data = addAdditionalCompositeFields(data);
+
 				attributes.each {key, value ->
 					if(data?.containsKey(key)){
 						def trimValue = data[key]
@@ -182,9 +190,9 @@ class PropertyInfoService {
 		// add units on the building
 		if(propertyInfo.propertyType == "MULTI"){
 			// Intersect layer with Polygon.
-			List features = featureService.featuresAttributesInPolygon(geometry, 'MDC.PTXGIS',['CONDO_UNIT'])['MDC.PTXGIS']
+			List features = featureService.featuresAttributesInPolygon(geometry, 'MDC.PaGIS',['TRUE_SITE_UNIT'])['MDC.PaGIS']
 			// Process results to extract just unit numbers
-			propertyInfo.units = features.collect {it.CONDO_UNIT}.sort()
+			propertyInfo.units = features.collect {it.TRUE_SITE_UNIT}.sort()
 		}
 		
 		return propertyInfo
@@ -192,11 +200,10 @@ class PropertyInfoService {
 
 	/**
 	 * It finds out what the propertyType is given the data from layers.
-	 * Specifically, either the MDC.PTXGIS (point layer containing all properties including condos)
-	 * or the MDC.Parcels (polygon layer which does not contain condo data) need to be present
-	 * in order to determine the property type. It checks first for PTXGIS data. In both layers
-	 * the property to analyze is CONDO but unfortunately their value has different meaning. ie: 
-	 * 'C' in PTXGIS means CONDO but 'C' in Parcels means MULTI 
+	 * Specifically, either the MDC.PaGIS (point layer containing all properties including condos)
+	 * or the MDC.PaParcel (polygon layer which does not contain condo data) need to be present
+	 * in order to determine the property type. It checks first for PAGis data. In both layers
+	 * the property to analyze is CONDO
 	 * @param dataFromLayers - Map of layer names and map of values for that layer.
 	 * @return PropertyType - as defined by the enum.
 	 */
@@ -207,35 +214,38 @@ class PropertyInfoService {
 		if(!dataFromLayers)
 			return propertyType
 		
-		
-		if (dataFromLayers['MDC.PTXGIS']){
-			String propertyTypeFlag = 	dataFromLayers['MDC.PTXGIS'].attributes?.CONDO?:dataFromLayers['MDC.PTXGIS'].CONDO
-			switch (propertyTypeFlag){
-				case 'C':
-					propertyType = PropertyType.CONDO
-					break
-				case 'P':
-					propertyType = PropertyType.MULTI
-					break
-				case 'N':
-					propertyType = PropertyType.UNDEFINED
-					break
-				default:
-					propertyType = PropertyType.UNDEFINED
-
-			}
+		if (dataFromLayers['MDC.PaGIS']){
+			propertyType = getPropertyType(dataFromLayers, 'MDC.PaGIS')
 		}
-		else if (dataFromLayers['MDC.Parcels']) {
-			String propertyTypeFlag = 	dataFromLayers['MDC.Parcels'].attributes?.CONDO?:dataFromLayers['MDC.Parcels'].CONDO
-			switch (propertyTypeFlag){
-				case 'C':
-					propertyType = PropertyType.MULTI
-					break
-				default:
-					propertyType = PropertyType.UNDEFINED
-			}
+		else if (dataFromLayers['MDC.PaParcel']) {
+			propertyType = getPropertyType(dataFromLayers, 'MDC.PaParcel')
 		}
 
+		return propertyType
+	}
+
+	/**
+	 * Get Property type.
+	 *
+	 * @param dataFromLayers
+	 * @param layerName
+     * @return
+     */
+	private PropertyType getPropertyType(Map dataFromLayers, String layerName) {
+
+		PropertyType propertyType = PropertyType.UNDEFINED;
+		String isCondo = dataFromLayers[layerName].attributes?.CONDO_FLAG ?: dataFromLayers[layerName].CONDO_FLAG
+		String parentFolioNumber = dataFromLayers[layerName].attributes?.PARENT_FOLIO ?: dataFromLayers[layerName].PARENT_FOLIO
+		String folioNumber = dataFromLayers[layerName].attributes?.FOLIO ?: dataFromLayers[layerName].FOLIO
+		String referenceOnlyFlag = dataFromLayers[layerName].attributes?.REFERENCE_ONLY_FLAG ?: dataFromLayers[layerName].REFERENCE_ONLY_FLAG
+
+		if (isCondo.toBoolean()) {
+			propertyType = PropertyType.CONDO
+		} else if ( parentFolioNumber != folioNumber && folioNumber.endsWith("0001") && referenceOnlyFlag.toBoolean()) {
+			propertyType = PropertyType.MULTI
+		} else {
+			propertyType = PropertyType.UNDEFINED
+		}
 		return propertyType
 	}
 
@@ -252,15 +262,15 @@ class PropertyInfoService {
 	Map getStreetZipUnitByFolio(String folioNumber){
 
 		def data = getCleanPropertyInfoByFolio(folioNumber)
-		data?[street:data.ADDRESS, zip:data.ZIP, unit:data.CONDO_UNIT, x:data.X_COORD, y:data.Y_COORD]:null
+		data?[street:data.TRUE_SITE_ADDR_NO_UNIT, zip:data.TRUE_SITE_ZIP_CODE, unit:data.TRUE_SITE_UNIT, x:data.X_COORD, y:data.Y_COORD]:null
 
 	}
 
 
 	Map getStreetZipByCoord(Double xCoord, Double yCoord){
-		List layers = ['MDC.Parcels']
+		List layers = ['MDC.PaParcel']
 		Map dataFromLayers = featureService.featuresAttributesFromPointLayersIntersection(xCoord as String, yCoord as String, layers)
-		dataFromLayers['MDC.Parcels']?getStreetZipUnitByFolio(dataFromLayers['MDC.Parcels']['FOLIO']):null
+		dataFromLayers['MDC.PaParcel']?getStreetZipUnitByFolio(dataFromLayers['MDC.PaParcel']['FOLIO']):null
 	}
 
 	/**
@@ -277,15 +287,15 @@ class PropertyInfoService {
 
 
 	/**
-	 * Intersects (xCoord,yCoord) against the parcel layer MDC.Parcels.
+	 * Intersects (xCoord,yCoord) against the parcel layer MDC.PaParcel.
 	 * @param xCoord
 	 * @param yCoord
 	 * @return - true if intersection with parcel layer succeeds, false otherwise.
 	 */
 	Boolean isCoordInProperty(Double xCoord, Double yCoord){
-		List layers = ['MDC.Parcels']
+		List layers = ['MDC.PaParcel']
 		Map dataFromLayers = featureService.featuresAttributesFromPointLayersIntersection(xCoord as String, yCoord as String, layers)
-		dataFromLayers['MDC.Parcels']?true:false
+		dataFromLayers['MDC.PaParcel']?true:false
 	}
 
 	/**
@@ -340,27 +350,113 @@ class PropertyInfoService {
 		Map coords = folio2Coord(folio)
 
 		// Get Polygons for building.
-		def geometry = featureService.featuresGeometryFromPointLayersIntersection(coords.x as String, coords.y as String, ['MDC.Parcels'])['MDC.Parcels']		
+		def geometry = featureService.featuresGeometryFromPointLayersIntersection(coords.x as String, coords.y as String, ['MDC.PaParcel'])['MDC.PaParcel']
 
 		// Intersect layer with Polygon.
-		List features = featureService.featuresInPolygon(geometry, 'MDC.PTXGIS', ['CONDO_UNIT'])['MDC.PTXGIS']
+		List features = featureService.featuresInPolygon(geometry, 'MDC.PaGIS', ['TRUE_SITE_UNIT'])['MDC.PaGIS']
 
 		// Process results to extract just unit numbers
-		features.collect {it.CONDO_UNIT}.sort()
+		features.collect {it.TRUE_SITE_UNIT}.sort()
 
 	}
-	
+
+	/**
+	 * There are some fields needs to be concatenate for simplicity.
+	 *
+	 * @param data
+	 * @return
+	 */
+	Map addAdditionalCompositeFields(Map data) {
+		if(data == null){
+			return data;
+		}
+
+		//If the layer has attributes of these, then add new attribute called ADDRESS_WITH_UNIT
+		if(data.containsKey("TRUE_SITE_ADDR_NO_UNIT") && data.containsKey("TRUE_SITE_UNIT")){
+			data.ADDRESS_WITH_UNIT = data.TRUE_SITE_ADDR_NO_UNIT?:'' + " " + (data.TRUE_SITE_UNIT?:'')
+		}
+
+		//Parcel Sales origin1
+		if(data.containsKey("OR_BK_1") && data.containsKey("OR_PG_1")){
+			data.SALES_ORI1 = (data.OR_BK_1?:'') + " " + (data.OR_PG_1?:'')
+		}
+
+		//Parcel Sales origin2
+		if(data.containsKey("OR_BK_2") && data.containsKey("OR_PG_2")){
+			data.SALES_ORI2 = (data.OR_BK_2?:'' ) +" " + (data.OR_PG_2?:'')
+		}
+
+		//Parcel Sales origin3
+		if(data.containsKey("OR_BK_3") && data.containsKey("OR_PG_3")){
+			data.SALES_ORI3 = (data.OR_BK_3?:'') +" " + (data.OR_PG_3?:'')
+		}
+
+		return addMissingFiledsDeleteItLater(data);
+
+	}
+
+	/**
+	 * Those fileds are missing... as soon as it is avilable it is going to be add into Field Mapping
+	 * and then this method could be deleted.
+	 *
+	 * @return
+     */
+	Map addMissingFiledsDeleteItLater(Map data){
+
+		data.Missing1 =""
+		data.Missing2 =""
+		data.Missing3 =""
+		data.Missing4 =""
+		data.Missing5 =""
+		data.Missing6 =""
+		data.Missing7 =""
+		data.Missing10 =""
+		data.Missing14 =""
+		data.Missing15 =""
+		data.Missing16 =""
+		data.Missing17 =""
+		data.Missing18 =""
+		data.Missing19 =""
+		data.Missing20 =""
+		data.Missing22 =""
+		data.Missing23 =""
+		data.Missing24 =""
+		data.Missing25 =""
+		data.Missing26 =""
+		data.Missing27 =""
+		data.Missing28 =""
+		data.Missing29 =""
+		data.Missing30 =""
+		data.Missing31 =""
+
+		//temp... see the comments on filed mappings
+		data.BAD_1 = ""
+		data.BAD_2 = ""
+		data.BAD_3 = ""
+
+		//temp... see the comments on filed mappings
+		data.LEGAL1 = ""
+		data.LEGAL2 = ""
+		data.LEGAL3 = ""
+		data.LEGAL4 = ""
+		data.LEGAL5 = ""
+		data.LEGAL6 = ""
+
+		//Delete it later
+		data.DELETE_LOT_SIZE_UNIT =""
+		return data;
+	}
 	
 	List getUnitsInBuildingByCoords(String x, String y){
 		
 		// Get Polygons for building.
-		def geometry = featureService.featuresGeometryFromPointLayersIntersection(x, y, ['MDC.Parcels'])['MDC.Parcels']				
+		def geometry = featureService.featuresGeometryFromPointLayersIntersection(x, y, ['MDC.PaParcel'])['MDC.PaParcel']
 
 		// Intersect layer with Polygon.
-		List features = featureService.featuresInPolygon(geometry, 'MDC.PTXGIS', ['CONDO_UNIT'])['MDC.PTXGIS']
+		List features = featureService.featuresInPolygon(geometry, 'MDC.PaGIS', ['TRUE_SITE_UNIT'])['MDC.PaGIS']
 
 		// Process results to extract just unit numbers
-		features.collect {it.CONDO_UNIT}.sort()
+		features.collect {it.TRUE_SITE_UNIT}.sort()
 	}
 	
 	

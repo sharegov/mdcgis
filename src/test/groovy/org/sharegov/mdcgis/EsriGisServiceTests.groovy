@@ -134,7 +134,7 @@ class EsriGisServiceTests {
 	public void testFeaturesInCircle(){
 		String urlStreetMaint = gisConfig.layers["MDC.StreetMaint"]
 		List features = gisService.featuresInCircle(904028.0626120828, 534703.3748988137, 300, urlStreetMaint)[urlStreetMaint]
-		assert features.size() == 2
+		assert features.size() == 7
 	}
 	
 	@Test
@@ -169,44 +169,44 @@ class EsriGisServiceTests {
 	
 	@Test
 	public void testFeaturesInPolygon(){
-		String urlPTXGIS = gisConfig.layers["MDC.PTXGIS"]
+		String urlPaGIS = gisConfig.layers["MDC.PaGIS"]
 		Map geometry = [rings:[[[857827.405,488961.478],[857908.642,488964.622],[857912.028,488852.544],[857832.004,488848.964],[857827.405,488961.478]]]]
-		Map features = gisService.featuresInPolygon(geometry, urlPTXGIS)
-		assert features[urlPTXGIS].size() == 1
-		assert features[urlPTXGIS][0].attributes.FOLIO == '3059010240130'
-		assert features[urlPTXGIS][0].attributes.PTXADDR == '11826 SW 97 ST'
+		Map features = gisService.featuresInPolygon(geometry, urlPaGIS)
+		assert features[urlPaGIS].size() == 1
+		assert features[urlPaGIS][0].attributes.FOLIO == '3059010240130'
+		assert features[urlPaGIS][0].attributes.TRUE_SITE_ADDR_NO_UNIT == '11826 SW 97 ST'
 	}
 
 	@Test
 	public void testFeaturesInPolygon_emptyGeometry(){
 		Map geometry = [rings:[]]
-		String urlPTXGIS = gisConfig.layers["MDC.PTXGIS"]
-		Map features = gisService.featuresInPolygon(geometry, urlPTXGIS)
-		assert features[urlPTXGIS] == []
+		String urlPaGIS = gisConfig.layers["MDC.PaGIS"]
+		Map features = gisService.featuresInPolygon(geometry, urlPaGIS)
+		assert features[urlPaGIS] == []
 
 		geometry = null
-		features = gisService.featuresInPolygon(geometry, urlPTXGIS)
-		assert features[urlPTXGIS] == []
+		features = gisService.featuresInPolygon(geometry, urlPaGIS)
+		assert features[urlPaGIS] == []
 	}
-		
+
 	@Test
 	public void testFeaturesInPolygon_QueryForGeometry() {
 		// x y for 2001 Meridian Ave
-		String urlParcels = gisConfig.layers["MDC.Parcels"]
-		String urlPTXGIS = gisConfig.layers["MDC.PTXGIS"]
+		String urlParcels = gisConfig.layers["MDC.PaParcel"]
+		String urlPaGIS = gisConfig.layers["MDC.PaGIS"]
 		def geometry = gisService.featuresGeometryFromPointLayersIntersection("940512.061", "532760.323", [urlParcels])
-		Map features = gisService.featuresInPolygon(geometry[urlParcels], urlPTXGIS)
-		assert features[urlPTXGIS].size() == 113
+		Map features = gisService.featuresInPolygon(geometry[urlParcels], urlPaGIS)
+		assert features[urlPaGIS].size() == 113
 	}
 	
 	@Test
 	public void testFeaturesInPolygon_QueryForLargeGeometry() {
 		// x y
-		String urlParcels = gisConfig.layers["MDC.Parcels"]
-		String urlPTXGIS = gisConfig.layers["MDC.PTXGIS"]
+		String urlParcels = gisConfig.layers["MDC.PaParcel"]
+		String urlPaGIS = gisConfig.layers["MDC.PaGIS"]
 		def geometry = gisService.featuresGeometryFromPointLayersIntersection("879912.9752018265", "582436.1347285807", [urlParcels])
-		Map features = gisService.featuresInPolygon(geometry[urlParcels], urlPTXGIS)
-		assert features[urlPTXGIS].size() == 117
+		Map features = gisService.featuresInPolygon(geometry[urlParcels], urlPaGIS)
+		assert features[urlPaGIS].size() == 117
 	}
 
 	

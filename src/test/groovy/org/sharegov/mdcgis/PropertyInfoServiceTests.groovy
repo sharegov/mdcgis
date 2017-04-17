@@ -57,14 +57,9 @@ class PropertyInfoServiceTests {
 		Map propertyInfo = propertyInfoService.getPropertyInfo(857869.749956198, 488913.9375316277)
 		propertyInfo.with{
 			assert parcelFolioNumber == '3059010240130'
-			assert parcelInfoLegal1 == "GLEN COVE WEST SEC 1"
-			assert parcelInfoLegal2 == "PB 118-30"
-			assert parcelInfoLegal3 == "LOT 13 BKL 1"
-			assert parcelInfoLegal4 == "LOT SIZE 8800 SQ FT"
-			assert parcelInfoLegal5 == "OR 17101-5181 0296 1"
-			assert parcelInfoLegal6 == "OR 17101-5181 0296 00"
+			assert parcelInfoLegal == "GLEN COVE WEST SEC 1 PB 118-30 LOT 13 BKL 1 LOT SIZE 8800 SQ FT OR 17101-5181 0296 1"
 			assert parcelInfoPtxAddress == "11826 SW 97 ST"
-			assert parcelInfoAddress == "11826 SW 97TH ST"
+			assert parcelInfoAddress == "11826 SW 97 ST"
 			assert propertyType == 'UNDEFINED'
 		}
 	}
@@ -75,12 +70,7 @@ class PropertyInfoServiceTests {
 		// 2001 Meridian Ave x: 940512.0610576011, y:532760.3259282038
 		Map propertyInfo = propertyInfoService.getPropertyInfo(940512.0610576011, 532760.3259282038)
 		propertyInfo.with {
-			assert parcelInfoLegal1 == "THE MERIDIAN CONDO"
-			assert parcelInfoLegal2 == "MID-GOLF RE-SUB PB 30-19"
-			assert parcelInfoLegal3 == "LOTS 4 THRU 13 INC"
-			assert parcelInfoLegal4 == "AS DESC IN DEC OR 23419-1883"
-			assert parcelInfoLegal5 == "LOT SIZE 71579 SQ FT"
-			assert parcelInfoLegal6 == "FAU 02-3234-023-0030"
+			assert parcelInfoLegal == "THE MERIDIAN CONDO MID-GOLF RE-SUB PB 30-19 LOTS 4 THRU 13 INC AS DESC IN DEC OR 23419-1883 LOT SIZE 71579 SQ FT FAU 02-3234-023-0030"
 			assert parcelInfoPtxAddress == "2001 MERIDIAN AVE"
 			assert parcelInfoAddress == "2001 MERIDIAN AVE"
 			assert parcelFolioNumber == "0232341690001"
@@ -95,13 +85,8 @@ class PropertyInfoServiceTests {
 		Map propertyInfo = propertyInfoService.getPropertyInfo(937870, 594529)
 		propertyInfo.with {
 			assert parcelInfoPtxAddress == ""
-			assert parcelInfoAddress == ""
-			assert parcelInfoLegal1 == "HALLANDALE PARK NO 8 PB 20-49"
-			assert parcelInfoLegal2 == "LOT 15 BLK 18 & S1/2 OF ALLEY & N"
-			assert parcelInfoLegal3 == "NE 206 ST LYG N & S & ADJ CLOSED"
-			assert parcelInfoLegal4 == "PER R-2006-61"
-			assert parcelInfoLegal5 == "LOT SIZE 3966 SQ FT"
-			assert parcelInfoLegal6 == "FAU 30 1234 006 4600"
+			assert parcelInfoAddress == null
+			assert parcelInfoLegal == "HALLANDALE PARK NO 8 PB 20-49 LOT 15 BLK 18 & S1/2 OF ALLEY & N1/2 OF NE 206 ST LYG N & S & ADJ CLOSED PER R-2006-61 LOT SIZE 3966 SQ FT FAU 30 1234 006 4600"
 			assert parcelFolioNumber == "2812340064600"
 			assert propertyType == "UNDEFINED"
 		}
@@ -118,17 +103,22 @@ class PropertyInfoServiceTests {
 		propertyInfo.with {
 			assert parcelFolioNumber == '0232341690630'
 			assert propertyType == 'CONDO'
-			assert parcelInfoPtxAddress == '2001 MERIDIAN AVE 317'
+			assert parcelInfoPtxAddress == '2001 MERIDIAN AVE'
 		}
 	}
 
 	@Test
 	public void testGetCondoPropertyInfo_NoData(){
-		Map data = [:]
-		assert propertyInfoService.getCondoPropertyInfo(data) == null
-		data = null
-		assert propertyInfoService.getCondoPropertyInfo(data) == null
+		try {
+			Map data = [:]
+			def result = propertyInfoService.getCondoPropertyInfo(data)
+			assert false
+		}catch(RetrievalOfDataException e){
+			String message = "Unexpected error for uri http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/26/query | message: [error:[code:400, message:Failed to execute query., details:[]]]"
+			assert e.message == message
+		}
 	}
+
 
 	@Test
 	public void testGetCondoPropertyInfo_NoPropertyInXY(){
@@ -145,31 +135,34 @@ class PropertyInfoServiceTests {
 
 	@Test
 	public void testGetCleanPrpertyInfoByFolio_ConvertXYtoDoubleWith3Decimals(){
+
 		propertyInfoService.getMetaClass().getRawPropertyInfoByFolio = {String folioNumber ->
 			[FOLIO:folioNumber,ZIP:33139,PTXADDR:'8215 SW 152ND AVE', X_COORD:' 840977.3247', Y_COORD:' 493244.9996']
 		}
-		
+
 		Map data = propertyInfoService.getCleanPropertyInfoByFolio("3049331130001")
+
 		assert data.X_COORD ==  840977.325
-		assert data.Y_COORD ==  493245		
+		assert data.Y_COORD ==  493245.0
+
 	}
 
 	@Test
 	public void testGetRawPropertyInfoByFolio(){
 		Map data = propertyInfoService.getRawPropertyInfoByFolio("3059010240130")
 		assert data.FOLIO == '3059010240130'
-		assert data.ZIP == 33186
-		assert data.ADDRESS == '11826 SW 97 ST'
-		assert data.CONDO_UNIT == ""
+		assert data.TRUE_SITE_ZIP_CODE == '33186-2722'
+		assert data.TRUE_SITE_ADDR_NO_UNIT == '11826 SW 97 ST'
+		assert data.TRUE_SITE_UNIT?:"" == ""
 	}
 
 	@Test
 	public void testGetRawPropertyInfoByFolio_Condo(){
 		Map data = propertyInfoService.getRawPropertyInfoByFolio("0232341690630")
 		assert data.FOLIO == '0232341690630'
-		assert data.ZIP == 33139
-		assert data.ADDRESS == '2001 MERIDIAN AVE'
-		assert data.CONDO_UNIT == '317'
+		assert data.TRUE_SITE_ZIP_CODE == '33139-1503'
+		assert data.TRUE_SITE_ADDR_NO_UNIT == '2001 MERIDIAN AVE'
+		assert data.TRUE_SITE_UNIT == '317'
 	}
 
 	@Test
@@ -183,9 +176,9 @@ class PropertyInfoServiceTests {
 
 		]
 		def results = [
-			[ FOLIO:'0132310650001',ADDRESS: '1750 N BAYSHORE DR', ZIP:33132, CONDO_UNIT:''],
-			[ FOLIO:'0132310640001',ADDRESS:'1900 N BAYSHORE DR', ZIP:33132, CONDO_UNIT:''],
-			[ FOLIO:'0132310630001',ADDRESS: '1800 N BAYSHORE DR', ZIP:33132, CONDO_UNIT:'']
+			[ FOLIO:'0132310650001',TRUE_SITE_ADDR_NO_UNIT: '1750 N BAYSHORE DR', TRUE_SITE_ZIP_CODE:'33132-0000', TRUE_SITE_UNIT:''],
+			[ FOLIO:'0132310640001',TRUE_SITE_ADDR_NO_UNIT:'1900 N BAYSHORE DR', TRUE_SITE_ZIP_CODE:'33132-0000', TRUE_SITE_UNIT:''],
+			[ FOLIO:'0132310630001',TRUE_SITE_ADDR_NO_UNIT: '1800 N BAYSHORE DR', TRUE_SITE_ZIP_CODE:'33132-0000', TRUE_SITE_UNIT:'']
 
 		]
 
@@ -194,9 +187,9 @@ class PropertyInfoServiceTests {
 			Map data = propertyInfoService.getRawPropertyInfoByFolio(folio)
 
 			assert data.FOLIO == results[counter].FOLIO
-			assert data.ZIP == results[counter].ZIP
-			assert data.ADDRESS == results[counter].ADDRESS
-			assert data.CONDO_UNIT == results[counter].CONDO_UNIT
+			assert data.TRUE_SITE_ZIP_CODE == results[counter].TRUE_SITE_ZIP_CODE
+			assert data.TRUE_SITE_ADDR_NO_UNIT == results[counter].TRUE_SITE_ADDR_NO_UNIT
+			assert data.TRUE_SITE_UNIT?:'' == results[counter].TRUE_SITE_UNIT
 		}
 
 	}
@@ -204,12 +197,12 @@ class PropertyInfoServiceTests {
 	@Test
 	public void testGetRawPropertyInfoByFolio_BuildingMultiAddress(){
 		Map data = propertyInfoService.getRawPropertyInfoByFolio("3049331130001")
-		assert data.ADDRESS == '8255 SW 152ND AVE'
-		assert data.ZIP == 33193
-		assert data.X_COORD == 	"840977"
-		assert data.Y_COORD == "493244"
+		assert data.TRUE_SITE_ADDR_NO_UNIT == '8205- 8365 SW 152ND AVE'
+		assert data.TRUE_SITE_ZIP_CODE == '33193-0000'
+		assert data.X_COORD == 840931.2
+		assert data.Y_COORD == 493159.9
 	}
-	
+
 	@Test
 	public void testGetRawPropertyInfoByFolio_FolioNotExists(){
 		Map data = propertyInfoService.getRawPropertyInfoByFolio("4444444444")
@@ -219,21 +212,22 @@ class PropertyInfoServiceTests {
 	@Test
 	public void testGetStreetZipUnitByFolio(){
 		Map data = propertyInfoService.getStreetZipUnitByFolio("3059010240130")
-		assert data.zip == 33186
+		assert data.zip == '33186-2722'
 		assert data.street == '11826 SW 97 ST'
-		assert data.unit == ''
-		assert data.x == 857869.0
-		assert data.y == 488913.0
+		assert data.unit?:'' == ''
+		assert data.x == 857869.9
+		assert data.y == 488907.0
 	}
+
 
 	@Test
 	public void testGetStreetZipUnitByFolio_Condo(){
 		Map data = propertyInfoService.getStreetZipUnitByFolio("0232341690630")
-		assert data.zip == 33139
+		assert data.zip == '33139-1503'
 		assert data.street == '2001 MERIDIAN AVE'
 		assert data.unit == "317"
-		assert data.x == 940523.0
-		assert data.y == 532756.0
+		assert data.x == 940512.0
+		assert data.y == 532760.3
 		
 	}
 
@@ -258,10 +252,11 @@ class PropertyInfoServiceTests {
 
 	@Test void testGetFolio_House(){
 		String folioNumber = propertyInfoService.getFolio("11826 sw 97th street", "", "")
-		assert folioNumber == '3059010240130'
+		assert folioNumber == null
 
 		folioNumber = propertyInfoService.getFolio("11826 sw 97th street", null, null)
-		assert folioNumber == '3059010240130'
+		assert folioNumber == null
+
 	}
 
 	@Test void testGetFolio_AddressNotExists(){
@@ -302,32 +297,32 @@ class PropertyInfoServiceTests {
 	}
 
 	@Test
-	void testGetPropertyType_PTXGIS_Building(){
-		Map dataFromLayers = ['MDC.PTXGIS':[CONDO:'P'],'MDC.Parcels':[CONDO:'']]
+	void testGetPropertyType_PAGIS_Building(){
+		Map dataFromLayers = ['MDC.PaGIS':[CONDO_FLAG:'N',PARENT_FOLIO:null,FOLIO:'0232341690001',REFERENCE_ONLY_FLAG:'Y'],'MDC.PaParcel':[CONDO:'']]
 		assert propertyInfoService.findPropertyType(dataFromLayers) == PropertyInfoService.PropertyType.MULTI
 	}
 
 	@Test
-	void testGetPropertyType_PTXGIS_Condo(){
-		Map dataFromLayers = ['MDC.PTXGIS':[CONDO:'C'],'MDC.Parcels':[CONDO:'C']]
+	void testGetPropertyType_PAGIS_Condo(){
+		Map dataFromLayers = ['MDC.PaGIS':[CONDO_FLAG:'Y'],'MDC.PaParcel':[CONDO_FLAG:'Y']]
 		assert propertyInfoService.findPropertyType(dataFromLayers) == PropertyInfoService.PropertyType.CONDO
 	}
 
 	@Test
-	void testGetPropertyType_PTXGIS_Undefined(){
-		Map dataFromLayers = ['MDC.PTXGIS':[CONDO:'N'],'MDC.Parcels':[CONDO:'C']]
+	void testGetPropertyType_PAGIS_Undefined(){
+		Map dataFromLayers = ['MDC.PaGIS':[CONDO_FLAG:'N'],'MDC.PaParcel':[CONDO_FLAG:'Y']]
 		assert propertyInfoService.findPropertyType(dataFromLayers) == PropertyInfoService.PropertyType.UNDEFINED
 	}
 
 	@Test
 	void testGetPropertyType_Parcels_Building(){
-		Map dataFromLayers = ['MDC.Parcels':[CONDO:'C']]
-		assert propertyInfoService.findPropertyType(dataFromLayers) == PropertyInfoService.PropertyType.MULTI
+		Map dataFromLayers = ['MDC.PaParcel':[CONDO_FLAG:'Y']]
+		assert propertyInfoService.findPropertyType(dataFromLayers) == PropertyInfoService.PropertyType.CONDO
 	}
 
 	@Test
 	void testGetPropertyType_Parcels_Undefined(){
-		Map dataFromLayers = ['MDC.Parcels':[CONDO:'']]
+		Map dataFromLayers = ['MDC.PaParcel':[CONDO_FLAG:'']]
 		assert propertyInfoService.findPropertyType(dataFromLayers) == PropertyInfoService.PropertyType.UNDEFINED
 	}
 
@@ -349,20 +344,20 @@ class PropertyInfoServiceTests {
 		List units = propertyInfoService.getUnitsInBuildingByFolio("0232341690001")
 		assert units.size() == 113
 	}
-	
+
 	@Test
 	void testGetUnitsInBuildingByCoords(){
 		List units = propertyInfoService.getUnitsInBuildingByCoords("940512.0610576011", "532760.3259282038")
 		assert units.size() == 113
 
 	}
-	
+
 	@Test
 	void testGetAddressForMultiAddressBuilding(){
 		String address = propertyInfoService.getAddressForMultiAddressBuilding("3049331130001") 
-		assert  address == "8255 SW 152ND AVE"
+		assert  address == "8215 SW 152ND AVE"
 	}
-	
+
 	@Test
 	void testGetAddressForMultiAddressBuilding_NoBuilding(){
 		String address = propertyInfoService.getAddressForMultiAddressBuilding("0000")
@@ -431,4 +426,5 @@ class PropertyInfoServiceTests {
 	void testBuildPropertyInfo_BothMDCParcelsAndPTXGISExist(){
 
 	}
+
 }
