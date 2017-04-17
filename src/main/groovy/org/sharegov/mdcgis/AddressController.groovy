@@ -63,7 +63,7 @@ class AddressController {
 	MailSender mailSender
 
 	/**
-	 * get recycling layer information.
+	 * get layer information for given layer and address with municipality(id).
 	 *
 	 * @param layerName
 	 * @param queryParams
@@ -162,7 +162,7 @@ class AddressController {
 	}
 
 	/**
-	 * Client and get Municipality ID
+	 * Get Municipality ID
 	 *
 	 * @param municipalityId
 	 * @param municipality

@@ -45,12 +45,12 @@ class AddressService {
 	GisConfig gisConfig
 
 	/**
-	 * get X and Y coordinates of address.
+	 * get X and Y coordinates for given address. It will return EITHER X, Y coordinates OR null.
 	 *
 	 * @param street
 	 * @param zip
 	 * @param municipalityId
-     * @return X and Y Coordinates if it found only one candidate else null.
+     * @return candidate == 1 returns candidate's X and Y coordinates, if the candidate > 1 returns null.
      */
 	@Cacheable(value="xy-coordinates-for-address")
 	Map getXYCoordinatesForAddress(String street, String zip, Integer municipalityId = null){
