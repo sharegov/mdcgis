@@ -44,6 +44,35 @@ class AddressService {
 	CacheManager cacheManager
 	GisConfig gisConfig
 
+	/**
+	 * get X and Y coordinates for given address. It will return EITHER X, Y coordinates OR null.
+	 *
+	 * @param street
+	 * @param zip
+	 * @param municipalityId
+     * @return candidate == 1 returns candidate's X and Y coordinates, if the candidate > 1 returns null.
+     */
+	@Cacheable(value="xy-coordinates-for-address")
+	Map getXYCoordinatesForAddress(String street, String zip, Integer municipalityId = null){
+
+		// Get candidates
+		List candidates = candidateService.getCandidates(street, zip, municipalityId)
+
+		Map candidateXY = [:]
+
+		// One candidate. Build full candidate address.
+		if(candidates.size() == 1){
+			candidates.each {candidate ->
+				candidateXY << candidate.get("location")
+			}
+		} else if(candidates.size() > 1){
+			//More than 1 candidates. So return null
+			return null;
+		}
+
+		return candidateXY;
+	}
+
 
 	/**
 	 * Using the CandidateService get a fully populated Address Object

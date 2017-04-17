@@ -23,6 +23,14 @@
         overflowToDisk="false" >
         <sizeOfPolicy maxDepthExceededBehavior="abort"/>
     </cache>
+
+    <cache
+            name="xy-coordinates-for-address"
+            maxBytesLocalHeap="50M"
+            timeToIdleSeconds="600"
+            overflowToDisk="false">
+        <sizeOfPolicy maxDepthExceededBehavior="abort"/>
+    </cache>
         
     
 </ehcache>
