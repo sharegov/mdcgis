@@ -89,15 +89,17 @@ class AddressController {
 		try {
 
 			Map xyCoordinates = addressService.getXYCoordinatesForAddress(address, zip, intMunicipalityId);
-			if (xyCoordinates == null) {
+			if (xyCoordinates == null || xyCoordinates.size() == 0 ) {
 				answer = [ok:false, message: "Could not find X,Y Coordinates", LayerInformation:[]];
 			}else {
 				Map data = getDataFromLayers([xyCoordinates.get("x"), xyCoordinates.get("y")], [layerName]);
 				answer = [ok: true, data: data]
 			}
 		}catch(RetrievalOfDataException rode) {
-			answer = [ok:false, message:rode.message, LayerInformation:[]]
+			_log.info( [ok:false, message:rode.message, LayerInformation:[]] );
 			//sendMail(rode.message)
+
+			answer = [ok:false, message: "Could not find X,Y Coordinates", LayerInformation:[]];
 		}
 
 		_log.info("getLayerInformation - About to Finish - address: " + address +
