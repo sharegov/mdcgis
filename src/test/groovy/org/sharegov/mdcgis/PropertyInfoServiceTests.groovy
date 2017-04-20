@@ -15,6 +15,8 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
+import groovy.json.JsonBuilder
+
 import static org.junit.Assert.*;
 import groovy.json.JsonSlurper
 
@@ -30,6 +32,7 @@ import org.sharegov.mdcgis.utils.AppContext;
 class PropertyInfoServiceTests {
 
 	private PropertyInfoService propertyInfoService
+	private AddressController addressController
 
 	@Before
 	public void setUp() throws Exception {
@@ -38,11 +41,42 @@ class PropertyInfoServiceTests {
 		ApplicationContext ctx = AppContext.getApplicationContext();
 		propertyInfoService = (PropertyInfoService) ctx
 				.getBean("PROPERTYINFO_SERVICE");
+
+		addressController = (AddressController) ctx
+				.getBean("ADDRESS_CONTROLLER");
 	}
 	
 	@After
 	public void destroy() throws Exception{
 		((ClassPathXmlApplicationContext) AppContext.getApplicationContext()).close();
+	}
+
+	@Test
+	public void testGetLayerInformation_With_CorrectData(){
+		Map data = [street:"11826 SW 97th Street", zip:33186]
+		JsonBuilder result =addressController.getLayerInformation("MDC.RecyclingRoute", data);
+		assert result.getProperties().get("content").getAt("ok") == true
+	}
+
+	@Test
+	public void testGetLayerInformation_With_WrongZip(){
+		Map data = [street:"11826 SW 97th Street", zip:33133]
+		JsonBuilder result =addressController.getLayerInformation("MDC.RecyclingRoute", data);
+		assert result.getProperties().get("content").getAt("ok") == false
+	}
+
+	@Test
+	public void testGetLayerInformation_With_NoData(){
+		Map data = [street:"", zip:""]
+		JsonBuilder result =addressController.getLayerInformation("MDC.RecyclingRoute", data);
+		assert result.getProperties().get("content").getAt("ok") == false
+	}
+
+	@Test
+	public void testGetLayerInformation_With_WrongParam(){
+		Map data = [streettt:"", zippp:""]
+		JsonBuilder result =addressController.getLayerInformation("MDC.RecyclingRoute", data);
+		assert result.getProperties().get("content").getAt("ok") == false
 	}
 
 	@Test
