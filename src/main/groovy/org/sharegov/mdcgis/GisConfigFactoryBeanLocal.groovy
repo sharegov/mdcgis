@@ -105,7 +105,7 @@ class GisConfigFactoryBeanLocal extends AbstractFactoryBean<GisConfig>{
 "http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/13",
 
  "MDC.PaGIS":
-"http://s0142354.miamidade.gov/arcgis/rest/services/GIC/MapServer/62",
+"http://s0142354.miamidade.gov/arcgis/rest/services/Gic/MapServer/62",
 
  "MDC.GarbagePickupRoute":
 "http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/22",
@@ -150,7 +150,7 @@ class GisConfigFactoryBeanLocal extends AbstractFactoryBean<GisConfig>{
 "http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/28",
 
  "MDC.PaParcel":
-"http://s0142354.miamidade.gov/arcgis/rest/services/GIC/MapServer/60",
+"http://s0142354.miamidade.gov/arcgis/rest/services/Gic/MapServer/60",
 
  "MDC.FEMAFloodZone":
 "http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/21",
