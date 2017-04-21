@@ -309,7 +309,7 @@
 			<property name="keyStorePassword" value="password"></property>
 		</bean>
 	
-		<bean id="GIS_CONFIG" class="org.sharegov.mdcgis.GisConfigFactoryBean">
+		<bean id="GIS_CONFIG" class="org.sharegov.mdcgis.GisConfigFactoryBeanLocal">
 		    <property name="connections">
 		        <map>
 		            
@@ -381,7 +381,7 @@
 			<property name="keyStorePassword" value="cirmservices"></property>
 		</bean>
 		
-		<bean id="GIS_CONFIG" class="org.sharegov.mdcgis.GisConfigFactoryBean">
+		<bean id="GIS_CONFIG" class="org.sharegov.mdcgis.GisConfigFactoryBeanLocal">
 		    <property name="connections">
 		        <map>
 		            
