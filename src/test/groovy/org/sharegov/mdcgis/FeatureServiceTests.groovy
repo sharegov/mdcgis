@@ -277,7 +277,7 @@ class FeatureServiceTests {
 		Map attributes = featureService.propertyAttributesForBuildingByFolio("0232341690001")
 		attributes.with {
 			assert FOLIO == "0232341690001"
-			assert ADDRESS == "2001 MERIDIAN AVE"
+			assert address == "2001 MERIDIAN AVE"
 		}	
 	}
 	

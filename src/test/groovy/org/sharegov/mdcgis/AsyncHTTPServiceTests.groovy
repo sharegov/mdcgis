@@ -116,10 +116,10 @@ class AsyncHTTPServiceTests {
 	
 	@Test
 	public void testRequest2_NullQuery(){
-		def url = 'http://s0020269/individuals/predefined/configset'
+		def url = 'https://cirm.miamidade.gov/individuals/predefined/configset'
 		def query = null
 		def result = httpService.request(url, query)
-		assert result.size() == 28
+		assert result.size() == 29
 	}
 		
 	@Test
@@ -198,22 +198,22 @@ class AsyncHTTPServiceTests {
 		//def query = [f:f]		
 		//def result = httpService.request(url, query, groovyx.net.http.ContentType.HTML)
 
-		def url = 'https://gisweb.miamidade.gov/ArcGIS/rest/services/MD_Map/MapServer/29'
+		def url = 'https://s0142354.miamidade.gov/arcgis/rest/services/Gic/MapServer/28'
 		String f = 'json'
 		def query = [f:f]
 		def result = httpService.request(url, query, groovyx.net.http.ContentType.JSON)
 		
-		assert result.currentVersion == 10.05
+		assert result.currentVersion == 10.41
 	}
 	
 	@Test
 	public void testRequest_URLEncoded(){
-		def url = 'http://gisweb.miamidade.gov/ArcGIS/rest/services/MD_Map/MapServer/29'
+		def url = 'http://s0142354.miamidade.gov/arcgis/rest/services/Gic/MapServer/28'
 		String f = 'json'
 		def query = [f:f]
 		def result = httpService.request(url, query, groovyx.net.http.ContentType.JSON)
 		
-		assert result.currentVersion == 10.05
+		assert result.currentVersion == 10.41
 	}
 	
 	

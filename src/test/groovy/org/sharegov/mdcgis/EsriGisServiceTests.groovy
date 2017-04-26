@@ -233,9 +233,9 @@ class EsriGisServiceTests {
 		List features = results[url]
 
 		assert features.size() == 2
-		assert features[0].attributes.SNAME == "NW 31ST AVE"
+		assert features[0].attributes.SNAME == "NW 29TH ST"
 		assert features[0].attributes.MAINTCODE == 'CO'
-		assert features[1].attributes.SNAME == "NW 29TH ST"
+		assert features[1].attributes.SNAME == "NW 31ST AVE"
 		assert features[1].attributes.MAINTCODE == 'CO'
 	}
 	
