@@ -66,130 +66,130 @@ class GisConfigFactoryBeanLocal extends AbstractFactoryBean<GisConfig>{
 		_log.info("populateLayersUrls(): about to populate layers from local")
 				
 		Map layers = ["MDC.TurkeyPointArea":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/61",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/61",
 
 "MDC.PainterTerritory":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/37",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/37",
 
 "MDC.RecyclingRoute":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/43",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/43",
 
 "MDC.RoadImpactFeeDistricts":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/45",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/45",
 
 "MDC.ZipCode":
 "http://gisweb.miamidade.gov/ArcGIS/rest/services/MD_PropertySearch/MapServer/3",
 
  "MDC.HomeOwnerAssociation":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/26",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/26",
 
  "Code_Enforcement_Zones":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/10",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/10",
 
  "GarbageRoutes":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/23",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/23",
 
  "MDC.DSWMServiceArea":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/17",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/17",
 
  "MDC.SenateDistrict":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/47",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/47",
 
  "MDC.StreetMaint":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/51",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/51",
 
  "EnforcementMunicipalities":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/19",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/19",
 
  "Commission_Districts":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/13",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/13",
 
  "MDC.PaGIS":
-"http://311arcgis.miamidade.gov/arcgis/rest/services/Gic/MapServer/62",
+"http://s0142354.miamidade.gov/arcgis/rest/services/Gic/MapServer/62",
 
  "MDC.GarbagePickupRoute":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/22",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/22",
 
  "MDC.CommonLocations":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/14",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/14",
 
  "MDC.SWMEnforcementZone":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/52",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/52",
 
  "MDC.TMBoundary":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/53",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/53",
 
  "MDC.PTXTABS":
 "http://gisweb.miamidade.gov/ArcGIS/rest/services/MD_PropertySearch/MapServer/4",
 
  "MDC.WaterServiceArea":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/55",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/55",
 
  "MDC.NeighborhoodCodeOfficer":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/32",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/32",
 
  "Recycle_Routes":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/42",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/42",
 
  "MDC.OutReach":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/36",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/36",
 
  "MDC.MinimumHousing":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/30",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/30",
 
  "NewGarbRoutes":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/34",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/34",
 
  "pwd_lights":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/41",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/41",
 
  "MDC.WCSBulkyBook":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/56",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/56",
 
  "MDC.HurricaneEvacZone":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/28",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/28",
 
  "MDC.PaParcel":
-"http://311arcgis.miamidade.gov/arcgis/rest/services/Gic/MapServer/60",
+"http://s0142354.miamidade.gov/arcgis/rest/services/Gic/MapServer/60",
 
  "MDC.FEMAFloodZone":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/21",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/21",
 
  "MDC.PoliceGrid_poly":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/38",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/38",
 
  "NET_Areas":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/33",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/33",
 
  "MDC.CommissionDistrict":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/11",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/11",
 
  "Trash_Route":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/54",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/54",
 
  "MDC.CommunityCouncil":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/15",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/15",
 
  "MDC.SewerServiceArea":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/49",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/49",
 
  "MDC.HouseDistrict":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/27",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/27",
 
  "MDC.GeoProp":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/57",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/57",
 
  "MDC.Precinct":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/39",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/39",
 
  "MDC.GISSection":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/24",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/24",
 
  "MDC.Municipality_poly":
-"http://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/31",
+"http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/31",
 
  "PW_Maint_Zones":
-"http://311arcgis.miamidade.gov/arcgis/rest/services/Gic/MapServer/64"
+"http://s0142354.miamidade.gov/arcgis/rest/services/Gic/MapServer/64"
 
 ]
 		

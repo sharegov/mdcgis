@@ -75,11 +75,11 @@ class CommonLocationsServiceTest {
 	@Test
 	public void testGetRawCommonLocations_ById(){
 		// lets check a simple call
-		def locations =  commonLocationsService.getRawCommonLocations(845273)
+		def locations =  commonLocationsService.getRawCommonLocations(823965)
 		assert locations.size() == 1
 		def location = locations[0]
 		location.with {
-			location.OBJECTID == 845273
+			location.OBJECTID == 823965
 			location.LAYER == 'HOSPITAL'
 			location.NAME == 'South Florida Evaluation & Treatment Center'
 		}
@@ -91,8 +91,8 @@ class CommonLocationsServiceTest {
 				[
 					[NAME:'South Miami Hospital', ADDRESS:'7400 SW 62ND AV', CITY:'SOUTH MIAMI', ZIP:33143, LAYER:'LANDMARK',OBJECTID:2035],
 					[NAME:'SOUTH MIAMI HOSPITAL CCC', ADDRESS:'6200 SW 73RD ST', CITY:'SOUTH MIAMI', ZIP:33143, LAYER:'DAYCARE',OBJECTID:2073],
-					[NAME:'South Miami Hospital', ADDRESS:'6200 SW 73 Street', CITY:'Miami', ZIP:33143, LAYER:'HOSPITAL',,OBJECTID:2074],
-					[NAME:'SOUTH MIAMI HOSPITAL', ADDRESS:'6200 SW 73RD STREET', CITY:'SOUTH MIAMI', ZIP:33143, LAYER:'HURRICANE SHELTER',,OBJECTID:2075]
+					[NAME:'South Miami Hospital', ADDRESS:'6200 SW 73 Street', CITY:'Miami', ZIP:33143, LAYER:'HOSPITAL',OBJECTID:2074],
+					[NAME:'SOUTH MIAMI HOSPITAL', ADDRESS:'6200 SW 73RD STREET', CITY:'SOUTH MIAMI', ZIP:33143, LAYER:'HURRICANE SHELTER',OBJECTID:2075]
 				]
 
 		commonLocationsService.getMetaClass().getRawCommonLocations = {String name, List layerNames -> 
@@ -124,7 +124,7 @@ class CommonLocationsServiceTest {
 	public void testGetCommonLocationByNameAndLayer(){
 		def rawLocations =
 				[
-					[NAME:'South Miami Hospital', ADDRESS:'6200 SW 73 Street', CITY:'Miami', ZIP:33143, LAYER:'HOSPITAL',,OBJECTID:2035],
+					[NAME:'South Miami Hospital', ADDRESS:'6200 SW 73 Street', CITY:'Miami', ZIP:33143, LAYER:'HOSPITAL',OBJECTID:2035],
 				]
 
 		commonLocationsService.getMetaClass().getRawCommonLocations = {String name, List layerNames ->
@@ -187,7 +187,7 @@ class CommonLocationsServiceTest {
 	public void testGetCommonLocationById(){
 		def rawLocations =
 				[
-					[NAME:'South Miami Hospital', ADDRESS:'6200 SW 73 Street', CITY:'Miami', ZIP:33143, LAYER:'HOSPITAL',,OBJECTID:2035],
+					[NAME:'South Miami Hospital', ADDRESS:'6200 SW 73 Street', CITY:'Miami', ZIP:33143, LAYER:'HOSPITAL',OBJECTID:2035],
 				]
 
 		commonLocationsService.getMetaClass().getRawCommonLocations = {Long id ->
@@ -228,8 +228,8 @@ class CommonLocationsServiceTest {
 	@Test
 	public void testGetCommonLocationById_Match(){
 		
-		CommonLocation cl =  commonLocationsService.getCommonLocation(845349)
-		assert cl.id == 845349
+		CommonLocation cl =  commonLocationsService.getCommonLocation(823841)
+		assert cl.id == 823841
 		assert cl.layer == 'ADULT LIVING FACILITY'
 		assert cl.name == "Cartaya Group Home,Corp II"
 
@@ -238,12 +238,12 @@ class CommonLocationsServiceTest {
 	@Test
 	public void testGetRawPollingLocationByPrecinct(){
 		Map pollingPlace = commonLocationsService.getRawPollingLocationByPrecinct("156.0")
-		assert pollingPlace.name == "C. Lawton McCall Community Center"
-		assert pollingPlace.address == "9617 Park Drive"
-		assert pollingPlace.municipality == "Miami Shores 33138"
+		assert pollingPlace.name == "Hubert O. Sibley K-8 Academy"
+		assert pollingPlace.address == "255 NW 115 St"
+		assert pollingPlace.municipality == "Miami 33168"
 		
 
-	}
+	};
 	
 	@Test
 	public void testGetRawPollingLocationByPrecinct_NullPrecinct(){
@@ -263,10 +263,10 @@ class CommonLocationsServiceTest {
 	@Test
 	public void testGetPollingLocationByPrecinct(){
 		String pollingPlace = commonLocationsService.getPollingLocationByPrecinct("156.0")
-		assert pollingPlace == "9617 Park Drive, Miami Shores 33138 (C. Lawton McCall Community Center)"
+		assert pollingPlace == "255 NW 115 St, Miami 33168 (Hubert O. Sibley K-8 Academy)"
 		
 		pollingPlace = commonLocationsService.getPollingLocationByPrecinct("156")
-		assert pollingPlace == "9617 Park Drive, Miami Shores 33138 (C. Lawton McCall Community Center)"
+		assert pollingPlace == "255 NW 115 St, Miami 33168 (Hubert O. Sibley K-8 Academy)"
 		
 		pollingPlace = commonLocationsService.getPollingLocationByPrecinct("asdfasd")
 		assert pollingPlace == ""
@@ -278,6 +278,6 @@ class CommonLocationsServiceTest {
 	@Test
 	public void testGetPollingLocationByPrecinct_156(){
 		String pollingPlace = commonLocationsService.getPollingLocationByPrecinct("156")
-		assert pollingPlace == "9617 Park Drive, Miami Shores 33138 (C. Lawton McCall Community Center)"
+		assert pollingPlace == "255 NW 115 St, Miami 33168 (Hubert O. Sibley K-8 Academy)"
 	}
 }
