@@ -65,7 +65,13 @@ class GisConfigFactoryBeanLocal extends AbstractFactoryBean<GisConfig>{
 		
 		_log.info("populateLayersUrls(): about to populate layers from local")
 				
-		Map layers = ["MDC.TurkeyPointArea":
+		Map layers = ["Fire_Prevention_Bureau_District":
+				 "http://s0142354.miamidade.gov/arcgis/rest/services/Gic/MapServer/67",
+
+"MiamiNeighborhoods":
+"http://s0142354.miamidade.gov/arcgis/rest/services/Gic/MapServer/66",
+
+"MDC.TurkeyPointArea":
 "http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/61",
 
 "MDC.PainterTerritory":
