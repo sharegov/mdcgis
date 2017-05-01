@@ -47,7 +47,7 @@ class GisConfigFactoryBeanTests {
 	
 	@Test
 	public void testLoadLayers(){
-		assert config.layers.size() == 42	//There is changes in the layers count???? Jorge...confirm
+		assert config.layers.size() == 44
 		assert config.locators.size() == 5
 		assert config.gisServices.size() == 9
 		assert config.municipalities.size() ==  35

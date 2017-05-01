@@ -84,7 +84,7 @@ class GisConfigFactoryBeanLocal extends AbstractFactoryBean<GisConfig>{
 "http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/45",
 
 "MDC.ZipCode":
-"http://gisweb.miamidade.gov/ArcGIS/rest/services/MD_PropertySearch/MapServer/3",
+"http://s0142354.miamidade.gov/arcgis/rest/services/Gic/MapServer/68",
 
  "MDC.HomeOwnerAssociation":
 "http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/26",
