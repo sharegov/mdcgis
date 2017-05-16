@@ -15,23 +15,13 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-import java.util.List;
-import java.util.Map;
-
 import groovy.json.JsonBuilder
-import net.sf.json.JSONNull
 import org.sharegov.mdcgis.model.Address
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.cache.Cache
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.Cacheable
-import org.springframework.context.ApplicationContext
-
-import org.sharegov.mdcgis.utils.AppContext;
-
-
 
 class AddressService {
 
@@ -43,6 +33,35 @@ class AddressService {
 	FeatureService featureService
 	CacheManager cacheManager
 	GisConfig gisConfig
+
+	/**
+	 * get PropertyInfo by folio.
+	 *
+	 * @param queryParam
+	 * @return PropertyInfo or error message with empty data.
+     */
+	JsonBuilder getPropertyInfo(Map queryParam ){
+
+		String folio = queryParam["folio"]
+		_log.info("AddressService - getPropertyInfo - folio: " + folio)
+		Map answer = [:]
+
+		try {
+			Map propertyInfo = propertyInfoService.getPropertyInfoByFolio(folio)
+			if(propertyInfo == null || propertyInfo.isEmpty()){
+				answer = [ok: false, message: "could not find PropertyInfo", data:[:]]
+			}else{
+				answer = [ok: true, data: propertyInfo]
+			}
+		}catch(RetrievalOfDataException rode){
+			_log.info([ok: false, message:rode.message, data:[:]])
+			answer = [ok: false, message: "could not find PropertyInfo", data:[:]]
+		}
+
+		_log.info("getPropertyInfo - About to finish with "+ answer.ok)
+		JsonBuilder json = new JsonBuilder();
+		json.call(answer)
+	}
 
 	/**
 	 * get X and Y coordinates for given address. It will return EITHER X, Y coordinates OR null.
@@ -458,7 +477,7 @@ class AddressService {
 		candidate.attributes.unit = unit;
 		Address addr = buildPartialAddressFromCandidate(candidate)
 
-		String folio = propertyInfoService.getFolio(addr.address.tokenize(",")[0].trim(), addr.address.tokenize(",")[1].trim(), unit)
+		String folio = propertyInfoService.getCondoFolio(addr.address.tokenize(",")[0].trim(), addr.address.tokenize(",")[1].trim(), unit)
 		if(!folio) return null
 
 		List layers = []

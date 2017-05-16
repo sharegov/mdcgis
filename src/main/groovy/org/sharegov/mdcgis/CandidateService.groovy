@@ -15,20 +15,8 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-
-import java.util.List;
-import java.util.Map;
-
-import org.sharegov.mdcgis.model.Address;
-
-
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext
-
-import org.sharegov.mdcgis.utils.AppContext;
-import org.sharegov.mdcgis.model.Address
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 abstract class CandidateService {
 

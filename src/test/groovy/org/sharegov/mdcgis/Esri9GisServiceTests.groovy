@@ -13,15 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package org.sharegov.mdcgis;
-
-import static org.junit.Assert.*;
-
-import org.junit.Test
-import org.junit.Before
-import org.sharegov.mdcgis.utils.AppContext
-import org.springframework.context.ApplicationContext
-import org.springframework.context.support.ClassPathXmlApplicationContext
+package org.sharegov.mdcgis
 
 class Esri9GisServiceTests {
 //

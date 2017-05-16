@@ -15,29 +15,24 @@
  ******************************************************************************/
 package org.sharegov.mdcgis;
 
-import static mjson.Json.make;
-import static mjson.Json.read;
-import groovy.json.JsonBuilder;
-
 import com.newrelic.api.agent.Trace;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.PathParam;
-
+import groovy.json.JsonBuilder;
 import mjson.Json;
-
 import org.restlet.Request;
 import org.restlet.data.Form;
 import org.sharegov.mdcgis.utils.AppContext;
-import org.springframework.context.ApplicationContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import java.util.HashMap;
+import java.util.Map;
+
+import static mjson.Json.read;
 
 /**
  * The PropertyService handles the requests from clients interested in GIS
@@ -55,6 +50,20 @@ public class PropertyService {
 
 	private static Logger _log = LoggerFactory.getLogger(PropertyService.class);
 
+
+	@Trace(dispatcher= true)
+	@GET
+	@Path("/getPropertyInfo")
+	@Produces("application/json")
+	public Json getPropertyInformation(){
+
+		Form queryParams = Request.getCurrent().getResourceRef().getQueryAsForm();
+		ApplicationContext applicationContext = AppContext.getApplicationContext();
+		AddressService addressService = (AddressService) applicationContext.getBean("ADDRESS_SERVICE");
+		JsonBuilder propertyInfo = addressService.getPropertyInfo(queryParams.getValuesMap());
+
+		return read(propertyInfo.toString());
+	}
 
 	@Trace(dispatcher= true)
 	@GET

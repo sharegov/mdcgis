@@ -15,13 +15,11 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-import java.util.Map;
-
 import org.apache.commons.collections.BidiMap
 import org.apache.commons.collections.bidimap.DualHashBidiMap
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.config.AbstractFactoryBean
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class GisConfigFactoryBean extends AbstractFactoryBean<GisConfig>{
 
@@ -107,11 +105,6 @@ class GisConfigFactoryBean extends AbstractFactoryBean<GisConfig>{
 			_log.info("${locator.hasName}: ${locator.hasUrl}")
 			locators << [(locator.hasName):locator['hasUrl']]
 		}
-		
-		// Fix in change from MD_Locator-20 to MD_Locator_75
-		//TODO: Change ontology configuration
-		locators.findAddressCandidates20 = "http://gisws.miamidade.gov/ArcGIS/rest/services/MDC_Locators/MD_Locator_75/GeocodeServer/findAddressCandidates"
-		
 		return locators
 	}
 	

@@ -15,9 +15,7 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-import static groovyx.net.http.ContentType.*
-
-import java.util.Map;
+import static groovyx.net.http.ContentType.XML;
 
 class PublicWorksService {
 

@@ -15,22 +15,17 @@
  ******************************************************************************/
 package org.sharegov.mdcgis;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.nio.CharBuffer;
+import mjson.Json;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
-
-import mjson.Json;
+import java.io.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.nio.CharBuffer;
 
 @javax.ws.rs.ext.Provider
 @javax.ws.rs.Consumes("application/json")

@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package org.sharegov.mdcgis;
+package org.sharegov.mdcgis
 
-import static org.junit.Assert.*;
-import org.junit.*;
+import org.junit.Test
 
 class UtilsTests {
 	

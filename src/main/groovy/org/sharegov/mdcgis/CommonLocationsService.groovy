@@ -15,15 +15,10 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext
-
-import org.sharegov.mdcgis.utils.AppContext;
 import org.sharegov.mdcgis.model.Address
 import org.sharegov.mdcgis.model.CommonLocation
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class CommonLocationsService {
 
@@ -89,24 +84,8 @@ class CommonLocationsService {
 		List layerNames = gisConfig.commonLocationsLayerNames.intersect(filterLayers)
 
 		// get data from common locations layer
-		def rawCommonLocations = getRawCommonLocations(name, layerNames)
-
-		CommonLocation commonLocation
-		if(rawCommonLocations.size() == 1) {
-
-			// call address service to get an address object
-
-			Address candidate = addressService.getAddress(rawCommonLocations[0]?.ADDRESS, rawCommonLocations[0]?.ZIP as String)
-			commonLocation = new CommonLocation(name:rawCommonLocations[0]?.NAME, layer:rawCommonLocations[0]?.LAYER, id:rawCommonLocations[0]?.OBJECTID)
-			commonLocation.address = candidate
-
-		} else
-			commonLocation = null
-
-		return commonLocation
-
+		return getCommonLocation(getRawCommonLocations(name, layerNames))
 	}
-
 
 	/**
 	 * returns a commonLocation matching the name and the layer with address fully populated.
@@ -117,26 +96,30 @@ class CommonLocationsService {
 	CommonLocation getCommonLocation(Long id){
 
 		// get data from common locations layer
-		def rawCommonLocations = getRawCommonLocations(id)
+		return getCommonLocation(getRawCommonLocations(id))
+	}
 
+	/**
+	 * Get Common Locations.
+	 *
+	 * @param rawCommonLocations
+	 * @return
+	 */
+	CommonLocation getCommonLocation(List<Map> rawCommonLocations) {
 		CommonLocation commonLocation
-		if(rawCommonLocations.size() == 1) {
+		if (rawCommonLocations.size() == 1) {
 
 			// call address service to get an address object
 
 			Address candidate = addressService.getAddress(rawCommonLocations[0]?.ADDRESS, rawCommonLocations[0]?.ZIP as String)
-			commonLocation = new CommonLocation(name:rawCommonLocations[0]?.NAME, layer:rawCommonLocations[0]?.LAYER, id:rawCommonLocations[0]?.OBJECTID)
-			commonLocation.address = candidate	
+			commonLocation = new CommonLocation(name: rawCommonLocations[0]?.NAME, layer: rawCommonLocations[0]?.LAYER, id: rawCommonLocations[0]?.OBJECTID)
+			commonLocation.address = candidate
 
 		} else
 			commonLocation = null
 
 		return commonLocation
-
 	}
-
-
-
 
 	/**
 	 * Searches on the common locations layer based on the following where clause:

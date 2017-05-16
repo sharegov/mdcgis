@@ -15,11 +15,8 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-import java.util.Map;
-
-import net.sf.json.JSONNull
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class PropertyInfoService {
 
@@ -75,7 +72,7 @@ class PropertyInfoService {
 			return null
 			
 		// Get the folio for the unit. No folio -> no property -> return null	
-		String folio = getFolio(data?.street, data?.zip, data?.unit)
+		String folio = getCondoFolio(data?.street, data?.zip, data?.unit)
 		if(!folio) 
 			return null
 		
@@ -87,7 +84,19 @@ class PropertyInfoService {
 
 	}
 
+	/**
+	 * Get Property information by Folio.
+	 *
+	 * @param folio
+	 * @return gets folio or returns null.
+     */
+	Map getPropertyInfoByFolio(String folio){
 
+		Map propertyLayers = ['MDC.HomeOwnerAssociation':null,
+							  'MDC.PaParcel':null,
+							  'MDC.PaGIS':getCleanPropertyInfoByFolio(folio)]
+		return buildPropertyInfo(propertyLayers)
+	}
 
 /**
 	 * Clean up of data coming from the getRawPropertyInfoByFolio should happen here.
@@ -154,10 +163,10 @@ class PropertyInfoService {
 		Map propertyInfo = [:]
 
 		// get the geometry if it exists
-		Map geometry = dataFromLayers['MDC.PaParcel'].geometry
+		Map geometry = dataFromLayers['MDC.PaParcel']?.geometry?:dataFromLayers['MDC.PaParcel']
 		
-		// If there is data coming from PTXGIS, it should be used instead of Parcels data.
-		// Condo data is only available in PTXGIS.
+		// If there is data coming from PaGIS, it should be used instead of Parcels data.
+		// Condo data is only available in PaGIS.
 		if(dataFromLayers['MDC.PaGIS'])
 			dataFromLayers['MDC.PaParcel'] = dataFromLayers['MDC.PaGIS']
 
@@ -169,8 +178,10 @@ class PropertyInfoService {
 			else {
 				Map data = dataFromLayers[layer]?.attributes?:dataFromLayers[layer]
 
-				//Add other composite fields
-				data = addAdditionalCompositeFields(data);
+				//Add other composite fields for only for PaGis and PaParcel layers
+				if(layer.equalsIgnoreCase("MDC.PaParcel") || layer.equalsIgnoreCase("MDC.PaGIS")){
+					data = addAdditionalCompositeFields(data);
+				}
 
 				attributes.each {key, value ->
 					if(data?.containsKey(key)){
@@ -184,17 +195,20 @@ class PropertyInfoService {
 			}
 		}
 
-		// populate propertyType
-		propertyInfo.propertyType = findPropertyType(dataFromLayers) as String
-		
-		// add units on the building
-		if(propertyInfo.propertyType == "MULTI"){
-			// Intersect layer with Polygon.
-			List features = featureService.featuresAttributesInPolygon(geometry, 'MDC.PaGIS',['TRUE_SITE_UNIT'])['MDC.PaGIS']
-			// Process results to extract just unit numbers
-			propertyInfo.units = features.collect {it.TRUE_SITE_UNIT}.sort()
+		if( dataFromLayers['MDC.PaGIS'] || dataFromLayers['MDC.PaParcel']) {
+
+			// populate propertyType
+			propertyInfo.propertyType = findPropertyType(dataFromLayers) as String
+
+			// add units on the building
+			if (propertyInfo.propertyType == "MULTI") {
+				// Intersect layer with Polygon.
+				List features = featureService.featuresAttributesInPolygon(geometry, 'MDC.PaGIS', ['TRUE_SITE_UNIT'])['MDC.PaGIS']
+				// Process results to extract just unit numbers
+				propertyInfo.units = features.collect { it.TRUE_SITE_UNIT }.sort()
+			}
 		}
-		
+
 		return propertyInfo
 	}
 
@@ -299,7 +313,7 @@ class PropertyInfoService {
 	}
 
 	/**
-	 * Get the folio number of the property given the Street, Zip and Unit.
+	 * Get the folio number of the condo property given the Street, Zip and Unit.
 	 * If no Unit, the parent folio is returned which is either the folio of the 'building'
 	 * or the folio of a 'house'.
 	 * @param street
@@ -308,17 +322,15 @@ class PropertyInfoService {
 	 * @return String - Return the folio number of a property. Return null if no property 
 	 * is found.
 	 */
-	String getFolio(String street, String zip, String unit){
+	String getCondoFolio(String street, String zip, String unit){
 
 		def query = [
 					'myAddress':street,
 					'myZipCode':zip,
 					'unit':unit]
 
-		String url = 'http://gisws.miamidade.gov/gisaddress/condo.asmx/CondoAddressZip'
-
-		// Make call to http client to get folio data
-		def condoFolios = httpService.request(url, query, groovyx.net.http.ContentType.XML)
+		// Make call to http client to get condo folio data
+		def condoFolios = httpService.request(gisConfig.gisServices['condoAddressZip'], query, groovyx.net.http.ContentType.XML)
 
 		// With a count of one the children folios gives the folio number
 		// With count bigger than one we are talking about a building so choose the parent folio.

@@ -13,40 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package org.sharegov.mdcgis;
+package org.sharegov.mdcgis
 
-import static org.junit.Assert.*;
-import groovyx.net.http.*;
-import net.sf.json.JSONObject
-import net.sf.json.JSONArray
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
+import org.sharegov.mdcgis.utils.AppContext
 import org.springframework.context.ApplicationContext
 import org.springframework.context.support.ClassPathXmlApplicationContext
-import org.sharegov.mdcgis.utils.AppContext;
-
-import groovyx.net.http.Method
-
-import java.util.concurrent.FutureTask
-import java.net.UnknownHostException
-
-import org.sharegov.mdcgis.AsyncHTTPService
-
-import javax.net.ssl.X509TrustManager
-import javax.net.ssl.SSLContext
-
-import java.security.cert.CertificateException
-import java.security.cert.X509Certificate
-
-import javax.net.ssl.TrustManager
-
-import java.security.SecureRandom
-
-import org.apache.http.conn.ssl.SSLSocketFactory
-import org.apache.http.conn.scheme.Scheme
-import org.apache.http.conn.scheme.SchemeRegistry
 
 class AsyncHTTPServiceTests {
 	

@@ -15,31 +15,16 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-
-
-
 import groovyx.net.http.ContentType
 import groovyx.net.http.EncoderRegistry
-import groovyx.net.http.URIBuilder
 import groovyx.net.http.Method
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
-	
-import net.sf.json.JSONObject
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import static groovyx.net.http.ContentType.*
-import static groovyx.net.http.Method.*
-
-import javax.net.ssl.X509TrustManager
-import javax.net.ssl.SSLContext
-import java.security.cert.CertificateException
-import java.security.cert.X509Certificate
-import javax.net.ssl.TrustManager
-import java.security.SecureRandom
-import org.apache.http.conn.ssl.SSLSocketFactory
-import org.apache.http.conn.scheme.Scheme
-import org.apache.http.conn.scheme.SchemeRegistry
+import static groovyx.net.http.ContentType.JSON
+import static groovyx.net.http.ContentType.URLENC
+import static groovyx.net.http.Method.GET
+import static groovyx.net.http.Method.POST
 
 
 class AsyncHTTPService implements HTTPService {
@@ -51,17 +36,7 @@ class AsyncHTTPService implements HTTPService {
 	public void init(){
 		
 		// accept ssl self signed certificates (peer not authenticated - SSLPeerUnverifiedException
-		def sslContext = SSLContext.getInstance("SSL")
-		sslContext.init(null, [ new X509TrustManager() {
-			public X509Certificate[] getAcceptedIssuers() {null }
-			public void checkClientTrusted(X509Certificate[] certs, String authType) { }
-			public void checkServerTrusted(X509Certificate[] certs, String authType) { }
-		} ] as TrustManager[], new SecureRandom())
-
-		def sf = new SSLSocketFactory(sslContext)
-		sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
-		def httpsScheme = new Scheme("https", sf, 443)
-		http.client.connectionManager.schemeRegistry.register( httpsScheme )
+		http = Utils.buildHttpWithSelfSignedCertificate(http);
 	}
 	
 		
