@@ -59,8 +59,8 @@ public class PropertyService {
 
 		Form queryParams = Request.getCurrent().getResourceRef().getQueryAsForm();
 		ApplicationContext applicationContext = AppContext.getApplicationContext();
-		AddressService addressService = (AddressService) applicationContext.getBean("ADDRESS_SERVICE");
-		JsonBuilder propertyInfo = addressService.getPropertyInfo(queryParams.getValuesMap());
+		PropertyController propertyController = (PropertyController) applicationContext.getBean("PROPERTY_CONTROLLER");
+		JsonBuilder propertyInfo = propertyController.getPropertyInformation(queryParams.getValuesMap());
 
 		return read(propertyInfo.toString());
 	}

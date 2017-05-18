@@ -15,7 +15,6 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-import groovy.json.JsonBuilder
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -40,34 +39,6 @@ class Esri10AddressServiceTest {
 	@After
 	public void destroy() throws Exception{
 		((ClassPathXmlApplicationContext) AppContext.getApplicationContext()).close();
-	}
-
-	@Test
-	public void testGetFolioInformation_With_CorrectData(){
-		Map data = [folio:"3022060602360"]
-		JsonBuilder result = addressService.getPropertyInfo(data);
-		assert result.getProperties().get("content").getAt("ok") == true
-	}
-
-	@Test
-	public void testGetFolioInformation_With_WrongData(){
-		Map data = [folio:"000"]
-		JsonBuilder result = addressService.getPropertyInfo(data);
-		assert result.getProperties().get("content").getAt("ok") == false
-	}
-
-	@Test
-	public void testGetFolioInformation_With_NoData(){
-		Map data = [folio:""]
-		JsonBuilder result = addressService.getPropertyInfo(data);
-		assert result.getProperties().get("content").getAt("ok") == false
-	}
-
-	@Test
-	public void testGetFolioInformation_With_WrongParam(){
-		Map data = [foliooo:"3022060602360"]
-		JsonBuilder result = addressService.getPropertyInfo(data);
-		assert result.getProperties().get("content").getAt("ok") == false
 	}
 
 	@Test

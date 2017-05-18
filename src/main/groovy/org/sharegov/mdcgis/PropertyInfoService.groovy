@@ -31,6 +31,32 @@ class PropertyInfoService {
 	}
 
 	/**
+	 * Get Property information by Folio.
+	 *
+	 * @param folio
+	 * @return gets folio or returns null.
+	 */
+	Map getPropertyInformation(String folio){
+
+		List layers = []
+
+		// Get data from PaGIS
+		Map folioInfoByPaGIS = getCleanPropertyInfoByFolio(folio)
+
+		//No property, return null.
+		if(folioInfoByPaGIS == null || folioInfoByPaGIS.isEmpty()){
+			return null
+		}
+
+		// Get data from PaParcel and HomeOwnerAssociation by intersecting with xCoord, yCoord
+		EsriFieldMappings.propertyInfoAttributes.each{key,value -> layers << key}
+		Map dataFromLayers = featureService.featuresFromPointLayersIntersection(folioInfoByPaGIS?.X_COORD as String, folioInfoByPaGIS?.Y_COORD as String, layers)
+
+		dataFromLayers["MDC.PaGIS"] = folioInfoByPaGIS
+		return buildPropertyInfo(dataFromLayers)
+	}
+
+	/**
 	 * 
 	 * @param xCoord
 	 * @param yCoord
@@ -45,11 +71,11 @@ class PropertyInfoService {
 		Map dataFromLayers = featureService.featuresFromPointLayersIntersection(xCoord as String, yCoord as String, layers)
 
 		// No property, return null
-		if (!dataFromLayers['MDC.PaParcel']?.geometry)
+		if (!dataFromLayers['MDC.PaParcel']?.geometry || !dataFromLayers['MDC.PaParcel']?.attributes)
 			return null
 
 		// Get the property data in the case of condos from PaGIS
-		dataFromLayers['MDC.PaGIS'] = getCleanPropertyInfoByFolio(dataFromLayers['MDC.PaParcel'].FOLIO)
+		dataFromLayers['MDC.PaGIS'] = getCleanPropertyInfoByFolio(dataFromLayers['MDC.PaParcel'].attributes.FOLIO)
 
 		// Ensemble it	
 		buildPropertyInfo(dataFromLayers)
@@ -82,20 +108,6 @@ class PropertyInfoService {
 		// Ensemble it	
 		buildPropertyInfo(dataFromLayers)
 
-	}
-
-	/**
-	 * Get Property information by Folio.
-	 *
-	 * @param folio
-	 * @return gets folio or returns null.
-     */
-	Map getPropertyInfoByFolio(String folio){
-
-		Map propertyLayers = ['MDC.HomeOwnerAssociation':null,
-							  'MDC.PaParcel':null,
-							  'MDC.PaGIS':getCleanPropertyInfoByFolio(folio)]
-		return buildPropertyInfo(propertyLayers)
 	}
 
 /**
