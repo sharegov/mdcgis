@@ -15,28 +15,27 @@ class PropertyController {
     /**
      * get PropertyInfo by folio.
      *
-     * @param queryParam
+     * @param folio
      * @return PropertyInfo or error message with empty data.
      */
-    JsonBuilder getPropertyInformation(Map queryParam ){
+    JsonBuilder propertyByFolio(String folio){
 
-        String folio = queryParam["folio"]
-        _log.info("AddressService - getPropertyInformation - folio: " + folio)
+        _log.info("PropertyController - propertyByFolio - folio: " + folio)
         Map answer = [:]
 
         try {
-            Map propertyInfo = propertyInfoService.getPropertyInformation(folio)
+            Map propertyInfo = propertyInfoService.getPropertyInfo(folio)
             if(propertyInfo == null || propertyInfo.isEmpty()){
-                answer = [ok: false, message: "could not find PropertyInformation", data:[:]]
+                answer = [ok: false, message: "could not find propertyByFolio", data:[:]]
             }else{
                 answer = [ok: true, data: propertyInfo]
             }
         }catch(RetrievalOfDataException rode){
             _log.info([ok: false, message:rode.message, data:[:]])
-            answer = [ok: false, message: "could not find PropertyInformation", data:[:]]
+            answer = [ok: false, message: "could not find propertyByFolio", data:[:]]
         }
 
-        _log.info("getPropertyInformation - About to finish with "+ answer.ok)
+        _log.info("PropertyController - propertyByFolio - About to finish with "+ answer.ok)
         JsonBuilder json = new JsonBuilder();
         json.call(answer)
     }

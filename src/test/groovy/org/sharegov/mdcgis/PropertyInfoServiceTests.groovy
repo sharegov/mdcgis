@@ -46,22 +46,22 @@ class PropertyInfoServiceTests {
 	}
 
 	@Test
-	public void testGetPropertyInformation_with_WrongFolio() {
-		Map propertyInfo = propertyInfoService.getPropertyInformation('0000000000000')
+	public void testGetPropertyInfo_with_WrongFolio() {
+		Map propertyInfo = propertyInfoService.getPropertyInfo('0000000000000')
 		assert propertyInfo == null
 	}
 
 	@Test
-	public void testGetPropertyInformationByFolioNumber() {
-		Map propertyInfo = propertyInfoService.getPropertyInformation('3022060602360')
+	public void testGetPropertyInfoByFolioNumber() {
+		Map propertyInfo = propertyInfoService.getPropertyInfo('3022060602360')
 		propertyInfo.with {
 			assert parcelFolioNumber == '3022060602360'
 		}
 	}
 
 	@Test
-	public void testGetPropertyInformationByFolioNumber_Condo(){
-		Map propertyInfo = propertyInfoService.getPropertyInformation('0232341690630')
+	public void testGetPropertyInfoByFolioNumber_Condo(){
+		Map propertyInfo = propertyInfoService.getPropertyInfo('0232341690630')
 		propertyInfo.with {
 			assert parcelFolioNumber == '0232341690630'
 			assert propertyType == 'CONDO'

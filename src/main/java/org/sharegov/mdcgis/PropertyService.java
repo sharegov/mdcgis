@@ -53,14 +53,13 @@ public class PropertyService {
 
 	@Trace(dispatcher= true)
 	@GET
-	@Path("/getPropertyInfo")
+	@Path("/properties/{folio}")
 	@Produces("application/json")
-	public Json getPropertyInformation(){
+	public Json getPropertyInformation(@PathParam("folio") String folio){
 
-		Form queryParams = Request.getCurrent().getResourceRef().getQueryAsForm();
 		ApplicationContext applicationContext = AppContext.getApplicationContext();
 		PropertyController propertyController = (PropertyController) applicationContext.getBean("PROPERTY_CONTROLLER");
-		JsonBuilder propertyInfo = propertyController.getPropertyInformation(queryParams.getValuesMap());
+		JsonBuilder propertyInfo = propertyController.propertyByFolio(folio);
 
 		return read(propertyInfo.toString());
 	}

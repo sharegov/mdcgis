@@ -30,37 +30,44 @@ class PropertyControllerTest {
     }
 
     @Test
-    public void testGetFolioInformation_With_CorrectData(){
-        Map data = [folio:"3022060602360"]
-        JsonBuilder result = propertyController.getPropertyInformation(data);
+    public void testPropertyByFolio_With_HouseFolio(){
+        JsonBuilder result = propertyController.propertyByFolio("3059010240130");
+        assert result.getProperties().get("content").getAt("ok") == true
+        assert result.getProperties().get("content").getAt("data").parcelFolioNumber == "3059010240130"
+    }
+
+    @Test
+    public void testPropertyByFolio_With_BuildingFolio(){
+        JsonBuilder result = propertyController.propertyByFolio("0232341690001");
+        assert result.getProperties().get("content").getAt("ok") == true
+        assert result.getProperties().get("content").getAt("data").parcelFolioNumber == "0232341690001"
+    }
+
+    @Test
+    public void testPropertyByFolio_With_CondoFolioUnit(){
+        JsonBuilder result = propertyController.propertyByFolio("0232341690630");
+        assert result.getProperties().get("content").getAt("ok") == true
+        assert result.getProperties().get("content").getAt("data").parcelFolioNumber == "0232341690630"
+        assert result.getProperties().get("content").getAt("data").propertyType == "CONDO"
+        assert result.getProperties().get("content").getAt("data").parcelInfoCondoUnit == "317"
+    }
+
+    @Test
+    public void testPropertyByFolio_With_MultipleAddress(){
+        JsonBuilder result = propertyController.propertyByFolio("3049331130001")
         assert result.getProperties().get("content").getAt("ok") == true
     }
 
     @Test
-    public void testGetFolioInformation_With_CondoFolio(){
-        Map data = [folio:"0232341690001"]
-        JsonBuilder result = propertyController.getPropertyInformation(data);
-        assert result.getProperties().get("content").getAt("ok") == true
-    }
-
-    @Test
-    public void testGetFolioInformation_With_WrongData(){
-        Map data = [folio:"000"]
-        JsonBuilder result = propertyController.getPropertyInformation(data);
+    public void testPropertyByFolio_With_WrongData(){
+        JsonBuilder result = propertyController.propertyByFolio("000");
         assert result.getProperties().get("content").getAt("ok") == false
     }
 
     @Test
-    public void testGetFolioInformation_With_NoData(){
-        Map data = [folio:""]
-        JsonBuilder result = propertyController.getPropertyInformation(data);
+    public void testPropertyByFolio_With_NoData(){
+        JsonBuilder result = propertyController.propertyByFolio("");
         assert result.getProperties().get("content").getAt("ok") == false
     }
 
-    @Test
-    public void testGetFolioInformation_With_WrongParam(){
-        Map data = [foliooo:"3022060602360"]
-        JsonBuilder result = propertyController.getPropertyInformation(data);
-        assert result.getProperties().get("content").getAt("ok") == false
-    }
 }

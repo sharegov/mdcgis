@@ -36,7 +36,7 @@ class PropertyInfoService {
 	 * @param folio
 	 * @return gets folio or returns null.
 	 */
-	Map getPropertyInformation(String folio){
+	Map getPropertyInfo(String folio){
 
 		List layers = []
 
