@@ -28,7 +28,7 @@ class PropertyController {
             if(propertyInfo == null || propertyInfo.isEmpty()){
                 answer = [ok: false, message: "could not find propertyByFolio", data:[:]]
             }else{
-                answer = [ok: true, data: propertyInfo]
+                answer = [ok: true, data:["propertyInfo": propertyInfo ]]
             }
         }catch(RetrievalOfDataException rode){
             _log.info([ok: false, message:rode.message, data:[:]])
