@@ -33,23 +33,23 @@ class PropertyControllerTest {
     public void testPropertyByFolio_With_HouseFolio(){
         JsonBuilder result = propertyController.propertyByFolio("3059010240130");
         assert result.getProperties().get("content").getAt("ok") == true
-        assert result.getProperties().get("content").getAt("data").parcelFolioNumber == "3059010240130"
+        assert result.getProperties().get("content").getAt("data").propertyInfo.parcelFolioNumber == "3059010240130"
     }
 
     @Test
     public void testPropertyByFolio_With_BuildingFolio(){
         JsonBuilder result = propertyController.propertyByFolio("0232341690001");
         assert result.getProperties().get("content").getAt("ok") == true
-        assert result.getProperties().get("content").getAt("data").parcelFolioNumber == "0232341690001"
+        assert result.getProperties().get("content").getAt("data").propertyInfo.parcelFolioNumber == "0232341690001"
     }
 
     @Test
     public void testPropertyByFolio_With_CondoFolioUnit(){
         JsonBuilder result = propertyController.propertyByFolio("0232341690630");
         assert result.getProperties().get("content").getAt("ok") == true
-        assert result.getProperties().get("content").getAt("data").parcelFolioNumber == "0232341690630"
-        assert result.getProperties().get("content").getAt("data").propertyType == "CONDO"
-        assert result.getProperties().get("content").getAt("data").parcelInfoCondoUnit == "317"
+        assert result.getProperties().get("content").getAt("data").propertyInfo.parcelFolioNumber == "0232341690630"
+        assert result.getProperties().get("content").getAt("data").propertyInfo.propertyType == "CONDO"
+        assert result.getProperties().get("content").getAt("data").propertyInfo.parcelInfoCondoUnit == "317"
     }
 
     @Test
