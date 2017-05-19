@@ -16,18 +16,12 @@
 package org.sharegov.mdcgis
 
 import groovy.json.JsonBuilder
-
-import static org.junit.Assert.*;
-import groovy.json.JsonSlurper
-
-import java.util.Map;
-
-import org.junit.*;
-import org.sharegov.mdcgis.model.Address
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
+import org.sharegov.mdcgis.utils.AppContext
 import org.springframework.context.ApplicationContext
 import org.springframework.context.support.ClassPathXmlApplicationContext
-import org.sharegov.mdcgis.utils.AppContext;
-
 
 class PropertyInfoServiceTests {
 
@@ -49,6 +43,29 @@ class PropertyInfoServiceTests {
 	@After
 	public void destroy() throws Exception{
 		((ClassPathXmlApplicationContext) AppContext.getApplicationContext()).close();
+	}
+
+	@Test
+	public void testGetPropertyInfo_with_WrongFolio() {
+		Map propertyInfo = propertyInfoService.getPropertyInfo('0000000000000')
+		assert propertyInfo == null
+	}
+
+	@Test
+	public void testGetPropertyInfoByFolioNumber() {
+		Map propertyInfo = propertyInfoService.getPropertyInfo('3022060602360')
+		propertyInfo.with {
+			assert parcelFolioNumber == '3022060602360'
+		}
+	}
+
+	@Test
+	public void testGetPropertyInfoByFolioNumber_Condo(){
+		Map propertyInfo = propertyInfoService.getPropertyInfo('0232341690630')
+		propertyInfo.with {
+			assert parcelFolioNumber == '0232341690630'
+			assert propertyType == 'CONDO'
+		}
 	}
 
 	@Test
@@ -271,33 +288,33 @@ class PropertyInfoServiceTests {
 		assert data == null
 	}
 
-	@Test void testGetFolio(){
-		String folioNumber = propertyInfoService.getFolio("2001 Meridian Ave", "33139", "317")
+	@Test void testGetCondoFolio(){
+		String folioNumber = propertyInfoService.getCondoFolio("2001 Meridian Ave", "33139", "317")
 		assert folioNumber == '0232341690630'
 	}
 
-	@Test void testGetFolio_NoUnitGivenReturnBuildingFolio(){
-		String folioNumber = propertyInfoService.getFolio("2001 Meridian Ave", "33139", "")
+	@Test void testGetCondoFolio_NoUnitGivenReturnBuildingFolio(){
+		String folioNumber = propertyInfoService.getCondoFolio("2001 Meridian Ave", "33139", "")
 		assert folioNumber == '0232341690001'
 
-		folioNumber = propertyInfoService.getFolio("2001 Meridian Ave", "33139", null)
+		folioNumber = propertyInfoService.getCondoFolio("2001 Meridian Ave", "33139", null)
 		assert folioNumber == '0232341690001'
 	}
 
-	@Test void testGetFolio_House(){
-		String folioNumber = propertyInfoService.getFolio("11826 sw 97th street", "", "")
+	@Test void testGetCondoFolio_House(){
+		String folioNumber = propertyInfoService.getCondoFolio("11826 sw 97th street", "", "")
 		assert folioNumber == null
 
-		folioNumber = propertyInfoService.getFolio("11826 sw 97th street", null, null)
+		folioNumber = propertyInfoService.getCondoFolio("11826 sw 97th street", null, null)
 		assert folioNumber == null
 
 	}
 
-	@Test void testGetFolio_AddressNotExists(){
-		String folioNumber = propertyInfoService.getFolio("no address", "", "")
+	@Test void testGetCondoFolio_AddressNotExists(){
+		String folioNumber = propertyInfoService.getCondoFolio("no address", "", "")
 		assert folioNumber == null
 
-		folioNumber = propertyInfoService.getFolio(null, null, null)
+		folioNumber = propertyInfoService.getCondoFolio(null, null, null)
 		assert folioNumber == null
 	}
 

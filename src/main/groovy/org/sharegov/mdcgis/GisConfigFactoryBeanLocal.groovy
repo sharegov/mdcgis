@@ -15,13 +15,11 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-import java.util.Map;
-
 import org.apache.commons.collections.BidiMap
 import org.apache.commons.collections.bidimap.DualHashBidiMap
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.config.AbstractFactoryBean
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class GisConfigFactoryBeanLocal extends AbstractFactoryBean<GisConfig>{
 
@@ -223,7 +221,7 @@ class GisConfigFactoryBeanLocal extends AbstractFactoryBean<GisConfig>{
 		Map locators = [ "reverseGeoCodeGeoStreet":
 "http://gisws.miamidade.gov/ArcGIS/rest/services/MDC_Locators/GeoStreet/GeocodeServer/reverseGeocode",
 
- "findAddressCandidates20":
+ "findAddressCandidates75":
 "http://gisws.miamidade.gov/ArcGIS/rest/services/MDC_Locators/MD_Locator_75/GeocodeServer/findAddressCandidates",
 
  "reverseGeoCodeGeoAddress":

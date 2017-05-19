@@ -15,10 +15,6 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-import java.util.List;
-import java.util.Map
-
-
 interface GisService {
 	
 	def geoCode(Map params)

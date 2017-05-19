@@ -15,23 +15,13 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-import java.util.List;
-import java.util.Map;
-
 import groovy.json.JsonBuilder
-import net.sf.json.JSONNull
 import org.sharegov.mdcgis.model.Address
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.cache.Cache
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.Cacheable
-import org.springframework.context.ApplicationContext
-
-import org.sharegov.mdcgis.utils.AppContext;
-
-
 
 class AddressService {
 
@@ -458,7 +448,7 @@ class AddressService {
 		candidate.attributes.unit = unit;
 		Address addr = buildPartialAddressFromCandidate(candidate)
 
-		String folio = propertyInfoService.getFolio(addr.address.tokenize(",")[0].trim(), addr.address.tokenize(",")[1].trim(), unit)
+		String folio = propertyInfoService.getCondoFolio(addr.address.tokenize(",")[0].trim(), addr.address.tokenize(",")[1].trim(), unit)
 		if(!folio) return null
 
 		List layers = []

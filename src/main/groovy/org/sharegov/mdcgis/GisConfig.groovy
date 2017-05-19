@@ -15,8 +15,6 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-import java.util.List;
-import java.util.Map;
 import org.apache.commons.collections.BidiMap
 import org.apache.commons.collections.bidimap.DualHashBidiMap
 

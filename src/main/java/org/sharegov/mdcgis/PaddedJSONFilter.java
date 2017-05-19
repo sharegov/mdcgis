@@ -15,15 +15,14 @@
  ******************************************************************************/
 package org.sharegov.mdcgis;
 
-import java.io.IOException;
-
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
-import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
 import org.restlet.routing.Filter;
+
+import java.io.IOException;
 
 /**
  * Filters outgoing responses, padding the JSON if necessary.

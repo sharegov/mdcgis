@@ -15,8 +15,6 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-import java.util.List;
-
 class Esri9CandidateService extends CandidateService {
 
 
@@ -66,7 +64,7 @@ class Esri9CandidateService extends CandidateService {
 
 		// In case no candidates from locator returned, drop to a lower scoring candidates to get some results
 		if (candidates.candidates.size() == 0){
-			locatorUrl = gisConfig.locators['findAddressCandidates20']
+			locatorUrl = gisConfig.locators['findAddressCandidates75']
 			candidates  = httpService.request(locatorUrl, query)
 		}
 		

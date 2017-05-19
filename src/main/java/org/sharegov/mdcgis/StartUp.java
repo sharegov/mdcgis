@@ -15,20 +15,16 @@
  ******************************************************************************/
 package org.sharegov.mdcgis;
 
-import java.net.URL;
-import java.util.logging.Level;
-
-import org.restlet.Application;
-import org.restlet.Component;
-import org.restlet.Context;
-import org.restlet.Restlet;
-import org.restlet.Server;
+import org.restlet.*;
 import org.restlet.data.Protocol;
 import org.restlet.ext.jaxrs.JaxRsApplication;
 import org.restlet.resource.Directory;
 import org.sharegov.mdcgis.utils.AppContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.net.URL;
+import java.util.logging.Level;
 
 /**
  * Startup class with main method to start up MDCGIS application.<br>

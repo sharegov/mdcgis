@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package org.sharegov.mdcgis;
+package org.sharegov.mdcgis
 
-import static org.junit.Assert.*;
-
-import org.eclipse.jetty.server.AbstractConnector.Acceptor;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
+import org.sharegov.mdcgis.utils.AppContext
 import org.springframework.context.ApplicationContext
 import org.springframework.context.support.ClassPathXmlApplicationContext
-import org.sharegov.mdcgis.utils.AppContext
 
-import static groovyx.net.http.ContentType.*
+import static groovyx.net.http.ContentType.HTML
 
 class PublicWorksTests {
 

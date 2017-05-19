@@ -15,15 +15,8 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-import java.util.List;
-import java.util.Map;
-
-import net.sf.json.JSONNull
-import org.sharegov.mdcgis.model.Address;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import groovy.json.JsonBuilder
-
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class FeatureService {
 

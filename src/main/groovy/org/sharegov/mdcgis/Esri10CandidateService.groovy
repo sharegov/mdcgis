@@ -15,9 +15,8 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class Esri10CandidateService extends CandidateService {
 
@@ -42,32 +41,24 @@ class Esri10CandidateService extends CandidateService {
 		//Delete any duplicate candidates. Preserve Loc_name GeoAddress over GeoStreet
 		candidates.sort{a,b-> b.score <=> a.score ?: a.attributes.Loc_name <=>b.attributes.Loc_name}
 		candidates.unique{candidate -> candidate.address}
+
+		candidates.each { candidate ->
+			def tokenizedAddress = candidate.address.tokenize(",")
+			String newAddress = "${tokenizedAddress[0]},${tokenizedAddress[2]}"
+			candidate.address = newAddress
+			candidate.municipalityId = tokenizedAddress[1] as Integer
+			candidate.location.x = Utils.round(candidate.location.x, 3)
+			candidate.location.y = Utils.round(candidate.location.y, 3)
+		}
+
 		
 		// If there is candidates with 100 score only return those
 		def candidates100 = candidates.findAll{candidate -> candidate.score == 100}
 		if (candidates100){
-			candidates100.each{candidate ->
-				def tokenizedAddress = candidate.address.tokenize(",")
-				String newAddress =  "${tokenizedAddress[0]},${tokenizedAddress[2]}"
-				candidate.address = newAddress
-				candidate.municipalityId = tokenizedAddress[1] as Integer
-				candidate.location.x = org.sharegov.mdcgis.Utils.round(candidate.location.x, 3)
-				candidate.location.y = org.sharegov.mdcgis.Utils.round(candidate.location.y, 3)
-			}
-
 			return candidates100
 		}
 
 		// No candidate with score 100 found. Process candidates with lower score than 100
-		candidates.each{candidate ->
-			def tokenizedAddress = candidate.address.tokenize(",")
-			String newAddress =  "${tokenizedAddress[0]},${tokenizedAddress[2]}"
-			candidate.address = newAddress
-			candidate.municipalityId = tokenizedAddress[1] as Integer
-			candidate.location.x = org.sharegov.mdcgis.Utils.round(candidate.location.x, 3)
-			candidate.location.y = org.sharegov.mdcgis.Utils.round(candidate.location.y, 3)
-		}
-
 		if (candidates.size() > 5)
 			return candidates[0..4]
 
@@ -151,7 +142,7 @@ class Esri10CandidateService extends CandidateService {
 
 		// In case no candidates from locator returned, drop to a lower scoring candidates to get some results
 		if (!candidates?.candidates){
-			locatorUrl = gisConfig.locators.findAddressCandidates20
+			locatorUrl = gisConfig.locators.findAddressCandidates75
 			candidates  = httpService.request(locatorUrl, query)
 		}
 

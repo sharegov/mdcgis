@@ -15,13 +15,12 @@
  ******************************************************************************/
 package org.sharegov.mdcgis;
 
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 
 /**
  * SSL util for situations where a certificate's CA is not in the current trust store.

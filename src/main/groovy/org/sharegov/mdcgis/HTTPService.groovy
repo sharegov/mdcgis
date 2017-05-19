@@ -15,10 +15,7 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-import java.util.List;
-import java.util.Map;
-
-import groovyx.net.http.ContentType;
+import groovyx.net.http.ContentType
 
 interface HTTPService {
 

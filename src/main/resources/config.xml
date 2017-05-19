@@ -12,7 +12,13 @@
 
 	<!-- Switch on the Caching -->
 	<cache:annotation-driven cache-manager="CACHE_MANAGER" proxy-target-class="true"/>
-		
+
+	<bean id="PROPERTY_CONTROLLER" class="org.sharegov.mdcgis.PropertyController">
+		<property name="propertyInfoService">
+			<ref bean="PROPERTYINFO_SERVICE" />
+		</property>
+	</bean>
+
 	<!-- generic cache manager -->
 	<bean id="CACHE_MANAGER" class="org.springframework.cache.ehcache.EhCacheCacheManager">
 		<property name="cacheManager">
@@ -232,8 +238,8 @@
 	<beans profile="dev" >
 	
 		<bean id="APPLICATION_CONFIG" class="org.sharegov.mdcgis.ApplicationConfig">
-			<property name="rootUri" value="file:///Users/fiallega/Projects/Work/mdcgis/src/main/resources/"></property>
-			<property name="keyStorePath" value="/Users/fiallega/Temp/clientcert.jks"></property>
+			<property name="rootUri" value="file:///C:/projects/work/mdcgis/src/main/resources/"></property>
+			<property name="keyStorePath" value="C:\projects\mdcgis-cert\keystory.jks"></property>
 			<property name="keyStorePassword" value="password"></property>
 		</bean>
 	

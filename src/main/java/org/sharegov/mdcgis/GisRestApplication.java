@@ -15,12 +15,9 @@
  ******************************************************************************/
 package org.sharegov.mdcgis;
 
-import java.util.HashSet;
-
-import java.util.Set;
-
 import javax.ws.rs.core.Application;
-import org.sharegov.mdcgis.JsonEntityProvider;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GisRestApplication extends Application
 {

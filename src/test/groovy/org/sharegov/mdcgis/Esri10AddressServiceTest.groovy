@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package org.sharegov.mdcgis;
+package org.sharegov.mdcgis
 
-
-import static org.junit.Assert.*;
-
-import java.util.Map;
-
-import org.junit.*;
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
 import org.sharegov.mdcgis.model.Address
+import org.sharegov.mdcgis.utils.AppContext
 import org.springframework.context.ApplicationContext
 import org.springframework.context.support.ClassPathXmlApplicationContext
-import org.sharegov.mdcgis.utils.AppContext;
-
 
 class Esri10AddressServiceTest {
 

@@ -15,40 +15,16 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-import static mjson.Json.make;
-import static mjson.Json.read;
-import groovy.json.JsonBuilder;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.mail.Transport;
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.ws.rs.PathParam;
-
-import mjson.Json;
-
-import org.restlet.Request;
-import org.restlet.data.Form;
-import org.sharegov.mdcgis.model.Address;
-import org.sharegov.mdcgis.model.CommonLocation;
-import org.sharegov.mdcgis.utils.AppContext;
-import org.springframework.cache.CacheManager;
-import org.springframework.context.ApplicationContext;
+import groovy.json.JsonBuilder
+import org.sharegov.mdcgis.model.Address
+import org.sharegov.mdcgis.model.CommonLocation
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.springframework.cache.CacheManager
 import org.springframework.mail.MailSender
-import org.springframework.mail.SimpleMailMessage
-import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.mail.internet.MimeMessage
 
 class AddressController {
 
