@@ -44,9 +44,7 @@ class PropertyInfoService {
 		Map folioInfoByPaGIS = getCleanPropertyInfoByFolio(folio)
 
 		//No property, return null.
-		if(folioInfoByPaGIS == null || folioInfoByPaGIS.isEmpty()){
-			return null
-		}
+		if(!folioInfoByPaGIS) return null
 
 		// Get data from PaParcel and HomeOwnerAssociation by intersecting with xCoord, yCoord
 		EsriFieldMappings.propertyInfoAttributes.each{key,value -> layers << key}
@@ -286,17 +284,25 @@ class PropertyInfoService {
 	 * It returns null if no folio is found.
 	 */
 	Map getStreetZipUnitByFolio(String folioNumber){
-
+		long startTime = System.currentTimeMillis();
 		def data = getCleanPropertyInfoByFolio(folioNumber)
-		data?[street:data.TRUE_SITE_ADDR_NO_UNIT, zip:data.TRUE_SITE_ZIP_CODE, unit:data.TRUE_SITE_UNIT, x:data.X_COORD, y:data.Y_COORD]:null
-
+		long endTime = System.currentTimeMillis() - startTime;
+		System.out.println("MDC.PaGIS TIme : " + endTime );
+		data?[street:data.TRUE_SITE_ADDR_NO_UNIT, zip:data.TRUE_SITE_ZIP_CODE, unit:data.TRUE_SITE_UNIT, municipalityId:data.MUNICIPALITY_CODE, municipality:data.TRUE_SITE_CITY, x:data.X_COORD, y:data.Y_COORD]:null
 	}
 
-
+	/**
+	 * Get property data from PaGIS.
+	 * @param xCoord
+	 * @param yCoord
+     * @return property data or return null.
+     */
 	Map getStreetZipByCoord(Double xCoord, Double yCoord){
-		List layers = ['MDC.PaParcel']
-		Map dataFromLayers = featureService.featuresAttributesFromPointLayersIntersection(xCoord as String, yCoord as String, layers)
-		dataFromLayers['MDC.PaParcel']?getStreetZipUnitByFolio(dataFromLayers['MDC.PaParcel']['FOLIO']):null
+		long startTime = System.currentTimeMillis();
+		Map dataFromLayers = featureService.featuresAttributesFromPointLayersIntersection(xCoord as String, yCoord as String, ['MDC.PaParcel'])
+		long endTime = System.currentTimeMillis() - startTime;
+		System.out.println("The MDC.PaParcel Time: " + endTime);
+		return dataFromLayers['MDC.PaParcel']?getStreetZipUnitByFolio(dataFromLayers['MDC.PaParcel']['FOLIO']):null
 	}
 
 	/**

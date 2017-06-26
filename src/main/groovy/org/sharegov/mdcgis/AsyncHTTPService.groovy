@@ -98,7 +98,7 @@ class AsyncHTTPService implements HTTPService {
 		while ( true ) {
 			if (result.done)
 				break
-			Thread.sleep(100)
+			Thread.sleep(10)
 		}
 
 		// return result. when calling get an exception may be returned, if exception happened in the

@@ -58,8 +58,15 @@ class Esri10GisService extends EsriGisService{
 
 	   if (!result?.address)
 		   return null
-		   
-	   return [street:result?.address?.Street?:"", zip:result?.address?.ZIP?:""];
+
+	   String muniId = result?.address?.City?:""
+	   return [street:result?.address?.Street?:"",
+			   zip:result?.address?.ZIP?:"",
+			   municipalityId:muniId,
+			   municipality:muniId.isInteger()?gisConfig.municipalities[Integer.valueOf(muniId)]:"",
+			   matchAddress: (result?.address?.Street?:"")+", "+ (result?.address?.ZIP?:""),
+			   x:org.sharegov.mdcgis.Utils.round(result?.location?.x, 3),
+			   y:org.sharegov.mdcgis.Utils.round(result?.location?.y, 3)]
    }
 	
 	/**

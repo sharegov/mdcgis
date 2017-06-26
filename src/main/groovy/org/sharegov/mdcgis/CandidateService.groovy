@@ -26,7 +26,46 @@ abstract class CandidateService {
 	GisConfig gisConfig
 	
 	Map candidateAttributes
-	
+
+	/**
+	 * get latitude/longitude for given x/y
+	 * @param x
+	 * @param y
+	 * @param url
+     * @return lat and lng
+     */
+	Map getLatAndLng(double x, double y, String url ){
+		_log.info("CandidateService - getLatAndLng x: "+ x + " y: " + y)
+
+		def xml = httpService.request(url, [X:x, Y:y], groovyx.net.http.ContentType.XML)
+		if(!xml) return [:]
+
+		return ["lng":xml.double[0]?.text(), "lat":xml.double[1]?.text()]
+	}
+
+	/**
+	 * get X/Y for given latitude/longitude
+	 * @param latitude
+	 * @param longitude
+	 * @param url
+     * @return converted x and y data or empty data
+     */
+	Map getXandY(double latitude, double longitude, String url){
+		_log.info("CandidateService - getXandY  latitude: "+ latitude + " longitude: " + longitude)
+
+		def xml = httpService.request(url, [LNG:longitude, LAT:latitude], groovyx.net.http.ContentType.XML)
+		if(!xml) return [:]
+		String x = xml.double[0]?.text()
+		String y = xml.double[1]?.text()
+
+		//Invalid data... return null.
+		if(x.equalsIgnoreCase("NaN") || y.equalsIgnoreCase("NaN")){
+			return [:]
+		}
+		return [x:x, y: y]
+	}
+
+
 	/**
 	* Produces a list of address candidates with address, zip. If only one
 	* candidate is match a fully populated address object is returned. If

@@ -165,7 +165,7 @@ class PropertyInfoServiceTests {
 			def result = propertyInfoService.getCondoPropertyInfo(data)
 			assert false
 		}catch(RetrievalOfDataException e){
-			String message = "Unexpected error for uri http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/26/query | message: [error:[code:400, message:Failed to execute query., details:[]]]"
+			String message = "Unexpected error for uri http://311arcgis.miamidade.gov/arcgis/rest/services/Gic/MapServer/26/query | message: [error:[code:400, message:Failed to execute query., details:[]]]"
 			assert e.message == message
 		}
 	}
@@ -248,7 +248,7 @@ class PropertyInfoServiceTests {
 	@Test
 	public void testGetRawPropertyInfoByFolio_BuildingMultiAddress(){
 		Map data = propertyInfoService.getRawPropertyInfoByFolio("3049331130001")
-		assert data.TRUE_SITE_ADDR_NO_UNIT == '8215 SW 152ND AVE'
+		assert data.TRUE_SITE_ADDR_NO_UNIT == '8205-8365 SW 152ND AVE'
 		assert data.TRUE_SITE_ZIP_CODE == '33193-0000'
 		assert data.X_COORD == 840931.2
 		assert data.Y_COORD == 493159.9
