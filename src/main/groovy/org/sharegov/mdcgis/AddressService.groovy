@@ -374,8 +374,6 @@ class AddressService {
 		addr.municipality = stAddress.municipality
 		addr.parsedAddress = stAddress.parsedAddress
 
-		// Get polling location
-		addr.pollingLocation = commonLocationsService.getPollingLocationByPrecinct(addr.electionsPrecinctId as String)
 		List layers = []
 
 		if(addr.municipality == 'MIAMI')
@@ -390,6 +388,9 @@ class AddressService {
 
 		// Populate derived fields
 		populateDerivedAddressFields(addr)
+
+		// Get polling location
+		addr.pollingLocation = commonLocationsService.getPollingLocationByPrecinct(addr.electionsPrecinctId as String)
 
 		// Get property info.
 		Map propertyInfo = propertyInfoService.getPropertyInfo(addr.location.x, addr.location.y)
