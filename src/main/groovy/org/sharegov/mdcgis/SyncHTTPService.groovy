@@ -20,6 +20,7 @@ import groovyx.net.http.HTTPBuilder
 import net.sf.json.JSONObject
 import org.apache.http.params.HttpConnectionParams
 import org.apache.http.params.HttpParams
+import org.json.XML
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -33,7 +34,7 @@ class SyncHTTPService implements HTTPService{
 	private static Logger _log = LoggerFactory.getLogger(SyncHTTPService.class);
 
 	HTTPBuilder http
-	
+
 	public void init(){
 		
 		// accept ssl self signed certificates (peer not authenticated - SSLPeerUnverifiedException
@@ -46,29 +47,27 @@ class SyncHTTPService implements HTTPService{
 	}
 
 	Object request(String url, def query, ContentType contentType=JSON){
-
-		def startDate = new Date().time
-
-		http.request(url, GET, contentType) {
+		_log.error "requestMultiple - request() - Method not implemented. It returns null."
+		http.request(url, GET, contentType){
 			uri.query = query
 
-			response.success = {resp, data ->
+			response.success = { resp, data ->
 				_log.info "syncRequest() - request for url ${url} : ${data}"
 				_log.info "syncRequest() - uri ${uri}"
 				_log.info "syncRequest() - response ${resp}"
 				_log.info "syncRequest() - query params ${query}"
 				_log.info "syncRequest() - conetentType ${contentType}"
+
 				return data
 			}
 
-			response.'404' = {resp ->
+			response.'404' = { resp ->
 				String message = "${resp.statusLine.statusCode} : ${resp.statusLine.reasonPhrase}"
 				_log.error "syncrequest() - 404 for url ${url} : ${message}"
 				_log.error "syncRequest() - uri ${uri}"
 				_log.error "syncRequest() - response ${resp}"
 				_log.error "syncRequest() - query params ${query}"
 				_log.error "syncRequest() - conetentType ${contentType}"
-
 				def errorResult = [error:[code:resp.statusLine.statusCode, message:resp.statusLine.reasonPhrase, details:[""]]] as JSONObject
 				return errorResult
 			}
@@ -80,21 +79,16 @@ class SyncHTTPService implements HTTPService{
 				_log.error "syncRequest() - response ${resp}"
 				_log.error "syncRequest() - query params ${query}"
 				_log.error "syncRequest() - conetentType ${contentType}"
-
 				def errorResult = [error:[code:resp.statusLine.statusCode, message:resp.statusLine.reasonPhrase, details:[""]]] as JSONObject
 				return errorResult
-
 			}
 		}
-		
-		def endDate = new Date().time
-		_log.info "time for url ${url} is ${endDate-startDate}"
 	}
 
 	Object requestPost(String url, def query, ContentType contentType=JSON){
 
 		def startDate = new Date().time
-		
+
 		http.request(url, POST, contentType) {
 
 			send URLENC, query
@@ -130,13 +124,41 @@ class SyncHTTPService implements HTTPService{
 
 			}
 		}
-		
+
 		def endDate = new Date().time
 		_log.info "syncRequestPost() - time for url ${url} is ${endDate-startDate}"
 	}
 
-	Map request(List urls, def query, ContentType contentType){
-		_log.error "requestMultiple - request() - Method not implemented. It returns null."
-		return null
+	Map request(List urls, def query, ContentType contentType=JSON){
+		def done = [:]
+
+		// Fire each one of the requests.
+		urls.each {url ->
+			// make the http request to the given url.
+			done[url] = request(url, query, contentType)
+		}
+
+		// Processs the request data.Convert the resuts to a map and return result.
+		Boolean exceptionsFound = false
+		String concatenatedExceptionsMessage = ""
+		Map result = done.collectEntries {key, value ->
+			try{
+				[key, value]
+			}catch(Exception e){
+				String message = "request() - Exception at the thread level for url ${key} | message: ${e.getMessage()} | query: ${query}"
+				_log.error message
+				exceptionsFound = true
+				concatenatedExceptionsMessage += " ++ ${message} ++ "
+
+				[key, null]
+			}
+		}
+
+		// If exceptions happens in any of the threads rethrow an exception
+		if(exceptionsFound)
+			throw new RetrievalOfDataException(concatenatedExceptionsMessage)
+
+		return result
 	}
+
 }

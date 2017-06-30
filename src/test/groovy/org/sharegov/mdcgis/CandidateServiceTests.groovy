@@ -26,6 +26,7 @@ class CandidateServiceTests {
 
 
 	private CandidateService candidateService
+	private GisConfig gisConfig
 
 	@Before
 	public void setUp() throws Exception {
@@ -33,15 +34,34 @@ class CandidateServiceTests {
 
 		ApplicationContext ctx = AppContext.getApplicationContext();
 		candidateService = ctx.getBean("CANDIDATE_SERVICE");
-		
-		
+
+		gisConfig = (GisConfig) ctx.getBean("GIS_CONFIG");
 	}
 
 	@After
 	public void destroy() throws Exception{
 		((ClassPathXmlApplicationContext) AppContext.getApplicationContext()).close();
 	}
-	
+
+	@Test
+	public void testGetLatLng(){
+		Map latLng = candidateService.getLatAndLng(914794.13009558292, 545838.36865925544, gisConfig.gisServices.getLatLongDecFromXY)
+		assert latLng.lat == "25.833195000006253"
+		assert latLng.lng == "-80.21370500000333"
+	}
+
+	@Test
+	public void testGetXandY(){
+		Map xy = candidateService.getXandY(25.833195, -80.213705, gisConfig.gisServices.getXYfromLatLongDec)
+		assert xy.x == "914794.13009558292"
+		assert xy.y == "545838.36865925544"
+	}
+
+	@Test
+	public void testGetXandY_WrongData(){
+		Map xy = candidateService.getXandY(0, -0, gisConfig.gisServices.getXYfromLatLongDec)
+		assert xy.isEmpty() == true
+	}
 
 	@Test
 	public void testGetCandidates_NoStreetPassedIn() {

@@ -60,8 +60,6 @@ class Esri10AddressServiceTest {
 		}
 	}
 
-
-	
 	@Test
 	public void testGetAddress_Building(){
 		def addressInput = [["2001 Meridian Ave", "33139"], ['7200 NW 177TH ST','33015']]
@@ -227,8 +225,8 @@ class Esri10AddressServiceTest {
 		assert address.address == "2975 NE 206TH ST, 33180"
 		assert address.municipality == 'AVENTURA'
 		assert address.municipalityId == 28
-		assert address.location.x == 937870.5
-		assert address.location.y ==  594521.2
+		assert address.location.x == 937865.175
+		assert address.location.y ==  594476.291
 		assert address.addressApproximation == true
 		assert address.propertyInfo.parcelFolioNumber == '2812340064600'
 		assert address.propertyInfo.propertyType == 'UNDEFINED'
@@ -272,11 +270,10 @@ class Esri10AddressServiceTest {
 		assert address.address == "5860 SW 87TH AVE, 33173"
 		assert address.municipality == 'UNINCORPORATED MIAMI-DADE'
 		assert address.municipalityId == 30
-		assert address.location.x == 874841.0
-		assert address.location.y == 502306.3
+		assert address.location.x == 875167.151
+		assert address.location.y == 502324.722
 		assert address.addressApproximation == true
-		assert address.propertyInfo.parcelFolioNumber == '3040280000050'
-		assert address.propertyInfo.propertyType == 'UNDEFINED'
+		assert address.propertyInfo == null
 		assert address.streetsMaintenance ==  [
 			[streetName:'SW 87TH AVE', maintenanceCode:'SR', maintenanceCodeAlias:'State maintained']
 		]
@@ -296,8 +293,8 @@ class Esri10AddressServiceTest {
 		assert address.address == "11787 SW 97TH ST, 33186"
 		assert address.municipality == 'UNINCORPORATED MIAMI-DADE'
 		assert address.municipalityId == 30
-		assert address.location.x == 858465.453
-		assert address.location.y ==  489016.477
+		assert address.location.x == 858457.396
+		assert address.location.y == 489032.267
 		assert address.addressApproximation == true
 		assert address.propertyInfo == null
 		assert address.streetsMaintenance ==  [
@@ -1031,8 +1028,8 @@ class Esri10AddressServiceTest {
 		assert address.address == "2975 NE 206TH ST, 33180"
 		assert address.municipality == 'AVENTURA'
 		assert address.municipalityId == 28
-		assert address.location.x == 937870
-		assert address.location.y ==  594529
+		assert address.location.x == 937865.175
+		assert address.location.y ==  594476.291
 		assert address.addressApproximation == true
 		assert address.propertyInfo.parcelFolioNumber == '2812340064600'
 		assert address.propertyInfo.propertyType == 'UNDEFINED'
@@ -1057,11 +1054,10 @@ class Esri10AddressServiceTest {
 		assert address.address == "3361 RIVIERA DR, 33134"
 		assert address.municipality == 'CORAL GABLES'
 		assert address.municipalityId == 3
-		assert address.location.x == 898029
-		assert address.location.y ==  512098.4
+		assert address.location.x == 897943.341
+		assert address.location.y ==  512006.947
 		assert address.addressApproximation == true
-		assert address.propertyInfo.parcelFolioNumber == '0341170040650'
-		assert address.propertyInfo.propertyType == 'UNDEFINED'
+		assert address.propertyInfo == null
 		assert address.parsedAddress.zip == '33134'
 		assert address.streetsMaintenance ==  [
 			[streetName:'RIVIERA DR', maintenanceCode:'CI', maintenanceCodeAlias:'City maintained']
@@ -1086,8 +1082,8 @@ class Esri10AddressServiceTest {
 		assert address.address == "11787 SW 97TH ST, 33186"
 		assert address.municipality == 'UNINCORPORATED MIAMI-DADE'
 		assert address.municipalityId == 30
-		assert address.location.x == 858465.453
-		assert address.location.y ==  489016.477
+		assert address.location.x == 858457.396
+		assert address.location.y ==  489032.267
 		assert address.addressApproximation == true
 		assert address.parsedAddress.zip == '33186'
 		assert address.propertyInfo == null

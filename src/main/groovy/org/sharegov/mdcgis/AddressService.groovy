@@ -15,7 +15,6 @@
  ******************************************************************************/
 package org.sharegov.mdcgis
 
-import groovy.json.JsonBuilder
 import org.sharegov.mdcgis.model.Address
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -33,6 +32,17 @@ class AddressService {
 	FeatureService featureService
 	CacheManager cacheManager
 	GisConfig gisConfig
+	AddressSearch addressSearch
+
+	/**
+	 * Get Address by lat and Lng
+	 * @param latitude
+	 * @param longitude
+	 * @return address data or empty data
+	 */
+	Map getAddressByLatAndLng(double latitude, double longitude){
+		return addressSearch.getAddressByLatAndLng(latitude, longitude)
+	}
 
 	/**
 	 * get X and Y coordinates for given address. It will return EITHER X, Y coordinates OR null.
@@ -271,12 +281,6 @@ class AddressService {
 			municipalityId = candidate.municipalityId
 			municipality = gisConfig.municipalities[municipalityId]
 		}
-
-		// Get Municipality Data
-		//List layers = ['MDC.Municipality_poly']
-		//Map dataFromLayers = layerFacade.getPointServiceLayersIntersectionAttributes(candidate.location.x as String, candidate.location.y as String, layers)
-		//populateAddressFields(addr, dataFromLayers)
-
 		return addr
 	}
 
@@ -357,57 +361,36 @@ class AddressService {
 	 * to the (xCoord, yCoord) exists.
 	 */
 	private Address buildAddressFromCoord(Double xCoord, Double yCoord){
-		Address addr = new Address()
 
-		// get approx address
-		Map streetData = gisService.reverseGeoCode(xCoord, yCoord, gisConfig.locators.reverseGeoCodeGeoStreet, 100)
-		if(!streetData) return null
+		Map stAddress = addressSearch.getAddressByStreetLocator(xCoord, yCoord)
+		if(!stAddress) return null
 
-		addr.address =  "${streetData.street}, ${streetData.zip}"
-		addr.addressApproximation = true
-		
-		// populate x, y
-		addr.location.x = org.sharegov.mdcgis.Utils.round(xCoord, 3)
-		addr.location.y = org.sharegov.mdcgis.Utils.round(yCoord, 3)
+		Address addr = new Address();
+		addr.address = stAddress.address
+		addr.addressApproximation = stAddress.addressApproximation
+		addr.location.x = stAddress.location.x
+		addr.location.y = stAddress.location.y
+		addr.municipalityId = stAddress.municipalityId? new Integer(stAddress.municipalityId).intValue():null
+		addr.municipality = stAddress.municipality
+		addr.parsedAddress = stAddress.parsedAddress
 
-		// Get Municipality and zip Data
-		List layers = [
-			'MDC.Municipality_poly',
-			'MDC.ZipCode'
-		]
-		
-		// Query layers for data.
-		Map dataFromLayers = featureService.featuresAttributesFromPointLayersIntersection(addr.location.x as String, addr.location.y as String, layers)
-		
-		// Map data from layers to fields in the address
-		populateAddressFields(addr, translateCodes(dataFromLayers))
-		
-		// Populate municipality Id
-		addr.municipalityId = gisConfig.municipalities.getKey(addr.municipality)
-		
-		// Get polling location
-		addr.pollingLocation = commonLocationsService.getPollingLocationByPrecinct(addr.electionsPrecinctId as String)
-		
-		// Populate zio
-		addr.parsedAddress = candidateService.parseAddress(addr.address)
-		//addr.parsedAddress.zip = dataFromLayers['MDC.ZipCode']['ZIPCODE']
-		//addr.parsedAddress.zip = dataFromLayers['MDC.ZipCode']?.ZIPCODE
-		addr.parsedAddress.zip = dataFromLayers['MDC.ZipCode']?.ZIPCODE ?: streetData.zip
-
-		layers = []
+		List layers = []
 
 		if(addr.municipality == 'MIAMI')
 			layers = gisConfig.cityOfMiamiAddressLayers
 		else
 			layers = gisConfig.addressLayers
 
-		dataFromLayers = featureService.featuresAttributesFromPointLayersIntersection(addr.location.x as String, addr.location.y as String, layers)
+		Map dataFromLayers = featureService.featuresAttributesFromPointLayersIntersection(addr.location.x as String, addr.location.y as String, layers)
 
 		// Map data from layers to fields in the address
 		populateAddressFields(addr, translateCodes(dataFromLayers))
 
 		// Populate derived fields
 		populateDerivedAddressFields(addr)
+
+		// Get polling location
+		addr.pollingLocation = commonLocationsService.getPollingLocationByPrecinct(addr.electionsPrecinctId as String)
 
 		// Get property info.
 		Map propertyInfo = propertyInfoService.getPropertyInfo(addr.location.x, addr.location.y)
@@ -441,8 +424,6 @@ class AddressService {
 		return addr
 
 	}
-
-
 
 	private Address buildCondoAddressFromCandidate(def candidate, String unit){
 		candidate.attributes.unit = unit;

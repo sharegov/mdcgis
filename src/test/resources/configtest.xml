@@ -1,307 +1,383 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:util="http://www.springframework.org/schema/util"
-	xmlns:cache="http://www.springframework.org/schema/cache"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
 		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.1.xsd">
 
-	<util:constant id="CONTENTTYPE_JSON" static-field="groovyx.net.http.ContentType.JSON" />
-	<util:constant id="CANDIDATE_ATTRIBUTES" static-field="org.sharegov.mdcgis.EsriFieldMappings.esri10CandidateAttributes" />
+    <util:constant id="CONTENTTYPE_JSON" static-field="groovyx.net.http.ContentType.JSON"/>
+    <util:constant id="CANDIDATE_ATTRIBUTES" static-field="org.sharegov.mdcgis.EsriFieldMappings.esri10CandidateAttributes"/>
 
-	<!-- Switch on the Caching -->	
-	<cache:annotation-driven cache-manager="CACHE_MANAGER" proxy-target-class="true"/>
+    <!--Address Search-->
+    <bean id="ADDRESS_SEARCH" class="org.sharegov.mdcgis.AddressSearch">
+        <property name="candidateService">
+            <ref bean="SYNC_CANDIDATE_SERVICE"/>
+        </property>
+        <property name="propertyInfoService">
+            <ref bean="SYNC_PROPERTYINFO_SERVICE"/>
+        </property>
+        <property name="gisService">
+            <ref bean="SYNC_GIS_SERVICE"/>
+        </property>
+        <property name="gisConfig">
+            <ref bean="GIS_CONFIG"/>
+        </property>
+    </bean>
 
+    <!--Base Candidate Service-->
+    <bean id="BASE_CANDIDATE_SERVICE" abstract="true">
+        <property name="featureService">
+            <ref bean="FEATURE_SERVICE"/>
+        </property>
+        <property name="candidateAttributes">
+            <ref bean="CANDIDATE_ATTRIBUTES"/>
+        </property>
+        <property name="gisConfig">
+            <ref bean="GIS_CONFIG"/>
+        </property>
+    </bean>
 
-	<bean id="PROPERTY_CONTROLLER" class="org.sharegov.mdcgis.PropertyController">
-		<property name="propertyInfoService">
-			<ref bean="PROPERTYINFO_SERVICE" />
-		</property>
-	</bean>
+    <!--Async Candidate Service-->
+    <bean id="CANDIDATE_SERVICE" parent="BASE_CANDIDATE_SERVICE" class="org.sharegov.mdcgis.Esri10CandidateService">
+        <property name="httpService">
+            <ref bean="ASYNC_HTTP_SERVICE"/>
+        </property>
+    </bean>
 
-	<!-- generic cache manager -->
-	<bean id="CACHE_MANAGER" class="org.springframework.cache.ehcache.EhCacheCacheManager">
-		<property name="cacheManager">
-			<ref bean="EHCACHE" />
-		</property>
-	</bean>
+    <!--Sync Candidate Service-->
+    <bean id="SYNC_CANDIDATE_SERVICE" parent="BASE_CANDIDATE_SERVICE" class="org.sharegov.mdcgis.Esri10CandidateService">
+        <property name="httpService">
+            <ref bean="SYNC_HTTP_SERVICE"/>
+        </property>
+        <property name="featureService">
+            <ref bean="SYNC_FEATURE_SERVICE"/>
+        </property>
+    </bean>
 
-	<!-- EhCache library setup -->
-	<bean id="EHCACHE" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-	    <property name="configLocation" value="ehcache.xml"/>
-	</bean>
-	
-	
-	<!-- 
-	<bean id="CACHE_MANAGER" class="org.springframework.cache.support.SimpleCacheManager">
-	  <property name="caches">
-	    <set>
-	      <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" name="default"/>
-	      <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" name="layers"/>
-	    </set>
-	  </property>
-	</bean>
- 	-->
- 	
-	
-	<bean id="ASYNC_HTTP_BUILDER" class="groovyx.net.http.AsyncHTTPBuilder">
-		<constructor-arg>
-			<map>
-				<entry>
-					<key>
-						<value>poolSize</value>
-					</key>
-					<value>30</value>
-				</entry>
-				<entry>
-					<key>
-						<value>timeout</value>
-					</key>
-					<value type="java.lang.Integer">60000</value>
-				</entry>				
-				<entry>
-					<key>
-						<value>uri</value>
-					</key>
-					<value>http://s0142357.miamidade.gov</value>
-				</entry>
-				<entry>
-					<key>
-						<value>contentType</value>
-					</key>
-					<ref bean="CONTENTTYPE_JSON" />
-				</entry>
-			</map>
+    <!--Common Location Service-->
+    <bean id="COMMON_LOCATIONS_SERVICE" class="org.sharegov.mdcgis.CommonLocationsService">
+        <property name="httpService">
+            <ref bean="ASYNC_HTTP_SERVICE"/>
+        </property>
+        <property name="addressService">
+            <ref bean="ADDRESS_SERVICE"/>
+        </property>
+        <property name="gisConfig">
+            <ref bean="GIS_CONFIG"/>
+        </property>
+    </bean>
 
-		</constructor-arg>
-	</bean>
+    <!--Address Service-->
+    <bean id="ADDRESS_SERVICE" class="org.sharegov.mdcgis.AddressService">
+        <property name="addressSearch">
+            <ref bean="ADDRESS_SEARCH"/>
+        </property>
+        <property name="candidateService">
+            <ref bean="CANDIDATE_SERVICE"/>
+        </property>
+        <property name="commonLocationsService">
+            <ref bean="COMMON_LOCATIONS_SERVICE"/>
+        </property>
+        <property name="gisService">
+            <ref bean="GIS_SERVICE"/>
+        </property>
+        <property name="propertyInfoService">
+            <ref bean="PROPERTYINFO_SERVICE"/>
+        </property>
+        <property name="featureService">
+            <ref bean="FEATURE_SERVICE"/>
+        </property>
+        <property name="cacheManager">
+            <ref bean="CACHE_MANAGER"/>
+        </property>
+        <property name="gisConfig">
+            <ref bean="GIS_CONFIG"/>
+        </property>
+    </bean>
 
+    <!--Address Controller-->
+    <bean id="ADDRESS_CONTROLLER" class="org.sharegov.mdcgis.AddressController">
+        <property name="gisConfig">
+            <ref bean="GIS_CONFIG"/>
+        </property>
+        <property name="candidateService">
+            <ref bean="CANDIDATE_SERVICE"/>
+        </property>
+        <property name="addressService">
+            <ref bean="ADDRESS_SERVICE"/>
+        </property>
+        <property name="featureService">
+            <ref bean="FEATURE_SERVICE"/>
+        </property>
+        <property name="commonLocationsService">
+            <ref bean="COMMON_LOCATIONS_SERVICE"/>
+        </property>
+        <property name="cacheManager">
+            <ref bean="CACHE_MANAGER"/>
+        </property>
+        <property name="mailSender">
+            <ref bean="MAIL_SENDER"/>
+        </property>
+    </bean>
 
-	<bean id="ASYNC_HTTP_SERVICE" class="org.sharegov.mdcgis.AsyncHTTPService" init-method="init">
-		<property name="http">
-			<ref bean="ASYNC_HTTP_BUILDER" />
-		</property>
-	</bean>
-	
-	<bean id="HTTP_BUILDER" class="groovyx.net.http.HTTPBuilder">
-		<constructor-arg index="0" value="http://s0142357.miamidade.gov" />
-		<constructor-arg index="1">
-			<ref bean="CONTENTTYPE_JSON" />
-		</constructor-arg>
-	</bean>
+    <!--Base Property Info Service-->
+    <bean id="BASE_PROPERTYINFO_SERVICE" abstract="true">
+        <property name="featureService">
+            <ref bean="FEATURE_SERVICE"/>
+        </property>
+        <property name="gisConfig">
+            <ref bean="GIS_CONFIG"/>
+        </property>
+    </bean>
 
-	<bean id="SYNC_HTTP_SERVICE" class="org.sharegov.mdcgis.SyncHTTPService" init-method="init">
-		<property name="http">
-			<ref bean="HTTP_BUILDER" />
-		</property>
-	</bean>
-	
-	<bean id="ADDRESS_CONTROLLER" class="org.sharegov.mdcgis.AddressController">
-		<property name="gisConfig">
-			<ref bean="GIS_CONFIG" />
-		</property>
-		<property name="candidateService">
-			<ref bean="CANDIDATE_SERVICE" />
-		</property>				
-		<property name="addressService">
-			<ref bean="ADDRESS_SERVICE" />
-		</property>
-		<property name="featureService">
-			<ref bean="FEATURE_SERVICE" />
-		</property>
-		<property name="commonLocationsService">
-			<ref bean="COMMON_LOCATIONS_SERVICE" />
-		</property>				
-		<property name="cacheManager">
-			<ref bean="CACHE_MANAGER" />
-		</property>						
-		<property name="mailSender">
-			<ref bean="MAIL_SENDER" />
-		</property>								
-	</bean>
-	
-	<bean id="PUBLICWORKS_CONTROLLER" class="org.sharegov.mdcgis.PublicWorksController">
-		<property name="publicWorksService">
-			<ref bean="PUBLICWORKS_SERVICE" />
-		</property>
-	</bean>	
-	
-	<bean id="CANDIDATE_SERVICE" class="org.sharegov.mdcgis.Esri10CandidateService">
-		<property name="httpService">
-			<ref bean="ASYNC_HTTP_SERVICE" />
-		</property>
-		<property name="featureService">
-			<ref bean="FEATURE_SERVICE" />
-		</property>		
-		<property name="candidateAttributes">
-			<ref bean="CANDIDATE_ATTRIBUTES" />
-		</property>		
-		<property name="gisConfig">
-			<ref bean="GIS_CONFIG" />
-		</property>													
-	</bean>
+    <!--Async Property Info Service-->
+    <bean id="PROPERTYINFO_SERVICE" parent="BASE_PROPERTYINFO_SERVICE" class="org.sharegov.mdcgis.PropertyInfoService">
+        <property name="httpService">
+            <ref bean="ASYNC_HTTP_SERVICE"/>
+        </property>
+    </bean>
 
+    <!--Sync Property Info Service-->
+    <bean id="SYNC_PROPERTYINFO_SERVICE" parent="BASE_PROPERTYINFO_SERVICE" class="org.sharegov.mdcgis.PropertyInfoService">
+        <property name="httpService">
+            <ref bean="SYNC_HTTP_SERVICE"/>
+        </property>
+        <property name="featureService">
+            <ref bean="SYNC_FEATURE_SERVICE"/>
+        </property>
+    </bean>
 
-	<bean id="COMMON_LOCATIONS_SERVICE" class="org.sharegov.mdcgis.CommonLocationsService">
-		<property name="httpService">
-			<ref bean="ASYNC_HTTP_SERVICE" />
-		</property>
-		<property name="addressService">
-			<ref bean="ADDRESS_SERVICE" />
-		</property>		
-		<property name="gisConfig">
-			<ref bean="GIS_CONFIG" />
-		</property>													
-	</bean>
-	
-	<bean id="PROPERTYINFO_SERVICE" class="org.sharegov.mdcgis.PropertyInfoService">
-		<property name="httpService">
-			<ref bean="ASYNC_HTTP_SERVICE" />
-		</property>
-		<property name="featureService">
-			<ref bean="FEATURE_SERVICE" />
-		</property>
-		<property name="gisConfig">
-			<ref bean="GIS_CONFIG" />
-		</property>																																					
-	</bean>		
+    <!--Property Controller-->
+    <bean id="PROPERTY_CONTROLLER" class="org.sharegov.mdcgis.PropertyController">
+        <property name="propertyInfoService">
+            <ref bean="PROPERTYINFO_SERVICE"/>
+        </property>
+    </bean>
 
+    <!--Base Feature Service-->
+    <bean id="BASE_FEATURE_SERVICE" abstract="true">
+        <property name="gisService">
+            <ref bean="GIS_SERVICE"/>
+        </property>
+        <property name="gisConfig">
+            <ref bean="GIS_CONFIG"/>
+        </property>
+    </bean>
 
-	<bean id="ADDRESS_SERVICE" class="org.sharegov.mdcgis.AddressService">
-		<property name="candidateService">
-			<ref bean="CANDIDATE_SERVICE" />
-		</property>		
-		<property name="commonLocationsService">
-			<ref bean="COMMON_LOCATIONS_SERVICE" />
-		</property>				
-		<property name="gisService">
-			<ref bean="GIS_SERVICE" />
-		</property>				
-		<property name="propertyInfoService">
-			<ref bean="PROPERTYINFO_SERVICE" />
-		</property>		
-		<property name="featureService">
-			<ref bean="FEATURE_SERVICE" />
-		</property>
-		<property name="cacheManager">
-			<ref bean="CACHE_MANAGER" />
-		</property>				
-		<property name="gisConfig">
-			<ref bean="GIS_CONFIG" />
-		</property>																											
-	</bean>
+    <!--Async Feature Service-->
+    <bean id="FEATURE_SERVICE" parent="BASE_FEATURE_SERVICE" class="org.sharegov.mdcgis.FeatureService">
+        <property name="httpService">
+            <ref bean="ASYNC_HTTP_SERVICE"/>
+        </property>
+    </bean>
 
-	<bean id="FEATURE_SERVICE" class="org.sharegov.mdcgis.FeatureService">
-		<property name="httpService">
-			<ref bean="ASYNC_HTTP_SERVICE" />
-		</property>
-		<property name="gisService">
-			<ref bean="GIS_SERVICE" />
-		</property>
-		<property name="gisConfig">
-			<ref bean="GIS_CONFIG" />
-		</property>															
-	</bean>
+    <!--Sync Feature Service-->
+    <bean id="SYNC_FEATURE_SERVICE" parent="BASE_FEATURE_SERVICE" class="org.sharegov.mdcgis.FeatureService">
+        <property name="httpService">
+            <ref bean="SYNC_HTTP_SERVICE"/>
+        </property>
+        <property name="gisService">
+            <ref bean="SYNC_GIS_SERVICE"/>
+        </property>
+    </bean>
 
-	<bean id="GIS_SERVICE" class="org.sharegov.mdcgis.Esri10GisService">
-		<property name="httpService">
-			<ref bean="ASYNC_HTTP_SERVICE" />
-		</property>
-		<property name="gisConfig">
-			<ref bean="GIS_CONFIG" />
-		</property>													
-	</bean>
-	
-	<bean id="PUBLICWORKS_SERVICE" class="org.sharegov.mdcgis.PublicWorksService">
-		<property name="httpService">
-			<ref bean="ASYNC_HTTP_SERVICE" />
-		</property>
-		<property name="gisConfig">
-			<ref bean="GIS_CONFIG" />
-		</property>		
-	</bean>	
-	
-	<bean id="MAIL_SENDER" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="bulk.miamidade.gov" />
-		<!-- 
-		<property name="javaMailProperties">  
+    <!--Base GIS Service-->
+    <bean id="BASE_GIS_SERVICE" abstract="true">
+        <property name="gisConfig">
+            <ref bean="GIS_CONFIG"/>
+        </property>
+    </bean>
+
+    <!--Async GIS Service-->
+    <bean id="GIS_SERVICE" parent="BASE_GIS_SERVICE" class="org.sharegov.mdcgis.Esri10GisService">
+        <property name="httpService">
+            <ref bean="ASYNC_HTTP_SERVICE"/>
+        </property>
+    </bean>
+
+    <!--Sync GIS Service-->
+    <bean id="SYNC_GIS_SERVICE" parent="BASE_GIS_SERVICE" class="org.sharegov.mdcgis.Esri10GisService">
+        <property name="httpService">
+            <ref bean="SYNC_HTTP_SERVICE"/>
+        </property>
+    </bean>
+
+    <!--public worker Service-->
+    <bean id="PUBLICWORKS_SERVICE" class="org.sharegov.mdcgis.PublicWorksService">
+        <property name="httpService">
+            <ref bean="ASYNC_HTTP_SERVICE"/>
+        </property>
+        <property name="gisConfig">
+            <ref bean="GIS_CONFIG"/>
+        </property>
+    </bean>
+
+    <!--Public Worker Controller-->
+    <bean id="PUBLICWORKS_CONTROLLER" class="org.sharegov.mdcgis.PublicWorksController">
+        <property name="publicWorksService">
+            <ref bean="PUBLICWORKS_SERVICE"/>
+        </property>
+    </bean>
+
+    <!--Mail Sender-->
+    <bean id="MAIL_SENDER" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="bulk.miamidade.gov"/>
+        <!--
+        <property name="javaMailProperties">
             <props>  
                 <prop key="mail.smtp.connectiontimeout">1000</prop>      
                 <prop key="mail.smtp.timeout">1000</prop>      
             </props>      
         </property>
-         -->  
-	</bean>
+         -->
+    </bean>
 
-	<bean id="contextApplicationContextProvider" class="org.sharegov.mdcgis.utils.ApplicationContextProvider"></bean>
+    <!-- Switch on the Caching -->
+    <cache:annotation-driven cache-manager="CACHE_MANAGER" proxy-target-class="true"/>
+
+    <!-- generic cache manager -->
+    <bean id="CACHE_MANAGER" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager">
+            <ref bean="EHCACHE"/>
+        </property>
+    </bean>
+
+    <!-- EhCache library setup -->
+    <bean id="EHCACHE" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="ehcache.xml"/>
+    </bean>
+
+    <!--
+    <bean id="CACHE_MANAGER" class="org.springframework.cache.support.SimpleCacheManager">
+      <property name="caches">
+        <set>
+          <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" name="default"/>
+          <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" name="layers"/>
+        </set>
+      </property>
+    </bean>
+     -->
 
 
-		<bean id="GIS_CONFIG" class="org.sharegov.mdcgis.GisConfigFactoryBeanLocal">
-		    <property name="connections">
-		        <map>
-		            
-		          <entry key="layer">
-		              <map>
-		                  <entry key="url" value="https://s0020284.miamidade.gov/individuals"/>
-		                  <entry key="query">
-		                      <map>
-		                          <entry key="q" value="GeoLayer" />
-		                      </map>
-		                  </entry>
-		              </map>
-		          </entry>
-		          
-		          <entry key="locator">
-		              <map>
-		                  <entry key="url" value="https://s0020284.miamidade.gov/individuals"/>
-		                  <entry key="query">
-		                      <map>
-		                          <entry key="q" value="GeoLocator" />
-		                      </map>
-		                  </entry>
-		              </map>
-		          </entry>
-	
-		           <entry key="gisService">
-		              <map>
-		                  <entry key="url" value="https://s0020284.miamidade.gov/individuals"/>
-		                  <entry key="query">
-		                      <map>
-		                          <entry key="q" value="GisService" />
-		                      </map>
-		                  </entry>
-		              </map>
-		          </entry>
-		          
-		           <entry key="gisGeometryService">
-		              <map>
-		                  <entry key="url" value="https://s0020284.miamidade.gov/individuals"/>
-		                  <entry key="query">
-		                      <map>
-		                          <entry key="q" value="GisGeometryService" />
-		                      </map>
-		                  </entry>
-		              </map>
-		          </entry>		          
-		           <entry key="miamiDadeCounty">
-		              <map>
-		                  <entry key="url" value="https://s0020284.miamidade.gov/individuals/Miami_Dade_County"/>
-		              </map>
-		          </entry>		          	    
-		           <entry key="cityOfMiami">
-		              <map>
-		                  <entry key="url" value="https://s0020284.miamidade.gov/individuals/City_of_Miami"/>
-		              </map>
-		          </entry>		          	    		          
-		          	          	          
-		        </map>
-		    </property>
-		    <property name="httpService" ref="ASYNC_HTTP_SERVICE"></property>
-		</bean>
+    <bean id="ASYNC_HTTP_BUILDER" class="groovyx.net.http.AsyncHTTPBuilder">
+        <constructor-arg>
+            <map>
+                <entry>
+                    <key>
+                        <value>poolSize</value>
+                    </key>
+                    <value>30</value>
+                </entry>
+                <entry>
+                    <key>
+                        <value>timeout</value>
+                    </key>
+                    <value type="java.lang.Integer">60000</value>
+                </entry>
+                <entry>
+                    <key>
+                        <value>uri</value>
+                    </key>
+                    <value>http://s0142357.miamidade.gov</value>
+                </entry>
+                <entry>
+                    <key>
+                        <value>contentType</value>
+                    </key>
+                    <ref bean="CONTENTTYPE_JSON"/>
+                </entry>
+            </map>
 
-	
+        </constructor-arg>
+    </bean>
 
-	
-	
+
+    <bean id="ASYNC_HTTP_SERVICE" class="org.sharegov.mdcgis.AsyncHTTPService" init-method="init">
+        <property name="http">
+            <ref bean="ASYNC_HTTP_BUILDER"/>
+        </property>
+    </bean>
+
+    <bean id="HTTP_BUILDER" class="groovyx.net.http.HTTPBuilder">
+        <constructor-arg index="0" value="http://s0142357.miamidade.gov"/>
+        <constructor-arg index="1">
+            <ref bean="CONTENTTYPE_JSON"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="SYNC_HTTP_SERVICE" class="org.sharegov.mdcgis.SyncHTTPService" init-method="init">
+        <property name="http">
+            <ref bean="HTTP_BUILDER"/>
+        </property>
+    </bean>
+
+    <bean id="contextApplicationContextProvider" class="org.sharegov.mdcgis.utils.ApplicationContextProvider"></bean>
+
+
+    <bean id="GIS_CONFIG" class="org.sharegov.mdcgis.GisConfigFactoryBeanLocal">
+        <property name="connections">
+            <map>
+
+                <entry key="layer">
+                    <map>
+                        <entry key="url" value="https://s0020284.miamidade.gov/individuals"/>
+                        <entry key="query">
+                            <map>
+                                <entry key="q" value="GeoLayer"/>
+                            </map>
+                        </entry>
+                    </map>
+                </entry>
+
+                <entry key="locator">
+                    <map>
+                        <entry key="url" value="https://s0020284.miamidade.gov/individuals"/>
+                        <entry key="query">
+                            <map>
+                                <entry key="q" value="GeoLocator"/>
+                            </map>
+                        </entry>
+                    </map>
+                </entry>
+
+                <entry key="gisService">
+                    <map>
+                        <entry key="url" value="https://s0020284.miamidade.gov/individuals"/>
+                        <entry key="query">
+                            <map>
+                                <entry key="q" value="GisService"/>
+                            </map>
+                        </entry>
+                    </map>
+                </entry>
+
+                <entry key="gisGeometryService">
+                    <map>
+                        <entry key="url" value="https://s0020284.miamidade.gov/individuals"/>
+                        <entry key="query">
+                            <map>
+                                <entry key="q" value="GisGeometryService"/>
+                            </map>
+                        </entry>
+                    </map>
+                </entry>
+                <entry key="miamiDadeCounty">
+                    <map>
+                        <entry key="url" value="https://s0020284.miamidade.gov/individuals/Miami_Dade_County"/>
+                    </map>
+                </entry>
+                <entry key="cityOfMiami">
+                    <map>
+                        <entry key="url" value="https://s0020284.miamidade.gov/individuals/City_of_Miami"/>
+                    </map>
+                </entry>
+
+            </map>
+        </property>
+        <property name="httpService" ref="ASYNC_HTTP_SERVICE"></property>
+    </bean>
+
+
 </beans>	

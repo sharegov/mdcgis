@@ -39,6 +39,43 @@ class AddressController {
 	MailSender mailSender
 
 	/**
+	 * Get address by latitude and longitude
+	 * @param queryParams
+	 * @return address data or empty data with message.
+     */
+	public JsonBuilder getAddressByLatAndLng(Map queryParams){
+
+		String lat = queryParams.get("lat");
+		String lng = queryParams.get("lng");
+
+		_log.info("AddressController - getAddressByLatAndLong - latitude:" + lat + " longitude:"+ lng)
+		Map answer = [:]
+
+		try{
+			if(!lat || !lng || !lat.isDouble() || !lng.isDouble()){
+				return [ok: false, message: "could not find address", data:[:]]
+			}
+
+			Map address = addressService.getAddressByLatAndLng(Double.valueOf(lat), Double.valueOf(lng))
+			if(!address){
+				answer = [ok: false, message: "could not find address", data:[:]]
+			}else{
+				answer = [ok: true, data: address]
+			}
+
+		}catch(RetrievalOfDataException rode){
+			_log.error("AddressController - getAddressByLatAndLong - "+ [ok:false, message:rode.stackTrace.toString(), data:[:]].toString());
+			answer = [ok: false, message: "could not find address", data:[:]]
+		}
+
+		_log.info("AddressController - getAddressByLatAndLong - latitude: about to finish with "+ answer)
+
+		// Convert map to json object
+		JsonBuilder json = new JsonBuilder()
+		json.call(answer)
+	}
+
+	/**
 	 * get layer information for given layer and address with municipality(id).
 	 *
 	 * @param layerName
@@ -72,7 +109,7 @@ class AddressController {
 				answer = [ok: true, data: data]
 			}
 		}catch(RetrievalOfDataException rode) {
-			_log.info( [ok:false, message:rode.message, data:[:]] );
+			_log.error("getCandidates - getLayerInformation " + [ok:false, message:rode.stackTrace.toString(), data:[:]].toString());
 			//sendMail(rode.message)
 
 			answer = [ok:false, message: "Could not find X,Y Coordinates", data:[:]];

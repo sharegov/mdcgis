@@ -51,6 +51,37 @@ public class PropertyService {
 	private static Logger _log = LoggerFactory.getLogger(PropertyService.class);
 
 
+	/**
+	 * Get address for latitude and longitude.
+	 * It expects
+	 * 	Query Param - lat and lng
+	 *
+	 * @return
+     */
+	@Trace(dispatcher = true)
+	@GET
+	@Path("/addressFromLatAndLng")
+	@Produces("application/json")
+	public Json getAddressFromLatitudeAndLongitude() {
+
+		Form queryParams = Request.getCurrent().getResourceRef()
+				.getQueryAsForm();
+
+		ApplicationContext ctx = AppContext.getApplicationContext();
+		AddressController addressController = (AddressController) ctx.getBean("ADDRESS_CONTROLLER");
+		JsonBuilder answer = addressController.getAddressByLatAndLng(queryParams.getValuesMap());
+
+		return read(answer.toString());
+	}
+
+	/**
+	 * Get Property Information by Folio.
+	 * It expects
+	 * 		Path Param - folio
+	 *
+	 * @param folio
+	 * @return
+     */
 	@Trace(dispatcher= true)
 	@GET
 	@Path("/properties/{folio}")
@@ -64,6 +95,15 @@ public class PropertyService {
 		return read(propertyInfo.toString());
 	}
 
+	/**
+	 * Get Layer Information for given layer.
+	 * It expects
+	 * 		Path Param - Layer Name
+	 * 		Query Params - street, zip, municipality and municipalityId
+	 *
+	 * @param layername
+	 * @return
+     */
 	@Trace(dispatcher= true)
 	@GET
 	@Path("/servicelayers/{layerName}")
@@ -78,6 +118,13 @@ public class PropertyService {
 		return read(answer.toString());
 	}
 
+	/**
+	 * Gets list of possible address candidates for the given address parameters
+	 * It expects
+	 * 		queryParams - street, zip, municipality, municipalityId.
+	 *
+	 * @return
+     */
 	@Trace(dispatcher = true)
 	@GET
 	@Path("/candidates")
@@ -115,6 +162,13 @@ public class PropertyService {
 
 	}
 
+	/**
+	 * Get the address on the x,y.
+	 * It expects
+	 * 		QueryParams - x, y
+	 *
+	 * @return
+     */
 	@Trace(dispatcher = true)
 	@GET
 	@Path("/addressFromCoords")

@@ -25,13 +25,13 @@ class PropertyController {
 
         try {
             Map propertyInfo = propertyInfoService.getPropertyInfo(folio)
-            if(propertyInfo == null || propertyInfo.isEmpty()){
+            if(!propertyInfo){
                 answer = [ok: false, message: "could not find propertyByFolio", data:[:]]
             }else{
                 answer = [ok: true, data:["propertyInfo": propertyInfo ]]
             }
         }catch(RetrievalOfDataException rode){
-            _log.info([ok: false, message:rode.message, data:[:]])
+            _log.error("PropertyController - propertyByFolio " + [ok: false, message:rode.stackTrace.toString(), data:[:]].toString())
             answer = [ok: false, message: "could not find propertyByFolio", data:[:]]
         }
 
