@@ -354,6 +354,12 @@ class PropertyInfoServiceTests {
 	}
 
 	@Test
+	void testGetPropertyType_PAGIS_Building_With_Folio_And_ReferenceOnlyFlage_Null(){
+		Map dataFromLayers = ['MDC.PaGIS':[CONDO_FLAG:'N',PARENT_FOLIO:null,FOLIO:null,REFERENCE_ONLY_FLAG:null],'MDC.PaParcel':[CONDO:'']]
+		assert propertyInfoService.findPropertyType(dataFromLayers) == PropertyInfoService.PropertyType.UNDEFINED
+	}
+
+	@Test
 	void testGetPropertyType_PAGIS_Condo(){
 		Map dataFromLayers = ['MDC.PaGIS':[CONDO_FLAG:'Y'],'MDC.PaParcel':[CONDO_FLAG:'Y']]
 		assert propertyInfoService.findPropertyType(dataFromLayers) == PropertyInfoService.PropertyType.CONDO
@@ -374,6 +380,12 @@ class PropertyInfoServiceTests {
 	@Test
 	void testGetPropertyType_Parcels_Undefined(){
 		Map dataFromLayers = ['MDC.PaParcel':[CONDO_FLAG:'']]
+		assert propertyInfoService.findPropertyType(dataFromLayers) == PropertyInfoService.PropertyType.UNDEFINED
+	}
+
+	@Test
+	void testGetPropertyType_Parcels_Undefined_CondoFlag_Null(){
+		Map dataFromLayers = ['MDC.PaParcel':[CONDO_FLAG:null]]
 		assert propertyInfoService.findPropertyType(dataFromLayers) == PropertyInfoService.PropertyType.UNDEFINED
 	}
 

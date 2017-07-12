@@ -265,9 +265,11 @@ class PropertyInfoService {
 		String folioNumber = dataFromLayers[layerName].attributes?.FOLIO ?: dataFromLayers[layerName].FOLIO
 		String referenceOnlyFlag = dataFromLayers[layerName].attributes?.REFERENCE_ONLY_FLAG ?: dataFromLayers[layerName].REFERENCE_ONLY_FLAG
 
-		if (isCondo.toBoolean()) {
+		if (isCondo != null && isCondo.toBoolean()) {
 			propertyType = PropertyType.CONDO
-		} else if ( parentFolioNumber != folioNumber && folioNumber.endsWith("0001") && referenceOnlyFlag.toBoolean()) {
+		} else if ( (parentFolioNumber != folioNumber) &&
+					(folioNumber != null && folioNumber.endsWith("0001")) &&
+					(referenceOnlyFlag != null && referenceOnlyFlag.toBoolean())) {
 			propertyType = PropertyType.MULTI
 		} else {
 			propertyType = PropertyType.UNDEFINED
