@@ -28,13 +28,13 @@
 
     <logger name="org.sharegov.mdcgis" >
         <param name="additivity" value="false" />
-        <level value="info" />
+        <level value="warn" />
         <appender-ref ref="mdcgis" />
         
     </logger>
 
     <root>
-        <level value="info" />
+        <level value="warn" />
         <appender-ref ref="default" />
     </root>
 
