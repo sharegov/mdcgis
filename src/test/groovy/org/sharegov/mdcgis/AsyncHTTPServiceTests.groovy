@@ -79,7 +79,7 @@ class AsyncHTTPServiceTests {
 			String where = "UPPER(NAME) LIKE '%SOUTH MIAMI HOSPITAL%'"
 			def query = [where:where, f:f, outFields:outFields]
 			
-			def result = httpService.request(['http://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/14/query',
+			def result = httpService.request(['https://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/14/query',
 											'http://s0141668:9193/crossdomain2.xml',
 											'http://s0141668:9193/crossdomain3.xml'], query)
 			assert false
@@ -103,7 +103,7 @@ class AsyncHTTPServiceTests {
 			assert false
 		} catch (RetrievalOfDataException rode) {
 			assert true
-			assert rode.message == " ++ request() - Exception at the thread level for url http://s0141668:9193/crossdomain2.xml | message: org.sharegov.mdcgis.RetrievalOfDataException: Unexpected error for uri http://s0141668:9193/crossdomain2.xml | message: 404 : Not Found | query: null | query: null ++ "
+			assert rode.message == " ++ request() - Exception at the thread level for url http://s0144821:9193/crossdomain2.xml | message: org.sharegov.mdcgis.RetrievalOfDataException: Unexpected error for uri http://s0144821:9193/crossdomain2.xml | message: 404 : Not Found | query: null | query: null ++ "
 		}
 	}
 		
@@ -122,10 +122,10 @@ class AsyncHTTPServiceTests {
 	@Test
 	public void testRequestUrlList_404(){
 		try {
-			def result = httpService.request(['http://s0141668:9193/crossdomain2.xml'], null)
+			def result = httpService.request(['http://s0144821:9193/crossdomain2.xml'], null)
 			assert false
 		}catch (RetrievalOfDataException rode) {
-			String message = " ++ request() - Exception at the thread level for url http://s0141668:9193/crossdomain2.xml | message: org.sharegov.mdcgis.RetrievalOfDataException: Unexpected error for uri http://s0141668:9193/crossdomain2.xml | message: 404 : Not Found | query: null | query: null ++ "
+			String message = " ++ request() - Exception at the thread level for url http://s0144821:9193/crossdomain2.xml | message: org.sharegov.mdcgis.RetrievalOfDataException: Unexpected error for uri http://s0144821:9193/crossdomain2.xml | message: 404 : Not Found | query: null | query: null ++ "
 			assert rode.message == message
 		}
 	}
@@ -145,10 +145,10 @@ class AsyncHTTPServiceTests {
 	@Test
 	public void testPostRequest_404(){
 		try {
-			def result = httpService.request('http://s0141668:9193/crossdomain2.xml', null)
+			def result = httpService.request('http://s0144821:9193/crossdomain2.xml', null)
 			assert false
 		} catch(RetrievalOfDataException rode){
-			String message = " ++ request() - Exception at the thread level for url http://s0141668:9193/crossdomain2.xml | message: org.sharegov.mdcgis.RetrievalOfDataException: Unexpected error for uri http://s0141668:9193/crossdomain2.xml | message: 404 : Not Found | query: null | query: null ++ "
+			String message = " ++ request() - Exception at the thread level for url http://s0144821:9193/crossdomain2.xml | message: org.sharegov.mdcgis.RetrievalOfDataException: Unexpected error for uri http://s0144821:9193/crossdomain2.xml | message: 404 : Not Found | query: null | query: null ++ "
 			assert rode.message == message
 		}
 	}
@@ -182,7 +182,7 @@ class AsyncHTTPServiceTests {
 	
 	@Test
 	public void testRequest_URLEncoded(){
-		def url = 'http://s0142354.miamidade.gov/arcgis/rest/services/Gic/MapServer/28'
+		def url = 'https://s0142354.miamidade.gov/arcgis/rest/services/Gic/MapServer/28'
 		String f = 'json'
 		def query = [f:f]
 		def result = httpService.request(url, query, groovyx.net.http.ContentType.JSON)

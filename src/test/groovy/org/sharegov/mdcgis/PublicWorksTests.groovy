@@ -51,7 +51,7 @@ class PublicWorksTests {
 
 	@Test
 	public void testRequest(){
-		def url = 'http://gisimsintra.miamidade.gov/website/pw_geocoder/CSR_Geocoder.asp'
+		def url = 'https://gisimsintra.miamidade.gov/website/pw_geocoder/CSR_Geocoder.asp'
 		String mode = 'CSR'
 		String Cmd = 'AREA'
 		String add1 = 'SW 112TH st'

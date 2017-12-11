@@ -71,12 +71,12 @@ class GisConfigFactoryBeanTests {
 	
 	@Test
 	public void testLayers_getValueFromKey(){
-		assert config.layers["pwd_lights"] == "http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/41/query"
+		assert config.layers["pwd_lights"] == "https://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/41/query"
 	}
 	
 	@Test
 	public void testLayers_GetKeyFromValue(){
-		assert config.layers.getKey("http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/41/query") == "pwd_lights"
+		assert config.layers.getKey("https://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/41/query") == "pwd_lights"
 	}
 	
 	@Test

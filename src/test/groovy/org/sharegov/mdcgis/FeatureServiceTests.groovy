@@ -208,7 +208,7 @@ class FeatureServiceTests {
 	
 	@Test
 	public void testFeaturesByIds_SwitchKeyToLayerName(){
-		Map rawResults = ["http://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/51/query":
+		Map rawResults = ["https://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/51/query":
 			[[attributes:[OBJECTID:42736, STREETID:99514], 
 			  geometry:[paths:[[[827864.1875471696, 405714.87507389486]]]]
 			 ]]]
@@ -224,7 +224,7 @@ class FeatureServiceTests {
 	
 	@Test
 	public void testFeaturesAttributesByIds_SwitchKeyToLayerName(){
-		Map rawResults = ["http://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/51/query":
+		Map rawResults = ["https://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/51/query":
 			[OBJECTID:42736, STREETID:99514]]
 		
 		Map results = ['MDC.StreetMaint':
@@ -236,7 +236,7 @@ class FeatureServiceTests {
 	
 	@Test
 	public void testFeaturesGeometryByIds_SwitchKeyToLayerName(){
-		Map rawResults = ["http://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/51/query":
+		Map rawResults = ["https://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/51/query":
 			[paths:[[[827864.1875471696, 405714.87507389486]]]]]
 
 		
