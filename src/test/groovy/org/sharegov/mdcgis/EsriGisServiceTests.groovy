@@ -50,7 +50,7 @@ class EsriGisServiceTests {
 	public void testFeaturesFromPointLayersIntersection(){
 		
 		def requestResult = 
-		["https://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/42/query":
+		["https://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/42/query":
 		 [
 		  displayFieldName:'ROUTE',
 		  fieldAliases:[OBJECTID:'OBJECTID'],
@@ -60,7 +60,7 @@ class EsriGisServiceTests {
 		]
 		
 		def cleanRequestResult =
-		["https://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/42/query":[attributes:[OBJECTID:251, ROUTE:'32A380']]]
+		["https://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/42/query":[attributes:[OBJECTID:251, ROUTE:'32A380']]]
 		gisService.getHttpService().getMetaClass().request = {List cleanUrls, Map query -> requestResult}
 		
 		assert gisService.featuresFromPointLayersIntersection("0", "0", [], false) == cleanRequestResult
@@ -69,7 +69,7 @@ class EsriGisServiceTests {
 	
 	@Test
 	public void testFeaturesFromPointLayersIntersection_ErrorInRequest(){		
-		def requestResult = ["https://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/43/query":
+		def requestResult = ["https://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/43/query":
 							[error:[code:"400", message:"bad error", details:[""]]]]
 		
 		gisService.getHttpService().getMetaClass().request = {List cleanUrls, Map query -> requestResult}
@@ -85,14 +85,14 @@ class EsriGisServiceTests {
 	@Test
 	public void testFeaturesFromPointLayersIntersection_SeveralUrlsInRequestWithOneError(){
 		def requestResult =
-		["https://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/42/query":
+		["https://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/42/query":
 		 [
 		  displayFieldName:'ROUTE',
 		  fieldAliases:[OBJECTID:'OBJECTID'],
 		  fields:[[name:'OBJECTID']],
 		  features:[[attributes:[OBJECTID:251, ROUTE:'32A380']]]
 		 ],
-		 "https://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/43/query":
+		 "https://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/43/query":
 		 [
 		   error:[code:"400", message:"bad error", details:[""]]
 		 ]
@@ -100,11 +100,11 @@ class EsriGisServiceTests {
 		
 		def cleanRequestResult =
 		[
-		 "https://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/42/query":
+		 "https://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/42/query":
 		 [
 			 attributes:[OBJECTID:251, ROUTE:'32A380']
 		 ],
-		 "https://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/43/query":
+		 "https://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/43/query":
 		 [
 			 error:[code:"400", message:"bad error", details:[""]]
 		 ]
@@ -116,7 +116,7 @@ class EsriGisServiceTests {
 			assert gisService.featuresFromPointLayersIntersection("0", "0", [], false) == cleanRequestResult
 			assert false
 		}catch(RetrievalOfDataException rode){
-			String message = "Unexpected error for uri https://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/43/query | message: [error:[code:400, message:bad error, details:[]]]"
+			String message = "Unexpected error for uri https://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/43/query | message: [error:[code:400, message:bad error, details:[]]]"
 			assert rode.message == message
 		}
 		

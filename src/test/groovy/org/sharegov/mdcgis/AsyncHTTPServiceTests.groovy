@@ -79,7 +79,8 @@ class AsyncHTTPServiceTests {
 			String where = "UPPER(NAME) LIKE '%SOUTH MIAMI HOSPITAL%'"
 			def query = [where:where, f:f, outFields:outFields]
 			
-			def result = httpService.request(['https://arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/14/query',
+			def result = httpService.request(['https://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/14/query',
+
 											'http://s0141668:9193/crossdomain2.xml',
 											'http://s0141668:9193/crossdomain3.xml'], query)
 			assert false
@@ -90,7 +91,7 @@ class AsyncHTTPServiceTests {
 	
 	@Test
 	public void testRequest2_NullQuery(){
-		def url = 'https://cirm.miamidade.gov/individuals/predefined/configset'
+		def url = 'https://311hub.miamidade.gov/individuals/predefined/configset'
 		def query = null
 		def result = httpService.request(url, query)
 		assert result.size() == 29
@@ -172,7 +173,7 @@ class AsyncHTTPServiceTests {
 		//def query = [f:f]		
 		//def result = httpService.request(url, query, groovyx.net.http.ContentType.HTML)
 
-		def url = 'https://s0142354.miamidade.gov/arcgis/rest/services/Gic/MapServer/28'
+		def url = 'https://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/28'
 		String f = 'json'
 		def query = [f:f]
 		def result = httpService.request(url, query, groovyx.net.http.ContentType.JSON)
@@ -182,7 +183,7 @@ class AsyncHTTPServiceTests {
 	
 	@Test
 	public void testRequest_URLEncoded(){
-		def url = 'https://s0142354.miamidade.gov/arcgis/rest/services/Gic/MapServer/28'
+		def url = 'https://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/28'
 		String f = 'json'
 		def query = [f:f]
 		def result = httpService.request(url, query, groovyx.net.http.ContentType.JSON)
