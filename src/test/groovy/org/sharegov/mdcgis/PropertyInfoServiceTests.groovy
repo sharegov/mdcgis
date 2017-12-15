@@ -165,7 +165,7 @@ class PropertyInfoServiceTests {
 			def result = propertyInfoService.getCondoPropertyInfo(data)
 			assert false
 		}catch(RetrievalOfDataException e){
-			String message = "Unexpected error for uri http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/26/query | message: [error:[code:400, message:Failed to execute query., details:[]]]"
+			String message = "Unexpected error for uri https://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/26/query | message: [error:[code:400, message:Failed to execute query., details:[]]]"
 			assert e.message == message
 		}
 	}

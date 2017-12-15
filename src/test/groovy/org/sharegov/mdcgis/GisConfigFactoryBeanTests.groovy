@@ -45,7 +45,7 @@ class GisConfigFactoryBeanTests {
 	public void testLoadLayers(){
 		assert config.layers.size() == 44
 		assert config.locators.size() == 5
-		assert config.gisServices.size() == 9
+		assert config.gisServices.size() == 8
 		assert config.municipalities.size() ==  35
 	}
 	
@@ -71,12 +71,12 @@ class GisConfigFactoryBeanTests {
 	
 	@Test
 	public void testLayers_getValueFromKey(){
-		assert config.layers["pwd_lights"] == "http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/41/query"
+		assert config.layers["pwd_lights"] == "https://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/41/query"
 	}
 	
 	@Test
 	public void testLayers_GetKeyFromValue(){
-		assert config.layers.getKey("http://s0142354.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/41/query") == "pwd_lights"
+		assert config.layers.getKey("https://311arcgis.miamidade.gov/ArcGIS/rest/services/Gic/MapServer/41/query") == "pwd_lights"
 	}
 	
 	@Test

@@ -47,34 +47,6 @@ class PublicWorksTests {
 		((ClassPathXmlApplicationContext) AppContext.getApplicationContext()).close();
 	}
 
-	
-
-	@Test
-	public void testRequest(){
-		def url = 'http://gisimsintra.miamidade.gov/website/pw_geocoder/CSR_Geocoder.asp'
-		String mode = 'CSR'
-		String Cmd = 'AREA'
-		String add1 = 'SW 112TH st'
-		String add2 = 'SW 108TH ct'
-		String add3 = 'SW 109TH ave'
-		String add4 = 'SW 114TH st'
-		String AddZipCode= ''
-		String submit1='Get GIS Information'
-
-		def query = [mode:mode, 
-			         Cmd:Cmd, 
-					 add1:add1, add2:add2, add3:add3, add4:add4, 
-					 AddZipCode:AddZipCode, 
-					 submit1:submit1]
-		
-		def result = httpService.request(url, query, HTML)
-		String expected = "SW 112TH ST/SW 108TH CT,863485.3125/484357.9375,11201 SW 108TH CT 33176,30,UNINCORPORATED MIAMI-DADE,8:7:9,Daniella Levine Cava:Xavier L. Suarez:Dennis C. Moss,12:14,n/a:n/a,33157:33176,554019:554031:554018:554030:554007,5;"
-
-		
-		assert result == expected
-	}
-		
-	
 	@Test 
 	public void testSplit(){
 		String example = 'SW 112TH ST/SW 108TH CT,863485.3125/484357.9375,11201 SW 108TH CT 33176,30,UNINCORPORATED MIAMI-DADE,8:7:9,Lynda Bell:Xavier L. Suarez:Dennis C. Moss,12:14,n/a:n/a,33176:33157,554019:554031:554018:554030:554007,5'
