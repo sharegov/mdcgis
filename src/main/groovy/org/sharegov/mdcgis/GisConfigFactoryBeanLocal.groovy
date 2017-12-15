@@ -258,9 +258,6 @@ class GisConfigFactoryBeanLocal extends AbstractFactoryBean<GisConfig>{
  "parentChildFolio":
 "https://gisws.miamidade.gov/gisaddress/condo.asmx/ParentChildFolio",
 
- "publicWorksGeoCoder":
-"https://gisimsintra.miamidade.gov/website/pw_geocoder/CSR_Geocoder.asp",
-
   "publicWorksIntersection":"https://gisws.miamidade.gov/ITDServ/ITDService.asmx/Intersection",
   "publicWorksArea":"https://gisws.miamidade.gov/ITDServ/ITDService.asmx/Area",
   "publicWorksCorridor":"https://gisws.miamidade.gov/ITDServ/ITDService.asmx/Segment"

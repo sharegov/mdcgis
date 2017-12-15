@@ -45,7 +45,7 @@ class GisConfigFactoryBeanTests {
 	public void testLoadLayers(){
 		assert config.layers.size() == 44
 		assert config.locators.size() == 5
-		assert config.gisServices.size() == 9
+		assert config.gisServices.size() == 8
 		assert config.municipalities.size() ==  35
 	}
 	
