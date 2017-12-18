@@ -72,7 +72,8 @@ class AddressController {
 				answer = [ok: true, data: data]
 			}
 		}catch(RetrievalOfDataException rode) {
-			_log.info( [ok:false, message:rode.message, data:[:]] );
+			_log.error( "getCandidates - getLayerInformation - address: " + address + " zip: " +
+					zip + " municipalityId: " + intMunicipalityId + " Message: " + rode.message );
 			//sendMail(rode.message)
 
 			answer = [ok:false, message: "Could not find X,Y Coordinates", data:[:]];

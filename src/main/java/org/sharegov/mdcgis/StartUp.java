@@ -118,12 +118,12 @@ public class StartUp
 			throw new RuntimeException(ex);
 		}
 	}
-	
+
 	/**
 	 * Waits for the  configured remote configuration server to become available.<br>
 	 * Exits VM if service at RemoteConfigCheckUrl is not available after RemoteConfigWaitSecs.<br>
-	 * 
-	 * @param config
+	 *
+	 * @param startupConfig
 	 */
 	public static void waitForRemoteConfigurationService(StartupApplicationConfig startupConfig) {
 		URL remoteUrl;

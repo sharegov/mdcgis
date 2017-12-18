@@ -31,7 +31,7 @@ class PropertyController {
                 answer = [ok: true, data:["propertyInfo": propertyInfo ]]
             }
         }catch(RetrievalOfDataException rode){
-            _log.info([ok: false, message:rode.message, data:[:]])
+            _log.error( "PropertyController - propertyByFolio - folio: " + folio + " message: " + rode.message )
             answer = [ok: false, message: "could not find propertyByFolio", data:[:]]
         }
 
