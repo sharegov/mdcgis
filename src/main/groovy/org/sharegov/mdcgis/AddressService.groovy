@@ -542,7 +542,6 @@ class AddressService {
 	private void populateDerivedAddressFields(Address address){
 		
 		if(address.municipality == 'MIAMI') {
-			address.cityCommissionerName = gisConfig?.cityOfMiamiCommissioners[address?.cityDistrictNumber]
 			address.recyclingCalendarUrl = gisConfig?.cityOfMiamiRecyclingCalendarUrls[address?.recyclingRoute]
 		}
 		else{
