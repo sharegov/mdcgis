@@ -50,7 +50,6 @@ class GisConfigFactoryBeanLocal extends AbstractFactoryBean<GisConfig>{
 		config.municipalities = populateMunicipalities(config.layers)
 		config.countyRecyclingCalendarUrls = populateCountyRecyclingCalendarUrls()
 		config.cityOfMiamiRecyclingCalendarUrls = populateCityOfMiamiRecyclingCalendarUrls()
-		config.cityOfMiamiCommissioners = populateCityOfMiamiCommissioners()
 		config.codeTranslator = populateCodeTranslator(config.layersUrls)
 		
 		
@@ -436,27 +435,6 @@ class GisConfigFactoryBeanLocal extends AbstractFactoryBean<GisConfig>{
 		return calendars
 	}
 
-	private Map populateCityOfMiamiCommissioners(){
-		
-		String url = connections.cityOfMiami.url
-
-		_log.info("populateCityOfMiamiCommissioners(): about to populate COM commissioners from ${url}")
-				
-		def result = httpService.request(url, [:])
-		
-		Map commissioners = [:]
-		   
-		result.hasDistrict.each{def commissioner ->
-			_log.info("${commissioner.hasDistrictID}: ${commissioners.Commissioner_Name}")
-			String commissionerName = "${commissioner['Commissioner_Name']}"
-			Integer districtId = commissioner.hasDistrictID.toInteger()
-			commissioners << [(districtId):commissionerName]
-		}
-		
-		return commissioners
-	}
-	
-	
 	/**
 	 * Builds a Map of codes and their friendly tranlation or alias if you may
 	 * for different layer attributes. Some aliases exist in the layer services

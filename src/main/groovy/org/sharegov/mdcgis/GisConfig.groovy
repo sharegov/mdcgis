@@ -24,7 +24,6 @@ class GisConfig {
 	Map<String, String> gisGeometryServices = [:]
 	Map<String, String>	countyRecyclingCalendarUrls = [:]
 	Map<String, String>	cityOfMiamiRecyclingCalendarUrls = [:]
-	Map<Integer, String>	cityOfMiamiCommissioners = [:]
 	List<String> serviceLayers = []
 	List<String> commonLocationsLayerNames = []
 	List<String> addressLayers = []
