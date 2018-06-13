@@ -109,19 +109,18 @@ class AddressController {
 		String zip = queryParams["zip"]
 		String municipalityId = queryParams["municipalityId"]
 		String municipality = queryParams["municipality"]
+		String districtNumber = queryParams["districtNumber"]
 		Integer intMunicipalityId
 
 		// clean municipalityId
 		intMunicipalityId = cleanMunicipalityId(municipalityId, municipality)
 
-		_log.info("getCandidates - Start - address: " + address + " zip: " +
-				zip + " municipalityId: " + intMunicipalityId);
+		_log.info("getCandidates - Start - address: " + address + " zip: " + zip + " municipalityId: " + intMunicipalityId + " districtNumber: " + districtNumber);
 
 		// Get candidates
 		Map answer = [:]
 		try{
-			List candidates = addressService.getCandidateAddresses(address,
-					zip, intMunicipalityId);
+			List candidates = addressService.getCandidateAddresses(address,	zip, intMunicipalityId, districtNumber);
 			answer = [ok:true, candidates:candidates]
 
 		}catch(RetrievalOfDataException rode) {
