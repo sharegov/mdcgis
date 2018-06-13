@@ -208,7 +208,7 @@ class AddressService {
 	 * @return List<Address> - List of candidate address object. Empty list if no candidates are found.
 	 */
 	@Cacheable(value="candidates")
-	List getCandidateAddresses (String street, String zip, Integer municipalityId = null, String districtNumber = null){
+	List getCandidateAddresses (String street, String zip, Integer municipalityId = null, Integer districtNumber = null){
 
 		// Get candidates
 		List candidates = candidateService.getCandidates(street, zip, municipalityId)
@@ -221,18 +221,17 @@ class AddressService {
 				candidateAddresses << buildAddressFromCandidate(candidate)
 			}
 		} else if(candidates.size() > 1) {
-			boolean addCommissionDistrictData = districtNumber != null && districtNumber.integer ?true:false;
 			// Several candidates. Build minimal candidate address.
 			candidates.each { candidate ->
-				candidateAddresses << buildPartialAddressFromCandidate(candidate, addCommissionDistrictData)
-			}
-
-			//filter by district number
-			if(addCommissionDistrictData || ( districtNumber != null &&	!districtNumber.isAllWhitespace() && !districtNumber.isEmpty()) ){
-				def districtId = districtNumber.integer ? districtNumber.toInteger() : districtNumber
-				candidateAddresses = candidateAddresses.findAll{ candidate -> candidate.districtNumber == districtId}
+				candidateAddresses << buildPartialAddressFromCandidate(candidate, districtNumber != null)
 			}
 		}
+
+		//filter by district number
+		if(districtNumber != null){
+			candidateAddresses = candidateAddresses.findAll{ candidate -> candidate.districtNumber == districtNumber }
+		}
+
 		return candidateAddresses
 	}
 

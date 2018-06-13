@@ -109,11 +109,14 @@ class AddressController {
 		String zip = queryParams["zip"]
 		String municipalityId = queryParams["municipalityId"]
 		String municipality = queryParams["municipality"]
-		String districtNumber = queryParams["districtNumber"]
+		String districtId = queryParams["districtNumber"]
 		Integer intMunicipalityId
 
 		// clean municipalityId
 		intMunicipalityId = cleanMunicipalityId(municipalityId, municipality)
+
+		//clean District Number
+		Integer districtNumber = cleanDistrictNumber(districtId)
 
 		_log.info("getCandidates - Start - address: " + address + " zip: " + zip + " municipalityId: " + intMunicipalityId + " districtNumber: " + districtNumber);
 
@@ -163,6 +166,26 @@ class AddressController {
 					municipality.trim().toUpperCase());
 
 		return intMunicipalityId
+	}
+
+	/**
+	 * Get District Number
+	 *
+	 * @param districtId
+	 * @return
+	 */
+	private Integer cleanDistrictNumber(String districtId){
+		Integer districtNumber
+		if(districtId == null){
+			districtNumber = null;
+		}else{
+			try{
+				districtNumber = Integer.valueOf(districtId)
+			}catch(NumberFormatException numberFormatException){
+				districtNumber = null
+			}
+		}
+		return districtNumber
 	}
 
 	/**

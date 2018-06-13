@@ -854,13 +854,13 @@ class Esri10AddressServiceTest {
 
 	@Test
 	public void testGetCandidateAddresses_With_DistrictNumber_Expect_No_Candidates(){
-		List candidatesAddress = addressService.getCandidateAddresses("111 NW 1St", "", null,"7")
+		List candidatesAddress = addressService.getCandidateAddresses("111 NW 1St", "", null, 7)
 		assert candidatesAddress.size() == 0
 	}
 
 	@Test
 	public void testGetCandidateAddresses_With_DistrictNumber_Expect_Three_Candidates(){
-		List candidatesAddress = addressService.getCandidateAddresses("111 NW 1St", "", null, "9")
+		List candidatesAddress = addressService.getCandidateAddresses("111 NW 1St", "", null, 9)
 		assert candidatesAddress.size() == 3
 
 		Address address1 = candidatesAddress[0]
@@ -871,33 +871,6 @@ class Esri10AddressServiceTest {
 
 		Address address3 = candidatesAddress[2]
 		assert address3.districtNumber == 9
-	}
-
-	@Test
-	public void testGetCandidateAddresses_With_String_As_DistrictNumber_Expect_No_Candidates(){
-		List candidatesAddress = addressService.getCandidateAddresses("111 NW 1St", "", null, "ramtest")
-		assert candidatesAddress.size() == 0
-	}
-
-	@Test
-	public void testGetCandidateAddresses_With_Empty_DistrictNumber_Expect_Five_Candidates_With_DistrictNumber_As_Null(){
-		List candidatesAddress = addressService.getCandidateAddresses("111 NW 1St", "", null, "")
-		assert candidatesAddress.size() == 5
-
-		Address address1 = candidatesAddress[0]
-		assert address1.districtNumber == null
-
-		Address address2 = candidatesAddress[1]
-		assert address2.districtNumber == null
-
-		Address address3 = candidatesAddress[2]
-		assert address3.districtNumber == null
-
-		Address address4 = candidatesAddress[3]
-		assert address4.districtNumber == null
-
-		Address address5 = candidatesAddress[4]
-		assert address5.districtNumber == null
 	}
 
 	@Test
@@ -913,9 +886,15 @@ class Esri10AddressServiceTest {
 	}
 
 	@Test
-	public void testGetCandidateAddresses_With_No_DistrictNumber_Expect_One_Candidates(){
-		List candidatesAddress = addressService.getCandidateAddresses("11826 SW 97th Street", "", null, "")
+	public void testGetCandidateAddresses_With_DistrictNumber_Expect_One_Candidates(){
+		List candidatesAddress = addressService.getCandidateAddresses("11826 SW 97th Street", "", null, 7)
 		assert candidatesAddress.size() == 1
+	}
+
+	@Test
+	public void testGetCandidateAddresses_With_InvalidDistrictNumber_Expect_No_Candidates(){
+		List candidatesAddress = addressService.getCandidateAddresses("11826 SW 97th Street", "", null, 2000)
+		assert candidatesAddress.size() == 0
 	}
 
 	@Test
