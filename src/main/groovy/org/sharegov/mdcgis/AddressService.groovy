@@ -260,6 +260,7 @@ class AddressService {
 
 	/**
 	 * It maps from candidate raw data to Address Object and
+	 * makes to other layers as needed to populate the necessary fields.
 	 * Besides raw candidate data, it populates the municipality and Commission District
 	 *
 	 * @param candidate
