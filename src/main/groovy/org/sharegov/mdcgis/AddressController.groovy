@@ -109,19 +109,21 @@ class AddressController {
 		String zip = queryParams["zip"]
 		String municipalityId = queryParams["municipalityId"]
 		String municipality = queryParams["municipality"]
+		String districtId = queryParams["districtNumber"]
 		Integer intMunicipalityId
 
 		// clean municipalityId
 		intMunicipalityId = cleanMunicipalityId(municipalityId, municipality)
 
-		_log.info("getCandidates - Start - address: " + address + " zip: " +
-				zip + " municipalityId: " + intMunicipalityId);
+		//clean District Number
+		Integer districtNumber = cleanDistrictNumber(districtId)
+
+		_log.info("getCandidates - Start - address: " + address + " zip: " + zip + " municipalityId: " + intMunicipalityId + " districtNumber: " + districtNumber);
 
 		// Get candidates
 		Map answer = [:]
 		try{
-			List candidates = addressService.getCandidateAddresses(address,
-					zip, intMunicipalityId);
+			List candidates = addressService.getCandidateAddresses(address,	zip, intMunicipalityId, districtNumber);
 			answer = [ok:true, candidates:candidates]
 
 		}catch(RetrievalOfDataException rode) {
@@ -164,6 +166,26 @@ class AddressController {
 					municipality.trim().toUpperCase());
 
 		return intMunicipalityId
+	}
+
+	/**
+	 * Get District Number
+	 *
+	 * @param districtId
+	 * @return
+	 */
+	private Integer cleanDistrictNumber(String districtId){
+		Integer districtNumber
+		if(districtId == null){
+			districtNumber = null;
+		}else{
+			try{
+				districtNumber = Integer.valueOf(districtId)
+			}catch(NumberFormatException numberFormatException){
+				districtNumber = null
+			}
+		}
+		return districtNumber
 	}
 
 	/**

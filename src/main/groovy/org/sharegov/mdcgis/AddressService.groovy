@@ -200,12 +200,15 @@ class AddressService {
 	 * Produces a list of address candidates with address, zip. If only one
 	 * candidate is match a fully populated address object is returned. If
 	 * several candidates are found, the address objecs are only populated partially.
-	 * @param address
+	 *
+	 * @param street
 	 * @param zip
+	 * @param municipalityId
+	 * @param districtNumber
 	 * @return List<Address> - List of candidate address object. Empty list if no candidates are found.
 	 */
 	@Cacheable(value="candidates")
-	List getCandidateAddresses (String street, String zip, Integer municipalityId = null){
+	List getCandidateAddresses (String street, String zip, Integer municipalityId = null, Integer districtNumber = null){
 
 		// Get candidates
 		List candidates = candidateService.getCandidates(street, zip, municipalityId)
@@ -217,15 +220,19 @@ class AddressService {
 			candidates.each {candidate ->
 				candidateAddresses << buildAddressFromCandidate(candidate)
 			}
-		} else if(candidates.size() > 1){
+		} else if(candidates.size() > 1) {
 			// Several candidates. Build minimal candidate address.
-			candidates.each {candidate ->
-				candidateAddresses << buildPartialAddressFromCandidate(candidate)
+			candidates.each { candidate ->
+				candidateAddresses << buildPartialAddressFromCandidate(candidate, districtNumber != null)
 			}
 		}
 
+		//filter by district number
+		if(districtNumber != null){
+			candidateAddresses = candidateAddresses.findAll{ candidate -> candidate.districtNumber == districtNumber }
+		}
+
 		return candidateAddresses
-		
 	}
 
 	/**
@@ -253,12 +260,13 @@ class AddressService {
 	/**
 	 * It maps from candidate raw data to Address Object and
 	 * makes to other layers as needed to populate the necessary fields.
-	 * Besides raw candidate data, it populates the municipality.
-	 * @param candidate - raw candidate data returned by locator.
-	 * @return Address - partially populated Address object that includes
-	 * data contained in the candidate, the municipality.
+	 * Besides raw candidate data, it populates the municipality and Commission District
+	 *
+	 * @param candidate
+	 * @param addCommissionDistrictData
+	 * @return
 	 */
-	private Address buildPartialAddressFromCandidate(def candidate){
+	private Address buildPartialAddressFromCandidate(def candidate, Boolean addCommissionDistrictData = false){
 
 		Address addr = new Address()
 		addr.with{
@@ -272,10 +280,11 @@ class AddressService {
 			municipality = gisConfig.municipalities[municipalityId]
 		}
 
-		// Get Municipality Data
-		//List layers = ['MDC.Municipality_poly']
-		//Map dataFromLayers = layerFacade.getPointServiceLayersIntersectionAttributes(candidate.location.x as String, candidate.location.y as String, layers)
-		//populateAddressFields(addr, dataFromLayers)
+		//Get Commission District Data
+		if(addCommissionDistrictData) {
+			Map commissionDistrictData = featureService.featuresAttributesFromPointLayersIntersection(candidate.location.x as String, candidate.location.y as String, ['MDC.CommissionDistrict'])
+			populateAddressFields(addr, commissionDistrictData)
+		}
 
 		return addr
 	}
