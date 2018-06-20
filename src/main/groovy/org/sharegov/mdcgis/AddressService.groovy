@@ -205,10 +205,11 @@ class AddressService {
 	 * @param zip
 	 * @param municipalityId
 	 * @param districtNumber
+	 * @param addDistrict
 	 * @return List<Address> - List of candidate address object. Empty list if no candidates are found.
 	 */
 	@Cacheable(value="candidates")
-	List getCandidateAddresses (String street, String zip, Integer municipalityId = null, Integer districtNumber = null){
+	List getCandidateAddresses (String street, String zip, Integer municipalityId = null, Integer districtNumber = null, boolean addDistrict = false){
 
 		// Get candidates
 		List candidates = candidateService.getCandidates(street, zip, municipalityId)
@@ -223,7 +224,7 @@ class AddressService {
 		} else if(candidates.size() > 1) {
 			// Several candidates. Build minimal candidate address.
 			candidates.each { candidate ->
-				candidateAddresses << buildPartialAddressFromCandidate(candidate, districtNumber != null)
+				candidateAddresses << buildPartialAddressFromCandidate(candidate, districtNumber != null || addDistrict)
 			}
 		}
 
