@@ -91,7 +91,7 @@ class AddressController {
 
 	/**
 	 * It will find a list of possible address candidates for the given parameters
-	 * @param queryParams - street, zip, municipality, municipalityId.
+	 * @param queryParams - street, zip, municipality, municipalityId, districtNumber and addDistrict.
 	 * The parameter municipality takes precedence over 
 	 * municipalityId. There is a mapping between municipality and municipalityId.
 	 * @return JsonBuilder - On success json of the form 
@@ -110,6 +110,8 @@ class AddressController {
 		String municipalityId = queryParams["municipalityId"]
 		String municipality = queryParams["municipality"]
 		String districtId = queryParams["districtNumber"]
+		boolean addDistrict = Boolean.valueOf(queryParams["addDistrict"])
+
 		Integer intMunicipalityId
 
 		// clean municipalityId
@@ -118,27 +120,40 @@ class AddressController {
 		//clean District Number
 		Integer districtNumber = cleanDistrictNumber(districtId)
 
-		_log.info("getCandidates - Start - address: " + address + " zip: " + zip + " municipalityId: " + intMunicipalityId + " districtNumber: " + districtNumber);
+		_log.info("getCandidates - Start - address: " + address +
+				" zip: " + zip +
+				" municipalityId: " + intMunicipalityId +
+				" districtNumber: " + districtNumber +
+				" addDistrict " + addDistrict );
 
 		// Get candidates
 		Map answer = [:]
 		try{
-			List candidates = addressService.getCandidateAddresses(address,	zip, intMunicipalityId, districtNumber);
+			List candidates = addressService.getCandidateAddresses(address,	zip, intMunicipalityId, districtNumber, addDistrict);
 			answer = [ok:true, candidates:candidates]
+
+			_log.info("getCandidates - About to Finish - address: " + address +
+					" zip: " + zip +
+					" municipalityId: " + intMunicipalityId +
+					" districtNumber: " + districtNumber +
+					" addDistrict " + addDistrict +
+					" with data " + answer)
 
 		}catch(RetrievalOfDataException rode) {
 			answer = [ok:false, message:rode.message, candidates:[]]
 			sendMail(rode.message)
 		}
 
-
-		_log.info("getCandidates - About to Finish - address: " + address +
-				" zip: " + zip + " with data " + answer)
-		_log.info("getCandidates - Finish - address: " + address +
-				" zip: " + zip + " with code " + answer.ok)
-
 		// Convert map to json object
 		JsonBuilder json = new JsonBuilder()
+
+		_log.info("getCandidates - Finish - address: " + address +
+				" zip: " + zip +
+				" municipalityId: " + intMunicipalityId +
+				" districtNumber: " + districtNumber +
+				" addDistrict " + addDistrict +
+				" with code " + answer.ok)
+
 		json.call(answer)
 	}
 
